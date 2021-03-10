@@ -2,10 +2,9 @@ package theenemy
 
 import (
 	"gfeed/news"
+	"gfeed/utils"
 	"regexp"
 	"strings"
-
-	log "github.com/sirupsen/logrus"
 
 	"github.com/gocolly/colly"
 )
@@ -15,11 +14,11 @@ const TYPE = "THE_ENEMY"
 const baseAddress = "https://www.theenemy.com.br"
 
 var reURL *regexp.Regexp
-var logger *log.Entry
+var logger utils.Logger
 
 func init() {
 	reURL = regexp.MustCompile(`\((.*?)\)`)
-	logger = log.New().WithField("scrapper", "theenemy")
+	logger = utils.NewLogger("scrapper:theenemy")
 }
 
 // Load the enemy news
@@ -34,9 +33,11 @@ func Load() []news.Entry {
 		link := e.ChildAttr(".card__content > a", "href")
 		title := e.ChildText(".card__content > a")
 
-		log.Info("New Entry: " + link)
+		entry := buildEntry(title, link, style)
 
-		entries = append(entries, buildEntry(title, link, style))
+		logger.Info("New Entry: " + link)
+
+		entries = append(entries, entry)
 	})
 
 	c.Visit(baseAddress + "/news")
