@@ -8,5 +8,7 @@ import (
 func main() {
 	entries := scrappers.NewsEntries()
 
-	fmt.Println(entries)
+	for _, v := range entries {
+		fmt.Println(v)
+	}
 }

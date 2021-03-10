@@ -9,13 +9,20 @@ import (
 func NewsEntries() (entries []news.Entry) {
 	var wg sync.WaitGroup
 
-	ch := make(chan news.Entry, 2)
+	ch := make(chan news.Entry, 100)
 
-	runOverChanners(&wg, ch)
+	logger.Info("Starting scrappers...")
+
+	runWithChannels(&wg, ch)
+
+	logger.Info("Scrappers are finish...")
 
 	for entry := range ch {
+		logger.WithField("type", entry.Type).Info("Entry: " + entry.Link)
 		entries = append(entries, entry)
 	}
+
+	logger.Info("Done")
 
 	return entries
 }

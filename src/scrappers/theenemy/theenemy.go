@@ -35,12 +35,16 @@ func Load() []news.Entry {
 
 		entry := buildEntry(title, link, style)
 
-		logger.Info("New Entry: " + link)
+		logger.Debug("New Entry: " + link)
 
 		entries = append(entries, entry)
 	})
 
+	logger.Debug("Starting...")
+
 	c.Visit(baseAddress + "/news")
+
+	logger.Debug("Done...")
 
 	c.Wait()
 
