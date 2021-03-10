@@ -1,14 +1,9 @@
 package main
 
 import (
-	"fmt"
-	"gfeed/scrappers"
+	"gfeed/cmd"
 )
 
 func main() {
-	entries := scrappers.NewsEntries()
-
-	for _, v := range entries {
-		fmt.Println(v)
-	}
+	cmd.Execute()
 }
