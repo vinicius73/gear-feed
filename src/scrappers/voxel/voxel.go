@@ -1,6 +1,7 @@
 package voxel
 
 import (
+	"fmt"
 	"gfeed/news"
 	"gfeed/utils"
 	"strings"
@@ -37,6 +38,14 @@ func Load() []news.Entry {
 		entries = append(entries, entry)
 	})
 
+	c.OnError(func(r *colly.Response, e error) {
+		logger.Error("Fail: " + e.Error())
+	})
+
+	c.OnResponse(func(r *colly.Response) {
+		logger.Debug(fmt.Sprintf("Voxel response: %v / %v", r.StatusCode, len(r.Body)))
+	})
+
 	logger.Debug("Starting...")
 
 	c.Visit(baseAddress)
@@ -44,6 +53,10 @@ func Load() []news.Entry {
 	c.Wait()
 
 	logger.Debug("Done...")
+
+	if len(entries) == 0 {
+		logger.Warn("Empty entries")
+	}
 
 	if len(entries) > 2 {
 		return entries[0:2]
