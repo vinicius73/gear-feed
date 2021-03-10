@@ -2,6 +2,7 @@ package scrappers
 
 import (
 	"gfeed/news"
+	"gfeed/scrappers/tecnoblog"
 	"gfeed/scrappers/theenemy"
 	"gfeed/scrappers/voxel"
 	"sync"
@@ -13,13 +14,13 @@ type loaderFn = func() []news.Entry
 var loaders []loaderFn
 
 func init() {
-	loaders = []loaderFn{theenemy.Load, voxel.Load}
+	loaders = []loaderFn{theenemy.Load, voxel.Load, tecnoblog.Load}
 }
 
 func runWithChannels(wg *sync.WaitGroup, ch chan news.Entry) {
-	for _, loader := range loaders {
-		wg.Add(1)
+	wg.Add(len(loaders))
 
+	for _, loader := range loaders {
 		go loadIntoChan(wg, ch, loader)
 	}
 
