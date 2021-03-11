@@ -10,6 +10,7 @@ import (
 
 var token string
 var channel string
+var dryRun bool
 
 var rootCmd = &cobra.Command{
 	Use:   "gfeed",
@@ -18,6 +19,7 @@ var rootCmd = &cobra.Command{
 		bot.SendNews(bot.Config{
 			Token:   token,
 			Channel: channel,
+			DryRun:  dryRun,
 		})
 	},
 }
@@ -27,6 +29,7 @@ func init() {
 
 	flags.StringVarP(&token, "token", "t", "", "Telegram Token (required)")
 	flags.StringVarP(&channel, "channel", "c", "@GamerFeed", "Telegram Channel")
+	flags.BoolVarP(&dryRun, "dry", "", false, "Just try to run")
 
 	rootCmd.MarkFlagRequired("token")
 }
