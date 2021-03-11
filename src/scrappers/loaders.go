@@ -2,6 +2,7 @@ package scrappers
 
 import (
 	"gfeed/news"
+	"gfeed/news/data"
 	"gfeed/scrappers/tecnoblog"
 	"gfeed/scrappers/theenemy"
 	"gfeed/scrappers/voxel"
@@ -35,7 +36,21 @@ func loadIntoChan(wg *sync.WaitGroup, ch chan news.Entry, loader loaderFn) {
 	entries := loader()
 
 	for _, v := range entries {
-		ch <- v
+		exist, err := data.IsRecorded(v)
+
+		if err != nil {
+			logger.
+				WithField("entry", v.Key()).
+				Error("data.IsRecorded: " + err.Error())
+		}
+
+		if exist {
+			logger.
+				WithField("entry", v.Key()).
+				Warn("That entry already exist")
+		} else {
+			ch <- v
+		}
 	}
 
 	wg.Done()

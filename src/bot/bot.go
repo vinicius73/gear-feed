@@ -2,6 +2,7 @@ package bot
 
 import (
 	"gfeed/news"
+	"gfeed/news/data"
 	"gfeed/scrappers"
 	"math/rand"
 	"strings"
@@ -32,7 +33,7 @@ func SendNews(c Config) {
 }
 
 func sendNews(b *tb.Bot, c Config) error {
-	chat, err := b.ChatByID("@GamerFeed")
+	chat, err := b.ChatByID(c.Channel)
 
 	if err != nil {
 		return err
@@ -47,7 +48,10 @@ func sendNews(b *tb.Bot, c Config) error {
 	for _, entry := range entries {
 		logger.Info("Sending: " + entry.Link)
 
+		data.Put(entry)
+
 		b.Send(chat, buildMsg(entry))
+
 		time.Sleep(time.Second * 1)
 	}
 
