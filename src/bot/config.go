@@ -4,4 +4,5 @@ package bot
 type Config struct {
 	Token   string
 	Channel string
+	DryRun  bool
 }

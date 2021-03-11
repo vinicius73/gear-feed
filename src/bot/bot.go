@@ -17,6 +17,10 @@ func init() {
 
 // SendNews to channel
 func SendNews(c Config) {
+	if c.DryRun {
+		logger.Warn("DryRun ON")
+	}
+
 	b, err := newClient(c)
 
 	if err != nil {
@@ -48,9 +52,10 @@ func sendNews(b *tb.Bot, c Config) error {
 	for _, entry := range entries {
 		logger.Info("Sending: " + entry.Link)
 
-		data.Put(entry)
-
-		b.Send(chat, buildMsg(entry))
+		if !c.DryRun {
+			data.Put(entry)
+			b.Send(chat, buildMsg(entry))
+		}
 
 		time.Sleep(time.Second * 1)
 	}
