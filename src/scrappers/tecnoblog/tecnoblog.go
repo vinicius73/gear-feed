@@ -35,7 +35,7 @@ func Load() []news.Entry {
 		}
 
 		image := e.ChildAttr(".thumb img", "data-lazy-src")
-		title := e.ChildText(".texts a")
+		title := e.ChildText(".texts h2 a")
 
 		entry := buildEntry(title, link, image)
 
@@ -49,7 +49,7 @@ func Load() []news.Entry {
 	})
 
 	c.OnResponse(func(r *colly.Response) {
-		logger.Debug(fmt.Sprintf("Voxel response: %v / %v", r.StatusCode, len(r.Body)))
+		logger.Debug(fmt.Sprintf("Tecnoblog response: %v / %v", r.StatusCode, len(r.Body)))
 	})
 
 	logger.Debug("Starting...")

@@ -29,7 +29,7 @@ func Load() []news.Entry {
 
 		image := e.ChildAttr("img.tec--voxel-main__item__thumb__image", "data-src")
 		link := e.ChildAttr("figure > a", "href")
-		title := e.ChildText(".tec--voxe l-main__item__title__link")
+		title := e.ChildText(".tec--voxel-main__item__title a.tec--voxel-main__item__title__link")
 
 		entry := buildEntry(title, link, image)
 
