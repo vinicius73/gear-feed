@@ -1,0 +1,13 @@
+{
+  "name": "gamer-feed",
+  "version": "1.0.0",
+  "repository": "git@github.com:vinicius73/gamer-feed.git",
+  "author": "Vinicius Reis <luiz.vinicius73@gmail.com>",
+  "license": "GPL-3.0 License",
+  "scripts": {
+    "deploy": "serverless deploy"
+  },
+  "devDependencies": {
+    "serverless": "^2.29.0"
+  }
+}
