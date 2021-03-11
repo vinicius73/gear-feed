@@ -1,0 +1,48 @@
+service: gamer-feed
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: go1.x
+  stage: ${opt:stage, 'dev'}
+  lambdaHashingVersion: "20201221"
+  memorySize: 192
+  timeout: 90
+  logRetentionInDays: 5
+  iam:
+    role:
+      statements:
+      - Effect: Allow
+        Resource: '*'
+        Action:
+          - cloudwatch:*
+          - logs:*
+          - dynamodb:Query
+          - dynamodb:Scan
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+
+  environment:
+    LOG_FORMAT: json
+    TELEGRAM_TOKEN: ${env:TELEGRAM_TOKEN}
+
+  tags:
+    project: 'gamer-feed'
+
+package:
+ exclude:
+   - ./src/**
+   - ./node_modules/**
+   - ./bin/*
+   - ./*
+ include:
+   - ./bin/function-*
+
+functions:
+  scrapper:
+    handler: bin/function-scrapper
+    events:
+      - schedule:
+          rate: rate(120 minutes)
+          enabled: true
