@@ -5,17 +5,26 @@ export $(shell sed 's/=.*//' ./.env)
 export CGO_ENABLED=0
 export GOOS=linux
 
-BUILD_FLAGS=-a -installsuffix cgo -ldflags '-s -w -extldflags "-static"'
+GIT_COMMIT=$(shell git rev-list -1 HEAD)
+APP_VERSION=$(shell node -p "require('./package.json').version")
+BUILD_DATE=$(shell date '+%Y-%m-%d__%H:%M:%S')
+
+LDFLAGS=-ldflags "-X main.Commit=${GIT_COMMIT} -X main.Version=${APP_VERSION} -X main.BuildDate=${BUILD_DATE} "
+BUILD_FLAGS=-a -installsuffix cgo -ldflags '-s -w -extldflags "-static"' ${LDFLAGS}
+
+version:
+	- @echo Commit: ${GIT_COMMIT}
+	- @echo Version: ${APP_VERSION}
 
 init:
 	- cd src/ && go get
 	- cd src/ && go mod vendor
 
-build:
+build: version
 	- cd src/ && go build ${BUILD_FLAGS} -o ../bin/gfeed
 	- chmod +x bin/gfeed
 
-build-functions:
+build-functions: version
 	- cd src/functions && go build -tags scrapper ${BUILD_FLAGS} -o ../../bin/function-scrapper scrapper.go
 	- chmod +x bin/function-scrapper
 

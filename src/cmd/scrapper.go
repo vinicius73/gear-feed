@@ -9,8 +9,9 @@ import (
 
 func init() {
 	rootCmd.AddCommand(&cobra.Command{
-		Use:   "scrapper",
-		Short: "Run scrappers",
+		Use:    "scrapper",
+		Short:  "Run scrappers",
+		PreRun: versionHook,
 		Run: func(cmd *cobra.Command, args []string) {
 			entries := scrappers.NewsEntries()
 

@@ -13,10 +13,12 @@ var token string
 var channel string
 var user string
 var dryRun bool
+var info ProcessInfo
 
 var rootCmd = &cobra.Command{
-	Use:   "gfeed",
-	Short: "Gamer Feed Project",
+	Use:    "gfeed",
+	Short:  "Gamer Feed Project",
+	PreRun: versionHook,
 	Run: func(cmd *cobra.Command, args []string) {
 		bot.SendNews(getBotConfig())
 	},
@@ -34,7 +36,9 @@ func init() {
 }
 
 // Execute the process
-func Execute() {
+func Execute(i ProcessInfo) {
+	info = i
+
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)

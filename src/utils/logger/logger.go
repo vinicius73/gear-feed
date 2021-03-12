@@ -23,6 +23,10 @@ func New(context string) zerolog.Logger {
 		Logger()
 }
 
+func Global() *zerolog.Logger {
+	return &log.Logger
+}
+
 func getLogLevel() zerolog.Level {
 	level := strings.ToLower(utils.GetEnv("LOG_LEVEL", "info"))
 
