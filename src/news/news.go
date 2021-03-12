@@ -7,10 +7,11 @@ import (
 
 // Entry news
 type Entry struct {
-	Title string
-	Link  string
-	Image string
-	Type  string
+	Title    string
+	Link     string
+	Image    string
+	Category string
+	Type     string
 }
 
 // Hash of entry
