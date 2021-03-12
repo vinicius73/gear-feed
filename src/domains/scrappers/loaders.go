@@ -2,7 +2,7 @@ package scrappers
 
 import (
 	"gfeed/domains/news"
-	"gfeed/domains/news/data"
+	"gfeed/domains/news/storage"
 	"gfeed/domains/scrappers/loader"
 	"sync"
 	"time"
@@ -152,7 +152,7 @@ func loadIntoChan(wg *sync.WaitGroup, ch chan news.Entry, loader loaderFn) {
 	entries := loader()
 
 	for _, v := range entries {
-		exist, err := data.IsRecorded(v)
+		exist, err := storage.IsRecorded(v)
 
 		if err != nil {
 			logger.

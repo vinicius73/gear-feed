@@ -3,7 +3,7 @@ package bot
 import (
 	"fmt"
 	"gfeed/domains/news"
-	"gfeed/domains/news/data"
+	"gfeed/domains/news/storage"
 	"gfeed/domains/scrappers"
 	"math/rand"
 	"strings"
@@ -54,7 +54,7 @@ func sendNews(b *tb.Bot, c Config) error {
 		logger.Info().Msgf("Sending: %s", entry.Link)
 
 		if !c.DryRun {
-			data.Put(entry)
+			storage.Put(entry)
 			b.Send(chat, buildMsg(entry))
 		}
 
