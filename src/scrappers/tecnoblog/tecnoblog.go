@@ -1,9 +1,8 @@
 package tecnoblog
 
 import (
-	"fmt"
 	"gfeed/news"
-	"gfeed/utils"
+	log "gfeed/utils/logger"
 	"strings"
 
 	"github.com/gocolly/colly"
@@ -13,10 +12,10 @@ import (
 const TYPE = "TECNOBLOG"
 const baseAddress = "https://tecnoblog.net"
 
-var logger utils.Logger
+var logger log.Logger
 
 func init() {
-	logger = utils.NewLogger("scrapper:tecnoblog")
+	logger = log.New("scrapper:tecnoblog")
 }
 
 // Load voxel news
@@ -30,7 +29,7 @@ func Load() []news.Entry {
 		link := e.ChildAttr(".texts a", "href")
 
 		if !isAllowed(category) {
-			logger.Warn("Skiped: " + link)
+			logger.Warn().Msgf("Skiped: %s", link)
 			return
 		}
 
@@ -39,26 +38,26 @@ func Load() []news.Entry {
 
 		entry := buildEntry(title, link, image)
 
-		logger.Debug("New entry: " + entry.Link)
+		logger.Debug().Msgf("New entry: %s", entry.Link)
 
 		entries = append(entries, entry)
 	})
 
 	c.OnError(func(r *colly.Response, e error) {
-		logger.Error("Fail: " + e.Error())
+		logger.Error().Err(e).Msg("Response failure")
 	})
 
 	c.OnResponse(func(r *colly.Response) {
-		logger.Debug(fmt.Sprintf("Tecnoblog response: %v / %v", r.StatusCode, len(r.Body)))
+		logger.Debug().Msgf("Response: %v / %v", r.StatusCode, len(r.Body))
 	})
 
-	logger.Debug("Starting...")
+	logger.Debug().Msg("Starting...")
 
 	c.Visit(baseAddress + "/cat/games-jogos/")
 
 	c.Wait()
 
-	logger.Debug("Done...")
+	logger.Debug().Msg("Done.")
 
 	if len(entries) > 2 {
 		return entries[0:2]

@@ -1,9 +1,11 @@
 package bot
 
-import "gfeed/utils"
+import (
+	log "gfeed/utils/logger"
+)
 
-var logger utils.Logger
+var logger log.Logger
 
 func init() {
-	logger = utils.NewLogger("bot")
+	logger = log.New("bot")
 }

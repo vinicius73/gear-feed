@@ -1,9 +1,8 @@
 package voxel
 
 import (
-	"fmt"
 	"gfeed/news"
-	"gfeed/utils"
+	log "gfeed/utils/logger"
 	"strings"
 
 	"github.com/gocolly/colly"
@@ -13,10 +12,10 @@ import (
 const TYPE = "VOXEL"
 const baseAddress = "https://www.tecmundo.com.br/voxel"
 
-var logger utils.Logger
+var logger log.Logger
 
 func init() {
-	logger = utils.NewLogger("scrapper:voxel")
+	logger = log.New("scrapper:voxel")
 }
 
 // Load voxel news
@@ -33,29 +32,29 @@ func Load() []news.Entry {
 
 		entry := buildEntry(title, link, image)
 
-		logger.Debug("New entry: " + entry.Link)
+		logger.Debug().Msgf("New entry: %s", entry.Link)
 
 		entries = append(entries, entry)
 	})
 
 	c.OnError(func(r *colly.Response, e error) {
-		logger.Error("Fail: " + e.Error())
+		logger.Error().Err(e).Msg("Response failure")
 	})
 
 	c.OnResponse(func(r *colly.Response) {
-		logger.Debug(fmt.Sprintf("Voxel response: %v / %v", r.StatusCode, len(r.Body)))
+		logger.Debug().Msgf("Response: %v / %v", r.StatusCode, len(r.Body))
 	})
 
-	logger.Debug("Starting...")
+	logger.Debug().Msg("Starting...")
 
 	c.Visit(baseAddress)
 
 	c.Wait()
 
-	logger.Debug("Done...")
+	logger.Debug().Msg("Done.")
 
 	if len(entries) == 0 {
-		logger.Warn("Empty entries")
+		logger.Warn().Msg("Empty entries")
 	}
 
 	if len(entries) > 2 {
