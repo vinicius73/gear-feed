@@ -73,6 +73,10 @@ func buildMsg(entry news.Entry) string {
 	builder.WriteString("\n")
 	builder.WriteString("#" + entry.Type)
 
+	if len(entry.Category) > 0 {
+		builder.WriteString(" #" + strings.ReplaceAll(entry.Category, " ", "_"))
+	}
+
 	return builder.String()
 }
 
