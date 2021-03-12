@@ -1,6 +1,7 @@
 package bot
 
 import (
+	"fmt"
 	"gfeed/news"
 	"gfeed/news/data"
 	"gfeed/scrappers"
@@ -60,7 +61,7 @@ func sendNews(b *tb.Bot, c Config) error {
 		time.Sleep(time.Second * 1)
 	}
 
-	return nil
+	return sendResume(b, c, entries)
 }
 
 func buildMsg(entry news.Entry) string {
@@ -73,4 +74,29 @@ func buildMsg(entry news.Entry) string {
 	builder.WriteString("#" + entry.Type)
 
 	return builder.String()
+}
+
+func sendResume(b *tb.Bot, c Config, entries []news.Entry) error {
+
+	chat, err := b.ChatByID(c.User)
+
+	if err != nil {
+		return err
+	}
+
+	var builder strings.Builder
+
+	if c.DryRun {
+		builder.WriteString("🧪")
+	}
+
+	builder.WriteString("🤖")
+	builder.WriteString(time.Now().String())
+	builder.WriteString("\n")
+	builder.WriteString("\n")
+	builder.WriteString(fmt.Sprintf("Gamer Feed was executed [%v entries]", len(entries)))
+
+	_, err = b.Send(chat, builder.String())
+
+	return err
 }
