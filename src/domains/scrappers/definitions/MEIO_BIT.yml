@@ -1,0 +1,24 @@
+name: MEIO_BIT
+base_url: https://tecnoblog.net
+path: /meiobit/arquivo/games/
+limit: 2
+attributes:
+  wrapper: section.hero .featured-link
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: ""
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: .caption h2
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .big-featured,.small-featured
+    attribute: style
+    parse_strategy: style

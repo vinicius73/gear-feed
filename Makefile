@@ -29,12 +29,11 @@ build-functions: version
 	- chmod +x bin/function-scrapper
 
 run:
-	- @cd src/ && go run *.go --token=${TELEGRAM_TOKEN}
+	- @cd src/ && go run *.go --token=${TELEGRAM_TOKEN} --dry
 
 run-scrapper:
 	- @cd src/ && go run *.go scrapper
 
-release: build build-functions
-	- upx --best bin/gfeed
+release: build-functions
 	- upx --best bin/function-scrapper
 	- ls -lh bin/

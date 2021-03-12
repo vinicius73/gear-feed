@@ -7,22 +7,22 @@ import (
 )
 
 type PathFinder struct {
-	Path          string
-	Attribute     string
-	ParseStrategy PathParserStrategy
+	Path          string             `yaml:"path"`
+	Attribute     string             `yaml:"attribute"`
+	ParseStrategy PathParserStrategy `yaml:"parse_strategy"`
 }
 
 type PathFinderCategory struct {
-	PathFinder
-	Alloweds []string
+	PathFinder `yaml:"path_finder"`
+	Alloweds   []string `yaml:"allows"`
 }
 
 type AttributesFinder struct {
-	Wrapper  string
-	Category PathFinderCategory
-	Link     PathFinder
-	Title    PathFinder
-	Image    PathFinder
+	Wrapper  string             `yaml:"wrapper"`
+	Category PathFinderCategory `yaml:"category"`
+	Link     PathFinder         `yaml:"link"`
+	Title    PathFinder         `yaml:"title"`
+	Image    PathFinder         `yaml:"image"`
 }
 
 func (option PathFinder) findAttribute(e *colly.HTMLElement) string {

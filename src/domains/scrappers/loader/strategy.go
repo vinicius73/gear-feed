@@ -5,11 +5,11 @@ import (
 	"strings"
 )
 
-type PathParserStrategy = int
+type PathParserStrategy = string
 
 const (
-	ParserStrategyNone PathParserStrategy = iota
-	ParserStrategyStyle
+	ParserStrategyNone  PathParserStrategy = ""
+	ParserStrategyStyle PathParserStrategy = "style"
 )
 
 var reURL = regexp.MustCompile(`\((.*?)\)`)
