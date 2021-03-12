@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"gfeed/bot"
+	"gfeed/domains/bot"
 	"gfeed/utils"
 	"os"
 

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"gfeed/bot"
+	"gfeed/domains/bot"
 	"gfeed/utils"
 
 	"github.com/aws/aws-lambda-go/events"

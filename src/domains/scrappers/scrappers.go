@@ -1,7 +1,7 @@
 package scrappers
 
 import (
-	"gfeed/news"
+	"gfeed/domains/news"
 	"sync"
 )
 

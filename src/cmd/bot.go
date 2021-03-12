@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"gfeed/bot"
+	"gfeed/domains/bot"
 
 	"github.com/spf13/cobra"
 )

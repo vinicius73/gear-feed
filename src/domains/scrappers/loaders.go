@@ -1,9 +1,9 @@
 package scrappers
 
 import (
-	"gfeed/news"
-	"gfeed/news/data"
-	"gfeed/scrappers/loader"
+	"gfeed/domains/news"
+	"gfeed/domains/news/data"
+	"gfeed/domains/scrappers/loader"
 	"sync"
 	"time"
 )

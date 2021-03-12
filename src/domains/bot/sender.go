@@ -2,9 +2,9 @@ package bot
 
 import (
 	"fmt"
-	"gfeed/news"
-	"gfeed/news/data"
-	"gfeed/scrappers"
+	"gfeed/domains/news"
+	"gfeed/domains/news/data"
+	"gfeed/domains/scrappers"
 	"math/rand"
 	"strings"
 	"time"
