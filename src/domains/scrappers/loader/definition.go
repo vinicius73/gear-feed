@@ -8,11 +8,11 @@ import (
 )
 
 type Definitions struct {
-	Name       string
-	BaseURL    string
-	Path       string
-	Limit      int8
-	Attributes AttributesFinder
+	Name       string           `yaml:"name"`
+	BaseURL    string           `yaml:"base_url"`
+	Path       string           `yaml:"path"`
+	Limit      int8             `yaml:"limit"`
+	Attributes AttributesFinder `yaml:"attributes"`
 }
 
 // FindEnties from definition

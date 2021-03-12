@@ -1,6 +1,6 @@
 module gfeed
 
-go 1.15
+go 1.16
 
 require (
 	github.com/PuerkitoBio/goquery v1.6.1 // indirect
@@ -16,4 +16,5 @@ require (
 	github.com/spf13/cobra v1.1.3
 	github.com/temoto/robotstxt v1.1.1 // indirect
 	gopkg.in/tucnak/telebot.v2 v2.3.5
+	gopkg.in/yaml.v2 v2.4.0
 )

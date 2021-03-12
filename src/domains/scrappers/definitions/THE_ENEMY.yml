@@ -1,0 +1,24 @@
+name: THE_ENEMY
+base_url: https://www.theenemy.com.br
+path: /news
+limit: 2
+attributes:
+  wrapper: div[data-content-type='featured'] .card__wrapper
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: .card__content > a
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: .card__content > a
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: a.card__image__anchor
+    attribute: style
+    parse_strategy: style

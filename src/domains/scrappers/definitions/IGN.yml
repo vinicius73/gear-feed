@@ -1,0 +1,24 @@
+name: IGN
+base_url: https://br.ign.com
+path: /
+limit: 2
+attributes:
+  wrapper: .hspotlight .card
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: .caption > a
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: .caption > a
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: img
+    attribute: src
+    parse_strategy: ""
