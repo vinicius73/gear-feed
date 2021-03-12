@@ -1,7 +1,7 @@
 package data
 
 import (
-	"gfeed/news"
+	"gfeed/domains/news"
 	"strconv"
 	"time"
 

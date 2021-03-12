@@ -1,6 +1,6 @@
 package cmd
 
-import "gfeed/bot"
+import "gfeed/domains/bot"
 
 func getBotConfig() bot.Config {
 	cfg := bot.Config{

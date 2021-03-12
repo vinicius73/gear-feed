@@ -1,7 +1,7 @@
 package loader
 
 import (
-	"gfeed/news"
+	"gfeed/domains/news"
 	"strings"
 
 	"github.com/gocolly/colly"
