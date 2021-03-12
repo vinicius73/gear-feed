@@ -10,11 +10,13 @@ import (
 
 func handler(ev events.CloudWatchAlarmTrigger) error {
 	token := utils.GetEnv("TELEGRAM_TOKEN", "")
+	user := utils.GetEnv("TELEGRAM_USER", "")
 	channel := utils.GetEnv("TELEGRAM_CHANNEL", "@GamerFeed")
 
 	bot.SendNews(bot.Config{
 		Token:   token,
 		Channel: channel,
+		User:    user,
 		DryRun:  false,
 	})
 
