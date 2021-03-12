@@ -13,6 +13,27 @@ type loaderFn = func() []news.Entry
 var loaders []loaderFn
 
 func init() {
+	meiobit := loader.Definitions{
+		BaseURL: "https://tecnoblog.net",
+		Path:    "/meiobit/arquivo/games/",
+		Name:    "MEIO_BIT",
+		Limit:   2,
+		Attributes: loader.AttributesFinder{
+			Wrapper: "section.hero .featured-link",
+			Title: loader.PathFinder{
+				Path: ".caption h2",
+			},
+			Link: loader.PathFinder{
+				Attribute: "href",
+			},
+			Image: loader.PathFinder{
+				Path:          ".big-featured,.small-featured",
+				Attribute:     "style",
+				ParseStrategy: loader.ParserStrategyStyle,
+			},
+		},
+	}
+
 	ign := loader.Definitions{
 		BaseURL: "https://br.ign.com",
 		Path:    "/",
@@ -104,7 +125,13 @@ func init() {
 		},
 	}
 
-	loaders = []loaderFn{theenemy.FindEnties, ign.FindEnties, tecnoblog.FindEnties, voxel.FindEnties}
+	loaders = []loaderFn{
+		theenemy.FindEnties,
+		ign.FindEnties,
+		tecnoblog.FindEnties,
+		voxel.FindEnties,
+		meiobit.FindEnties,
+	}
 }
 
 func runWithChannels(wg *sync.WaitGroup, ch chan news.Entry) {
