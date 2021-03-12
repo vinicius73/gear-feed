@@ -37,6 +37,10 @@ func (option PathFinder) findAttribute(e *colly.HTMLElement) string {
 
 func (option PathFinder) findAttributeRaw(e *colly.HTMLElement) string {
 	if len(option.Path) == 0 {
+		if len(option.Attribute) > 0 {
+			return e.Attr(option.Attribute)
+		}
+
 		return ""
 	}
 
