@@ -22,12 +22,7 @@ func init() {
 
 // NewLogger create a new logger entry
 func NewLogger(context string) Logger {
-	l := logrus.New()
-
-	l.SetLevel(logLevel)
-	l.SetFormatter(logFormater)
-
-	return l.WithField("context", context)
+	return logrus.WithField("context", context)
 }
 
 func getLogLevel() logrus.Level {
