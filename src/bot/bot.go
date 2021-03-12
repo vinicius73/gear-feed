@@ -18,20 +18,20 @@ func init() {
 // SendNews to channel
 func SendNews(c Config) {
 	if c.DryRun {
-		logger.Warn("DryRun ON")
+		logger.Warn().Msg("DryRun ON")
 	}
 
 	b, err := newClient(c)
 
 	if err != nil {
-		logger.Fatal(err)
+		logger.Fatal().Err(err).Msg("Fail to create bot client")
 		return
 	}
 
 	err = sendNews(b, c)
 
 	if err != nil {
-		logger.Fatal(err)
+		logger.Fatal().Err(err).Msg("Fail to send news")
 		return
 	}
 }
@@ -50,7 +50,7 @@ func sendNews(b *tb.Bot, c Config) error {
 	})
 
 	for _, entry := range entries {
-		logger.Info("Sending: " + entry.Link)
+		logger.Info().Msgf("Sending: %s", entry.Link)
 
 		if !c.DryRun {
 			data.Put(entry)

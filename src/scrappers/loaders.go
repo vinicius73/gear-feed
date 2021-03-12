@@ -40,14 +40,17 @@ func loadIntoChan(wg *sync.WaitGroup, ch chan news.Entry, loader loaderFn) {
 
 		if err != nil {
 			logger.
-				WithField("entry", v.Key()).
-				Error("data.IsRecorded: " + err.Error())
+				Error().
+				Err(err).
+				Str("entry", v.Key()).
+				Msg("Fail to check record")
 		}
 
 		if exist {
 			logger.
-				WithField("entry", v.Key()).
-				Warn("That entry already exist")
+				Warn().
+				Str("entry", v.Key()).
+				Msg("That entry already exist")
 		} else {
 			ch <- v
 		}

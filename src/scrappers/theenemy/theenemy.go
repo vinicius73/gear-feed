@@ -1,9 +1,8 @@
 package theenemy
 
 import (
-	"fmt"
 	"gfeed/news"
-	"gfeed/utils"
+	log "gfeed/utils/logger"
 	"regexp"
 	"strings"
 
@@ -15,11 +14,11 @@ const TYPE = "THE_ENEMY"
 const baseAddress = "https://www.theenemy.com.br"
 
 var reURL *regexp.Regexp
-var logger utils.Logger
+var logger log.Logger
 
 func init() {
 	reURL = regexp.MustCompile(`\((.*?)\)`)
-	logger = utils.NewLogger("scrapper:theenemy")
+	logger = log.New("scrapper:theenemy")
 }
 
 // Load the enemy news
@@ -36,29 +35,29 @@ func Load() []news.Entry {
 
 		entry := buildEntry(title, link, style)
 
-		logger.Debug("New Entry: " + link)
+		logger.Debug().Msgf("New Entry: %s", link)
 
 		entries = append(entries, entry)
 	})
 
 	c.OnError(func(r *colly.Response, e error) {
-		logger.Error("Fail: " + e.Error())
+		logger.Error().Err(e).Msg("Response failure")
 	})
 
 	c.OnResponse(func(r *colly.Response) {
-		logger.Debug(fmt.Sprintf("Voxel response: %v / %v", r.StatusCode, len(r.Body)))
+		logger.Debug().Msgf("Response: %v / %v", r.StatusCode, len(r.Body))
 	})
 
-	logger.Debug("Starting...")
+	logger.Debug().Msg("Starting...")
 
 	c.Visit(baseAddress + "/news")
 
-	logger.Debug("Done...")
+	logger.Debug().Msg("Done.")
 
 	c.Wait()
 
 	if len(entries) == 0 {
-		logger.Warn("Empty entries")
+		logger.Warn().Msg("Empty entries")
 	}
 
 	return entries

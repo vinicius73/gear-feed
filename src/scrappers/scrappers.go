@@ -11,18 +11,22 @@ func NewsEntries() (entries []news.Entry) {
 
 	ch := make(chan news.Entry, 100)
 
-	logger.Info("Starting scrappers...")
+	logger.Info().Msg("Starting scrappers...")
 
 	runWithChannels(&wg, ch)
 
-	logger.Info("Scrappers are finish...")
+	logger.Info().Msg("Scrappers are finish...")
 
 	for entry := range ch {
-		logger.WithField("type", entry.Type).Info("Entry: " + entry.Link)
+		logger.
+			Info().
+			Str("type", entry.Type).
+			Msgf("Entry: %s", entry.Link)
+
 		entries = append(entries, entry)
 	}
 
-	logger.Info("Done")
+	logger.Info().Msg("Done.")
 
 	return entries
 }
