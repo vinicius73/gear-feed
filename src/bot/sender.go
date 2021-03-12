@@ -58,7 +58,7 @@ func sendNews(b *tb.Bot, c Config) error {
 			b.Send(chat, buildMsg(entry))
 		}
 
-		time.Sleep(time.Second * 1)
+		time.Sleep(time.Microsecond * 100)
 	}
 
 	return sendResume(b, c, entries)
