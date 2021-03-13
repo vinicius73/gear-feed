@@ -1,0 +1,25 @@
+name: ADRENALINE
+base_url: https://adrenaline.com.br
+path: /noticias/pesquisa/todas/games/pagina/1
+limit: 2
+enabled: true
+attributes:
+  wrapper: .main article.post-h
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: .post-h__content > a
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: .post-h__content-title
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .post-h__image img
+    attribute: data-original
+    parse_strategy: ""
