@@ -31,7 +31,13 @@ func loadDefinitions() (definitions []loader.Definitions, err error) {
 			return definitions, err
 		}
 
-		definitions = append(definitions, def)
+		if def.Enabled {
+			definitions = append(definitions, def)
+		} else {
+			logger.Warn().
+				Msgf("Loasder %s is disabled", def.Name)
+		}
+
 	}
 
 	return definitions, nil

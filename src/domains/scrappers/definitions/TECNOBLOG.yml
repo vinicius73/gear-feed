@@ -2,6 +2,7 @@ name: TECNOBLOG
 base_url: https://tecnoblog.net
 path: /cat/games-jogos/
 limit: 2
+enabled: true
 attributes:
   wrapper: div.posts article.bloco
   category:

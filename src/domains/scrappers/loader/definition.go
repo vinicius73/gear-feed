@@ -9,6 +9,7 @@ import (
 
 type Definitions struct {
 	Name       string           `yaml:"name"`
+	Enabled    bool             `yaml:"enabled"`
 	BaseURL    string           `yaml:"base_url"`
 	Path       string           `yaml:"path"`
 	Limit      int8             `yaml:"limit"`

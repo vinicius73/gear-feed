@@ -2,6 +2,7 @@ name: MEIO_BIT
 base_url: https://tecnoblog.net
 path: /meiobit/arquivo/games/
 limit: 2
+enabled: true
 attributes:
   wrapper: section.hero .featured-link
   category:
