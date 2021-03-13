@@ -26,7 +26,25 @@ func (options Definitions) FindEnties() []news.Entry {
 
 	attributes := options.Attributes
 
+	skip := false
+	count := 0
+
 	c.OnHTML(attributes.Wrapper, func(e *colly.HTMLElement) {
+		count++
+		if skip {
+			return
+		}
+
+		if len(entries) >= int(options.Limit) {
+			skip = true
+
+			logger.
+				Warn().
+				Msgf("There is more than %v entries, skiping all new entries", options.Limit)
+
+			return
+		}
+
 		link := attributes.Link.findAttribute(e)
 		category := attributes.Category.findAttribute(e)
 
@@ -34,7 +52,7 @@ func (options Definitions) FindEnties() []news.Entry {
 			if !attributes.Category.isAllowed(category) {
 				logger.Warn().
 					Str("category", category).
-					Msgf("Skiped: %s", link)
+					Msgf("Skiped, that category is not allowed: %s", link)
 				return
 			}
 		}
@@ -65,21 +83,11 @@ func (options Definitions) FindEnties() []news.Entry {
 
 	c.Wait()
 
-	logger.Debug().Msg("Done.")
+	logger.Info().Msgf("Done with %v results and %v entries.", count, len(entries))
 
-	total := len(entries)
-
-	if total == 0 {
+	if len(entries) == 0 {
 		logger.Warn().
 			Msg("Empty result")
-	}
-
-	if total > int(options.Limit) {
-		logger.
-			Warn().
-			Msgf("Finded %v entries, the limit is %v", total, options.Limit)
-
-		return entries[0:options.Limit]
 	}
 
 	return entries
