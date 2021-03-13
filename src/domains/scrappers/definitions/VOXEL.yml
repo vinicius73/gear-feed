@@ -2,6 +2,7 @@ name: VOXEL
 base_url: https://www.tecmundo.com.br
 path: /voxel
 limit: 2
+enabled: true
 attributes:
   wrapper: article.tec--voxel-main__item
   category:

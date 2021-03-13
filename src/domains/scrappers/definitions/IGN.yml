@@ -2,6 +2,7 @@ name: IGN
 base_url: https://br.ign.com
 path: /
 limit: 2
+enabled: true
 attributes:
   wrapper: .hspotlight .card
   category:
