@@ -1,0 +1,25 @@
+name: JOVEM_NERD
+base_url: https://jovemnerd.com.br
+path: /bunker/categoria/games/
+limit: 2
+enabled: true
+attributes:
+  wrapper: .main-content article.card-post
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: .info .title a
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: .info .title a
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .image img
+    attribute: src
+    parse_strategy: ""
