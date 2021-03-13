@@ -7,5 +7,5 @@ import (
 var baseLogger log.Logger
 
 func init() {
-	baseLogger = log.New("common:scrapper")
+	baseLogger = log.New("scrapper:loader")
 }
