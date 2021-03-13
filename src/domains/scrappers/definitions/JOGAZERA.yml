@@ -1,0 +1,25 @@
+name: JOGAZERA
+base_url: https://jogazera.com.br
+path: /categoria/noticias/
+limit: 2
+enabled: true
+attributes:
+  wrapper: .tipi-row-inner-box.contents .block.tipi-flex article.tile-design
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: .meta .title a
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: .meta .title a
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .mask img
+    attribute: data-lazy-src
+    parse_strategy: ""
