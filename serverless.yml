@@ -6,7 +6,7 @@ provider:
   runtime: go1.x
   stage: ${opt:stage, 'dev'}
   lambdaHashingVersion: "20201221"
-  memorySize: 128
+  memorySize: 192
   timeout: 90
   logRetentionInDays: 5
   iam:
