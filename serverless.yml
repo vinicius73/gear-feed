@@ -25,8 +25,10 @@ provider:
 
   environment:
     LOG_FORMAT: json
-    TELEGRAM_TOKEN: ${env:TELEGRAM_TOKEN}
-    TELEGRAM_USER: ${env:TELEGRAM_USER}
+    AWS_DEFAULT_REGION: ${env:AWS_DEFAULT_REGION}
+    TELEGRAM_TOKEN:     ${env:TELEGRAM_TOKEN}
+    TELEGRAM_USER:      ${env:TELEGRAM_USER}
+    ENTRIES_TABLE:      { "Ref": "entriesTable" }
 
   tags:
     project: 'gamer-feed'
@@ -53,3 +55,28 @@ functions:
       - schedule: cron(0 23 * * ? *)       # 20h
       - schedule: cron(0 1 ? * MON-FRI *)  # 22h
       - schedule: cron(0 3 ? * MON-FRI *)  # 0h
+
+
+resources: # CloudFormation template syntax from here on.
+  Resources:
+    entriesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:service}-${self:provider.stage}-entries
+        AttributeDefinitions:
+          - AttributeName: type
+            AttributeType: S
+          - AttributeName: hash
+            AttributeType: S
+        KeySchema:
+          - AttributeName: type
+            KeyType: HASH
+          - AttributeName: hash
+            KeyType: RANGE
+        TimeToLiveSpecification:
+          AttributeName: ttl
+          Enabled: true
+        ProvisionedThroughput:
+          ReadCapacityUnits: 0
+          WriteCapacityUnits: 0
