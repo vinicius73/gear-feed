@@ -7,8 +7,6 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 )
 
-const dynamoDBTable = "gamer-feed-test"
-
 // Get entry from DynamoDB
 func Get(entry news.Entry) (*dynamodb.GetItemOutput, error) {
 	input := &dynamodb.GetItemInput{
