@@ -4,6 +4,7 @@ export $(shell sed 's/=.*//' ./.env)
 
 export CGO_ENABLED=0
 export GOOS=linux
+export ENTRIES_TABLE=gamer-feed-dev-entries
 
 GIT_COMMIT=$(shell git rev-list -1 HEAD)
 APP_VERSION=$(shell node -p "require('./package.json').version")

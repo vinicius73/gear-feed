@@ -25,7 +25,6 @@ provider:
 
   environment:
     LOG_FORMAT: json
-    AWS_DEFAULT_REGION: ${env:AWS_DEFAULT_REGION}
     TELEGRAM_TOKEN:     ${env:TELEGRAM_TOKEN}
     TELEGRAM_USER:      ${env:TELEGRAM_USER}
     ENTRIES_TABLE:      { "Ref": "entriesTable" }
