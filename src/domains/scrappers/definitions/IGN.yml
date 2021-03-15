@@ -1,10 +1,10 @@
 name: IGN
 base_url: https://br.ign.com
-path: /
+path: /news.xml
 limit: 2
 enabled: true
 attributes:
-  wrapper: .hspotlight .card
+  wrapper: //channel[1]/item
   category:
     path_finder:
       path: ""
@@ -12,11 +12,11 @@ attributes:
       parse_strategy: ""
     allows: []
   link:
-    path: .caption > a
-    attribute: href
+    path: /link
+    attribute: ""
     parse_strategy: ""
   title:
-    path: .caption > a
+    path: /title
     attribute: ""
     parse_strategy: ""
   image:

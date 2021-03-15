@@ -33,7 +33,7 @@ func (options Definitions) FindEnties() []news.Entry {
 
 	c.SetRequestTimeout(time.Second * 15)
 
-	c.OnHTML(attributes.Wrapper, func(e *colly.HTMLElement) {
+	callback := func(e Element, parser string) {
 		count++
 		if skip {
 			return
@@ -66,9 +66,20 @@ func (options Definitions) FindEnties() []news.Entry {
 
 		entry := options.buildEntry(title, link, image, category)
 
-		logger.Debug().Msgf("New entry: %s", entry.Link)
+		logger.
+			Debug().
+			Str("parser", parser).
+			Msgf("New entry: %s", entry.Link)
 
 		entries = append(entries, entry)
+	}
+
+	c.OnXML(attributes.Wrapper, func(e *colly.XMLElement) {
+		callback(e, "XML")
+	})
+
+	c.OnHTML(attributes.Wrapper, func(e *colly.HTMLElement) {
+		callback(e, "HTML")
 	})
 
 	c.OnError(func(r *colly.Response, e error) {
@@ -77,8 +88,6 @@ func (options Definitions) FindEnties() []news.Entry {
 
 	c.OnResponse(func(r *colly.Response) {
 		logger.Debug().Msgf("Response: %v / %v", r.StatusCode, len(r.Body))
-
-		// fmt.Println(string(r.Body))
 	})
 
 	logger.

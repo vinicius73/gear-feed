@@ -2,8 +2,6 @@ package loader
 
 import (
 	"strings"
-
-	"github.com/gocolly/colly"
 )
 
 type PathFinder struct {
@@ -25,7 +23,13 @@ type AttributesFinder struct {
 	Image    PathFinder         `yaml:"image"`
 }
 
-func (option PathFinder) findAttribute(e *colly.HTMLElement) string {
+type Element interface {
+	Attr(attribute string) string
+	ChildAttr(tag, attribute string) string
+	ChildText(tag string) string
+}
+
+func (option PathFinder) findAttribute(e Element) string {
 	val := option.findAttributeRaw(e)
 
 	if option.ParseStrategy == ParserStrategyStyle {
@@ -35,7 +39,7 @@ func (option PathFinder) findAttribute(e *colly.HTMLElement) string {
 	return val
 }
 
-func (option PathFinder) findAttributeRaw(e *colly.HTMLElement) string {
+func (option PathFinder) findAttributeRaw(e Element) string {
 	if len(option.Path) == 0 {
 		if len(option.Attribute) > 0 {
 			return e.Attr(option.Attribute)
