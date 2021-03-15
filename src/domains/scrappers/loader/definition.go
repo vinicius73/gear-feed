@@ -50,12 +50,12 @@ func (options Definitions) FindEnties() []news.Entry {
 		}
 
 		link := attributes.Link.findAttribute(e)
-		category := attributes.Category.findAttribute(e)
+		categories := attributes.Category.findCategories(e)
 
-		if len(attributes.Category.Path) > 0 && len(category) > 0 {
-			if !attributes.Category.isAllowed(category) {
+		if len(attributes.Category.Path) > 0 && len(categories) > 0 {
+			if !attributes.Category.isAllowed(categories) {
 				logger.Warn().
-					Str("category", category).
+					Strs("categories", categories).
 					Msgf("Skiped, that category is not allowed: %s", link)
 				return
 			}
@@ -64,7 +64,7 @@ func (options Definitions) FindEnties() []news.Entry {
 		image := attributes.Image.findAttribute(e)
 		title := attributes.Title.findAttribute(e)
 
-		entry := options.buildEntry(title, link, image, category)
+		entry := options.buildEntry(title, link, image, categories)
 
 		logger.
 			Debug().
@@ -117,13 +117,13 @@ func (d Definitions) visitURL() string {
 	return d.BaseURL + d.Path
 }
 
-func (d Definitions) buildEntry(title, link, image, category string) news.Entry {
+func (d Definitions) buildEntry(title, link, image string, categories []string) news.Entry {
 	return news.Entry{
-		Type:     d.Name,
-		Title:    title,
-		Category: category,
-		Link:     d.absouteURL(link),
-		Image:    d.absouteURL(image),
+		Type:       d.Name,
+		Title:      title,
+		Categories: categories,
+		Link:       d.absouteURL(link),
+		Image:      d.absouteURL(image),
 	}
 }
 
