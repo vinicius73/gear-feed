@@ -18,6 +18,8 @@ func init() {
 
 // SendNews to channel
 func SendNews(c Config) {
+	startTime := time.Now()
+
 	if c.DryRun {
 		logger.Warn().Msg("DryRun ON")
 	}
@@ -35,6 +37,10 @@ func SendNews(c Config) {
 		logger.Fatal().Err(err).Msg("Fail to send news")
 		return
 	}
+
+	logger.
+		Info().
+		Msgf("All done (%s)", time.Since(startTime).String())
 }
 
 func sendNews(b *tb.Bot, c Config) error {

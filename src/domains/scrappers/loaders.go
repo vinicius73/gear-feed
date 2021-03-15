@@ -49,7 +49,8 @@ func loadIntoChan(wg *sync.WaitGroup, ch chan news.Entry, loader loaderFn) {
 		if exist {
 			logger.
 				Warn().
-				Str("entry", v.Key()).
+				Str("scrapper", v.Type).
+				Str("title", v.Title).
 				Msg("That entry already exist")
 		} else {
 			ch <- v

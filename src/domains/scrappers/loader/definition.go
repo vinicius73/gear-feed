@@ -3,6 +3,7 @@ package loader
 import (
 	"gfeed/domains/news"
 	"strings"
+	"time"
 
 	"github.com/gocolly/colly"
 )
@@ -23,11 +24,14 @@ func (options Definitions) FindEnties() []news.Entry {
 	logger := baseLogger.With().Str("scrapper", options.Name).Logger()
 
 	c := colly.NewCollector()
+	startTime := time.Now()
 
 	attributes := options.Attributes
 
 	skip := false
 	count := 0
+
+	c.SetRequestTimeout(time.Second * 15)
 
 	c.OnHTML(attributes.Wrapper, func(e *colly.HTMLElement) {
 		count++
@@ -77,13 +81,20 @@ func (options Definitions) FindEnties() []news.Entry {
 		// fmt.Println(string(r.Body))
 	})
 
-	logger.Debug().Msg("Starting...")
+	logger.
+		Debug().
+		Msg("Starting...")
 
 	c.Visit(options.visitURL())
 
 	c.Wait()
 
-	logger.Info().Msgf("Done with %v results and %v entries.", count, len(entries))
+	duration := time.Since(startTime)
+
+	logger.
+		Info().
+		Dur("duration", duration).
+		Msgf("Done with %v results and %v entries (%s).", count, len(entries), duration.String())
 
 	if len(entries) == 0 {
 		logger.Warn().
