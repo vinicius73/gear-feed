@@ -1,6 +1,9 @@
 package cmd
 
-import "gfeed/domains/bot"
+import (
+	"gfeed/domains"
+	"gfeed/domains/bot"
+)
 
 func getBotConfig() bot.Config {
 	cfg := bot.Config{
@@ -8,6 +11,7 @@ func getBotConfig() bot.Config {
 		Channel: channel,
 		User:    user,
 		DryRun:  dryRun,
+		Info:    domains.Info(),
 	}
 
 	return cfg
