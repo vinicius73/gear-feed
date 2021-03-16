@@ -6,6 +6,7 @@ import (
 	"gfeed/domains/news/storage"
 	"gfeed/domains/scrappers"
 	"math/rand"
+	"strconv"
 	"strings"
 	"time"
 
@@ -96,17 +97,31 @@ func sendResume(b *tb.Bot, c Config, entries []news.Entry) error {
 		return err
 	}
 
+	counter := map[string]int{}
+
+	for _, entry := range entries {
+		counter[entry.Type] += 1
+	}
+
 	var builder strings.Builder
 
 	if c.DryRun {
 		builder.WriteString("🧪")
 	}
 
-	builder.WriteString("🤖")
-	builder.WriteString(time.Now().String())
+	builder.WriteString(fmt.Sprintf("🤖 v%s %s", c.Info.Version, c.Info.Commit))
+	builder.WriteString("\n")
+	builder.WriteString(time.Now().Format("2 Jan 2006 15:04:05 MST"))
 	builder.WriteString("\n")
 	builder.WriteString("\n")
 	builder.WriteString(fmt.Sprintf("Gamer Feed was executed [%v entries]", len(entries)))
+
+	for key, total := range counter {
+		builder.WriteString("\n")
+		builder.WriteString(key)
+		builder.WriteString(": ")
+		builder.WriteString(strconv.Itoa(total))
+	}
 
 	_, err = b.Send(chat, builder.String())
 
