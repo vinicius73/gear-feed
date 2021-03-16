@@ -7,10 +7,24 @@ attributes:
   wrapper: //channel[1]/item
   category:
     path_finder:
-      path: ""
+      path: /category
       attribute: ""
       parse_strategy: ""
-    allows: []
+    allows:
+    - playstation
+    - playstation-4
+    - playstation-5
+    - ps4
+    - ps5
+    - xbox
+    - xbox-360
+    - xbox-one
+    - xbox-series-s
+    - xbox-series-x
+    - nintendo
+    - nintendo-switch
+    - stadia
+    - pc
   link:
     path: /link
     attribute: ""
