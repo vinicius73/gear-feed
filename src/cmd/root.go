@@ -13,7 +13,6 @@ var token string
 var channel string
 var user string
 var dryRun bool
-var info ProcessInfo
 
 var rootCmd = &cobra.Command{
 	Use:    "gfeed",
@@ -36,9 +35,7 @@ func init() {
 }
 
 // Execute the process
-func Execute(i ProcessInfo) {
-	info = i
-
+func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)

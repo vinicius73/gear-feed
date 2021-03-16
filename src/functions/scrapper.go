@@ -1,6 +1,7 @@
 package main
 
 import (
+	"gfeed/domains"
 	"gfeed/domains/bot"
 	"gfeed/utils"
 
@@ -17,6 +18,7 @@ func handler(ev events.CloudWatchAlarmTrigger) error {
 		Token:   token,
 		Channel: channel,
 		User:    user,
+		Info:    domains.Info(),
 		DryRun:  false,
 	})
 

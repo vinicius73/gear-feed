@@ -10,7 +10,7 @@ GIT_COMMIT=$(shell git rev-list -1 HEAD)
 APP_VERSION=$(shell node -p "require('./package.json').version")
 BUILD_DATE=$(shell date '+%Y-%m-%d__%H:%M:%S')
 
-LDFLAGS=-ldflags "-X main.Commit=${GIT_COMMIT} -X main.Version=${APP_VERSION} -X main.BuildDate=${BUILD_DATE} "
+LDFLAGS=-ldflags "-X gfeed/domains.commit=${GIT_COMMIT} -X gfeed/domains.version=${APP_VERSION} -X gfeed/domains.buildDate=${BUILD_DATE} "
 BUILD_FLAGS=-a -installsuffix cgo -ldflags '-s -w -extldflags "-static"' ${LDFLAGS}
 
 version:
