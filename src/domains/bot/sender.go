@@ -80,11 +80,11 @@ func buildMsg(entry news.Entry) string {
 	builder.WriteString("\n")
 	builder.WriteString("#" + entry.Type)
 
-	if len(entry.Categories) > 0 {
-		for _, cat := range entry.Categories {
-			builder.WriteString(" #" + strings.ReplaceAll(cat, " ", "_"))
-		}
-	}
+	// if len(entry.Categories) > 0 {
+	// 	for _, cat := range entry.Categories {
+	// 		builder.WriteString(" #" + strings.ReplaceAll(cat, " ", "_"))
+	// 	}
+	// }
 
 	return builder.String()
 }
