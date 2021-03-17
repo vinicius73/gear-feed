@@ -15,12 +15,16 @@ type Entry struct {
 }
 
 // Hash of entry
-func (e Entry) Hash() string {
+func (e Entry) Hash() (string, error) {
 	h := md5.New()
 
-	h.Write([]byte(e.Link))
+	_, err := h.Write([]byte(e.Link))
 
-	return hex.EncodeToString(h.Sum(nil))
+	if err != nil {
+		return "", err
+	}
+
+	return hex.EncodeToString(h.Sum(nil)), nil
 }
 
 // Key of entry

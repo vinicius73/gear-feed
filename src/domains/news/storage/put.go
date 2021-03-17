@@ -16,7 +16,11 @@ func Put(entry news.Entry) error {
 	now := strconv.FormatInt(time.Now().Unix(), 10)
 	ttl := strconv.FormatInt(time.Now().Add(ttlTime).Unix(), 10)
 
-	item := toKeyAttributes(entry)
+	item, err := toKeyAttributes(entry)
+
+	if err != nil {
+		return err
+	}
 
 	item["title"] = &dynamodb.AttributeValue{
 		S: aws.String(entry.Title),
@@ -35,7 +39,7 @@ func Put(entry news.Entry) error {
 		TableName: aws.String(dynamoDBTable),
 	}
 
-	_, err := svc.PutItem(input)
+	_, err = svc.PutItem(input)
 
 	return err
 }
