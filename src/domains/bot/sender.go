@@ -61,8 +61,15 @@ func sendNews(b *tb.Bot, c Config) error {
 		logger.Info().Msgf("Sending: %s", entry.Link)
 
 		if !c.DryRun {
-			storage.Put(entry)
-			b.Send(chat, buildMsg(entry))
+			_ = storage.Put(entry)
+			_, err = b.Send(chat, buildMsg(entry))
+
+			if err != nil {
+				logger.
+					Error().
+					Err(err).
+					Msgf("Fail to send message")
+			}
 		}
 
 		time.Sleep(time.Microsecond * 100)

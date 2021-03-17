@@ -31,7 +31,7 @@ func init() {
 	flags.StringVarP(&channel, "channel", "c", "@GamerFeed", "Telegram Channel")
 	flags.BoolVarP(&dryRun, "dry", "", false, "Just try to run")
 
-	rootCmd.MarkFlagRequired("token")
+	_ = rootCmd.MarkFlagRequired("token")
 }
 
 // Execute the process
