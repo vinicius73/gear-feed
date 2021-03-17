@@ -12,7 +12,7 @@ name = "go"
 enabled = true
 
   [analyzers.meta]
-  import_paths = ["github.com/vinicius73/gamer-feed"]
+  import_paths = ["src"]
   dependencies_vendored = false
 
 [[transformers]]
