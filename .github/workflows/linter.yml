@@ -9,6 +9,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - run: cp .env.example .env
       - run: make init
 
       # Runs the Super-Linter action
