@@ -7,13 +7,14 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 )
 
-func toKeyAttributes(entry news.Entry) map[string]*dynamodb.AttributeValue {
+func toKeyAttributes(entry news.Entry) (map[string]*dynamodb.AttributeValue, error) {
+	hash, err := entry.Hash()
 	return map[string]*dynamodb.AttributeValue{
 		"type": {
 			S: aws.String(entry.Type),
 		},
 		"hash": {
-			S: aws.String(entry.Hash()),
+			S: aws.String(hash),
 		},
-	}
+	}, err
 }

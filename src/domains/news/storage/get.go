@@ -9,8 +9,14 @@ import (
 
 // Get entry from DynamoDB
 func Get(entry news.Entry) (*dynamodb.GetItemOutput, error) {
+	key, err := toKeyAttributes(entry)
+
+	if err != nil {
+		return nil, err
+	}
+
 	input := &dynamodb.GetItemInput{
-		Key:       toKeyAttributes(entry),
+		Key:       key,
 		TableName: aws.String(dynamoDBTable),
 	}
 
