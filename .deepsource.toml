@@ -13,7 +13,7 @@ enabled = true
 
   [analyzers.meta]
   import_paths = ["github.com/vinicius73/gamer-feed/src"]
-  dependencies_vendored = true
+  dependencies_vendored = false
 
 [[transformers]]
 name = "gofmt"
