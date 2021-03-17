@@ -94,7 +94,16 @@ func (options Definitions) FindEnties() []news.Entry {
 		Debug().
 		Msg("Starting...")
 
-	c.Visit(options.visitURL())
+	err := c.Visit(options.visitURL())
+
+	if err != nil {
+		logger.
+			Error().
+			Err(err).
+			Msgf("Fail to visit %s", options.visitURL())
+
+		return entries
+	}
 
 	c.Wait()
 
