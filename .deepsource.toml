@@ -1,0 +1,13 @@
+version = 1
+
+[[analyzers]]
+name = "go"
+enabled = true
+
+  [analyzers.meta]
+  import_paths = ["github.com/vinicius73/gamer-feed"]
+  dependencies_vendored = true
+
+[[transformers]]
+name = "gofmt"
+enabled = true
