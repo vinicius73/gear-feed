@@ -9,6 +9,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - run: make init
+
       # Runs the Super-Linter action
       - name: Run Super-Linter
         uses: github/super-linter@v3
