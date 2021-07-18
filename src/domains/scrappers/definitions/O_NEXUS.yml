@@ -1,0 +1,25 @@
+name: O_NEXUS
+base_url: https://onexus.games
+path: /blog-feed/
+limit: 2
+enabled: false
+attributes:
+  wrapper: .site-main article
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: .entry-title a
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: ..entry-title a
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .entry-thumbnail img
+    attribute: src
+    parse_strategy: ""
