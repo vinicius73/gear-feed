@@ -2,6 +2,7 @@
 !/bin/.gitkeep
 src/vendor
 .env
+.idea
 
 # Logs
 logs
