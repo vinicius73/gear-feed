@@ -21,7 +21,7 @@ func Agent(c Config) {
 			logger.
 				Warn().
 				Err(err).
-				Int("sender.id", m.Sender.ID).
+				Int64("sender.id", m.Sender.ID).
 				Msg("Fail to send message")
 		}
 	})
