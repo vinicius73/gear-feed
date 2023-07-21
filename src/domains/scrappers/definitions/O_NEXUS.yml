@@ -2,7 +2,7 @@ name: O_NEXUS
 base_url: https://onexus.games
 path: /blog-feed/
 limit: 2
-enabled: true
+enabled: false
 attributes:
   wrapper: .site-main article
   category:
