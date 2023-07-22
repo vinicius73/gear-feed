@@ -35,7 +35,7 @@ func loadDefinitions() (definitions []loader.Definitions, err error) {
 			definitions = append(definitions, def)
 		} else {
 			logger.Warn().
-				Msgf("Loasder %s is disabled", def.Name)
+				Msgf("Loader %s is disabled", def.Name)
 		}
 
 	}
