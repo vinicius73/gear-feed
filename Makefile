@@ -3,7 +3,7 @@ include ./.env
 export $(shell sed 's/=.*//' ./.env)
 
 export CGO_ENABLED=0
-# export GOOS=linux
+export GOOS=linux
 export ENTRIES_TABLE=gamer-feed-dev-entries
 export LOG_LEVEL=debug
 
