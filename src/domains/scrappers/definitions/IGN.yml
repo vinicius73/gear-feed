@@ -3,6 +3,7 @@ base_url: https://br.ign.com
 path: /news.xml
 limit: 2
 enabled: true
+parser: XML
 attributes:
   wrapper: //channel[1]/item
   category:
@@ -11,20 +12,21 @@ attributes:
       attribute: ""
       parse_strategy: ""
     allows:
-    - playstation
-    - playstation-4
-    - playstation-5
-    - ps4
-    - ps5
-    - xbox
-    - xbox-360
-    - xbox-one
-    - xbox-series-s
-    - xbox-series-x
-    - nintendo
-    - nintendo-switch
-    - stadia
-    - pc
+      - games
+      - playstation
+      - playstation-4
+      - playstation-5
+      - ps4
+      - ps5
+      - xbox
+      - xbox-360
+      - xbox-one
+      - xbox-series-s
+      - xbox-series-x
+      - nintendo
+      - nintendo-switch
+      - stadia
+      - pc
   link:
     path: /link
     attribute: ""

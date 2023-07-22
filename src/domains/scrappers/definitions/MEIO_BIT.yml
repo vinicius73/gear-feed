@@ -1,10 +1,11 @@
 name: MEIO_BIT
-base_url: https://tecnoblog.net
-path: /meiobit/arquivo/games/
+base_url: https://meiobit.com
+path: /tema/games/
 limit: 2
 enabled: true
+parser: HTML
 attributes:
-  wrapper: section.hero .featured-link
+  wrapper: ".hero a.featured-link"
   category:
     path_finder:
       path: ""
@@ -20,6 +21,6 @@ attributes:
     attribute: ""
     parse_strategy: ""
   image:
-    path: .big-featured,.small-featured
+    path: .big-featured
     attribute: style
-    parse_strategy: style
+    parse_strategy: "style"

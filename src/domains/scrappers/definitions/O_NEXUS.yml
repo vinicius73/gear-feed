@@ -3,6 +3,7 @@ base_url: https://onexus.games
 path: /blog-feed/
 limit: 2
 enabled: false
+parser: HTML
 attributes:
   wrapper: .site-main article
   category:
