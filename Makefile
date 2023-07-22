@@ -4,6 +4,7 @@ export $(shell sed 's/=.*//' ./.env)
 
 export CGO_ENABLED=0
 export GOOS=linux
+export GOARCH=amd64
 export ENTRIES_TABLE=gamer-feed-dev-entries
 export LOG_LEVEL=debug
 
