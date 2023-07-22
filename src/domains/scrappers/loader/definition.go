@@ -14,6 +14,7 @@ type Definitions struct {
 	BaseURL    string           `yaml:"base_url"`
 	Path       string           `yaml:"path"`
 	Limit      int8             `yaml:"limit"`
+	Parser     string           `yaml:"parser"`
 	Attributes AttributesFinder `yaml:"attributes"`
 }
 
@@ -64,6 +65,10 @@ func (options Definitions) FindEnties() []news.Entry {
 		image := attributes.Image.findAttribute(e)
 		title := attributes.Title.findAttribute(e)
 
+		if len(title) > 150 {
+			title = title[:150]
+		}
+
 		entry := options.buildEntry(title, link, image, categories)
 
 		logger.
@@ -74,13 +79,17 @@ func (options Definitions) FindEnties() []news.Entry {
 		entries = append(entries, entry)
 	}
 
-	c.OnXML(attributes.Wrapper, func(e *colly.XMLElement) {
-		callback(e, "XML")
-	})
+	if options.Parser == "XML" {
+		c.OnXML(attributes.Wrapper, func(e *colly.XMLElement) {
+			callback(e, "XML")
+		})
+	}
 
-	c.OnHTML(attributes.Wrapper, func(e *colly.HTMLElement) {
-		callback(e, "HTML")
-	})
+	if options.Parser == "" || options.Parser == "HTML" {
+		c.OnHTML(attributes.Wrapper, func(e *colly.HTMLElement) {
+			callback(e, "HTML")
+		})
+	}
 
 	c.OnError(func(r *colly.Response, e error) {
 		logger.Error().Err(e).Msg("Response failure")
