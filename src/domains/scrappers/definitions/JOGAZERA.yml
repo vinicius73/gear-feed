@@ -3,6 +3,7 @@ base_url: https://jogazera.com.br
 path: /categoria/noticias/
 limit: 2
 enabled: true
+parser: HTML
 attributes:
   wrapper: .tipi-row-inner-box.contents .block.tipi-flex article.tile-design
   category:

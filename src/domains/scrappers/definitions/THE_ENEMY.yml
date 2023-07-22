@@ -3,6 +3,7 @@ base_url: https://www.theenemy.com.br
 path: /news
 limit: 2
 enabled: true
+parser: HTML
 attributes:
   wrapper: div[data-content-type='featured'] .card__wrapper
   category:

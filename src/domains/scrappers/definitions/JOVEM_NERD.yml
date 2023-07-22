@@ -3,6 +3,7 @@ base_url: https://jovemnerd.com.br
 path: /bunker/categoria/games/
 limit: 2
 enabled: true
+parser: HTML
 attributes:
   wrapper: .main-content article.card-post
   category:
