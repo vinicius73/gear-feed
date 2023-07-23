@@ -48,7 +48,7 @@ func getLogLevel(val string) zerolog.Level {
 }
 
 func buildBaseLogger(logger zerolog.Logger, format string) zerolog.Logger {
-	logger = logger.With().Str("name", pkg.APP_NAME).Logger()
+	logger = logger.With().Str("name", pkg.AppName).Logger()
 
 	switch format {
 	case "text":

@@ -6,6 +6,7 @@ linters:
     - errcheck
     - wrapcheck
     - depguard
+    - tagliatelle
   presets:
     - bugs
     - comment
@@ -20,3 +21,11 @@ linters:
     - style
     - test
     - unused
+
+linters-settings:
+  varnamelen:
+    ignore-type-assert-ok: true
+    ignore-decls:
+      - el Element
+    ignore-names:
+      - err

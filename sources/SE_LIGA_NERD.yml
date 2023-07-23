@@ -1,0 +1,26 @@
+name: SE_LIGA_NERD
+base_url: https://seliganerd.com
+path: /noticias/games/
+limit: 3
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: ".elementor-posts-container article.post"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: "h3 a"
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: "h3 a"
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: a img
+    attribute: src
+    parse_strategy: ""
