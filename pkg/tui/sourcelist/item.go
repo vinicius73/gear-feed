@@ -5,9 +5,7 @@ import (
 	"github.com/vinicius73/gamer-feed/pkg/scraper"
 )
 
-var (
-	_ list.DefaultItem = SourceItem{}
-)
+var _ list.DefaultItem = SourceItem{}
 
 type SourceItem struct {
 	scraper.SourceDefinition
