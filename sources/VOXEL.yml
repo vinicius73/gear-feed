@@ -1,0 +1,26 @@
+name: VOXEL
+base_url: https://www.tecmundo.com.br
+path: /voxel
+limit: 2
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: article.tec--voxel-main__item
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: figure > a
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: .tec--voxel-main__item__title a.tec--voxel-main__item__title__link
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: img.tec--voxel-main__item__thumb__image
+    attribute: data-src
+    parse_strategy: ""

@@ -2,9 +2,9 @@ package support
 
 import "strings"
 
-func Find[T comparable](list []T, val T) (int, bool) {
+func FindIndex[T any](list []T, test func(T) bool) (int, bool) {
 	for i, item := range list {
-		if item == val {
+		if test(item) {
 			return i, true
 		}
 	}
@@ -13,7 +13,7 @@ func Find[T comparable](list []T, val T) (int, bool) {
 }
 
 func Contains[T comparable](list []T, val T) bool {
-	_, ok := Find(list, val)
+	_, ok := FindIndex(list, func(row T) bool { return row == val })
 
 	return ok
 }
