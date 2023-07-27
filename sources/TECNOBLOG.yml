@@ -17,7 +17,7 @@ attributes:
     attribute: href
     parse_strategy: ""
   title:
-    path: .caption h2
+    path: .texts h2
     attribute: ""
     parse_strategy: ""
   image:
