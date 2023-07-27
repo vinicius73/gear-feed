@@ -53,12 +53,22 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 		}
 
-		// if k == "q" || k == "esc" || k == "ctrl+c" {
-		// 	m.quitting = true
-		// 	return m, tea.Quit
-		// }
+		if k == "q" || k == "ctrl+c" {
+			return m, tea.Quit
+		}
+
+		if m.mode != detailMode && k == "esc" {
+			return m, tea.Quit
+		}
 	}
 	switch msg := msg.(type) {
+	case tui.BackMsg:
+		if m.mode == detailMode {
+			m.mode = listMode
+			return m, nil
+		}
+		return m, tea.Quit
+
 	case tui.ErrorMsg:
 		m.err = msg
 		return m, cmd
