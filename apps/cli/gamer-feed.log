@@ -1,0 +1,26 @@
+{"level":"info","process":"tui","time":1690417634,"message":"loading links"}
+{"level":"debug","process":"tui","source":"SE_LIGA_NERD","time":1690417641,"message":"Response: 200 / 153713"}
+{"level":"debug","process":"tui","source":"SE_LIGA_NERD","time":1690417641,"message":"New entry: https://seliganerd.com/146-milhoes-de-copias-resident-evil-alcanca-marco-historico-de-vendas-na-capcom/"}
+{"level":"debug","process":"tui","source":"SE_LIGA_NERD","time":1690417641,"message":"New entry: https://seliganerd.com/project-l-novo-jogo-de-luta-da-riot-games-revela-modo-cooperativo-2x2/"}
+{"level":"debug","process":"tui","source":"SE_LIGA_NERD","time":1690417641,"message":"New entry: https://seliganerd.com/playstation-earbuds-tecnologia-que-promete-imersao-total-nos-jogos/"}
+{"level":"debug","process":"tui","source":"SE_LIGA_NERD","time":1690417641,"message":"New entry: https://seliganerd.com/forza-motorsport-2023-uma-revolucao-realista-nos-games-de-corrida/"}
+{"level":"debug","process":"tui","source":"SE_LIGA_NERD","time":1690417641,"message":"New entry: https://seliganerd.com/one-dd-playtest-6-o-racismo-continua/"}
+{"level":"debug","process":"tui","source":"SE_LIGA_NERD","time":1690417641,"message":"New entry: https://seliganerd.com/action-figure-de-spider-man-2-revela-o-traje-simbionte-em-detalhes/"}
+{"level":"debug","process":"tui","source":"SE_LIGA_NERD","time":1690417641,"message":"New entry: https://seliganerd.com/insomniac-surpreende-com-novo-projeto-aaa-e-possivel-incursao-no-mundo-multiplayer/"}
+{"level":"debug","process":"tui","source":"SE_LIGA_NERD","time":1690417641,"message":"New entry: https://seliganerd.com/exoprimal-lutando-para-ser-extinto/"}
+{"level":"debug","process":"tui","source":"SE_LIGA_NERD","time":1690417641,"message":"New entry: https://seliganerd.com/o-legado-e-a-historia-nos-50-anos-de-rpg/"}
+{"level":"info","process":"tui","source":"SE_LIGA_NERD","time":1690417641,"message":"Fetching source"}
+{"level":"info","process":"tui","source":"SE_LIGA_NERD","duration":1560,"time":1690417641,"message":"Done with 9 entries (1.5607925s)."}
+{"level":"info","process":"tui","time":1690417837,"message":"loading links"}
+{"level":"debug","process":"tui","source":"SE_LIGA_NERD","time":1690417837,"message":"Response: 200 / 153713"}
+{"level":"debug","process":"tui","source":"SE_LIGA_NERD","time":1690417837,"message":"New entry: https://seliganerd.com/146-milhoes-de-copias-resident-evil-alcanca-marco-historico-de-vendas-na-capcom/"}
+{"level":"debug","process":"tui","source":"SE_LIGA_NERD","time":1690417837,"message":"New entry: https://seliganerd.com/project-l-novo-jogo-de-luta-da-riot-games-revela-modo-cooperativo-2x2/"}
+{"level":"debug","process":"tui","source":"SE_LIGA_NERD","time":1690417837,"message":"New entry: https://seliganerd.com/playstation-earbuds-tecnologia-que-promete-imersao-total-nos-jogos/"}
+{"level":"debug","process":"tui","source":"SE_LIGA_NERD","time":1690417837,"message":"New entry: https://seliganerd.com/forza-motorsport-2023-uma-revolucao-realista-nos-games-de-corrida/"}
+{"level":"debug","process":"tui","source":"SE_LIGA_NERD","time":1690417837,"message":"New entry: https://seliganerd.com/one-dd-playtest-6-o-racismo-continua/"}
+{"level":"debug","process":"tui","source":"SE_LIGA_NERD","time":1690417837,"message":"New entry: https://seliganerd.com/action-figure-de-spider-man-2-revela-o-traje-simbionte-em-detalhes/"}
+{"level":"debug","process":"tui","source":"SE_LIGA_NERD","time":1690417837,"message":"New entry: https://seliganerd.com/insomniac-surpreende-com-novo-projeto-aaa-e-possivel-incursao-no-mundo-multiplayer/"}
+{"level":"debug","process":"tui","source":"SE_LIGA_NERD","time":1690417837,"message":"New entry: https://seliganerd.com/exoprimal-lutando-para-ser-extinto/"}
+{"level":"debug","process":"tui","source":"SE_LIGA_NERD","time":1690417837,"message":"New entry: https://seliganerd.com/o-legado-e-a-historia-nos-50-anos-de-rpg/"}
+{"level":"info","process":"tui","source":"SE_LIGA_NERD","time":1690417837,"message":"Fetching source"}
+{"level":"info","process":"tui","source":"SE_LIGA_NERD","duration":152,"time":1690417837,"message":"Done with 9 entries (152.425959ms)."}

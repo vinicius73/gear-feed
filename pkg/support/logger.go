@@ -34,6 +34,17 @@ func Logger(process string, tags map[string]interface{}) zerolog.Logger {
 	return builder.Fields(tags).Logger()
 }
 
+func LoggerToFile(file string) (*os.File, error) {
+	f, err := os.OpenFile(file, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o644)
+	if err != nil {
+		return f, err
+	}
+
+	log.Logger = log.Output(f)
+
+	return f, nil
+}
+
 func getLogLevel(val string) zerolog.Level {
 	level := strings.ToLower(val)
 
