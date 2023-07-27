@@ -2,8 +2,10 @@ package tui
 
 import "github.com/charmbracelet/lipgloss"
 
-var windowWidth = 0
-var windowHeight = 0
+var (
+	windowWidth  = 0
+	windowHeight = 0
+)
 
 type WindowSize struct {
 	Width  int

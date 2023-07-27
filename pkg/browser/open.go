@@ -17,5 +17,4 @@ func OpenURL(url string) error {
 	default:
 		return fmt.Errorf("unsupported platform")
 	}
-
 }
