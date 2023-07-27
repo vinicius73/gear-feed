@@ -8,7 +8,7 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/rs/zerolog"
+	"github.com/vinicius73/gamer-feed/pkg/browser"
 	"github.com/vinicius73/gamer-feed/pkg/scraper"
 	"github.com/vinicius73/gamer-feed/pkg/tui"
 )
@@ -35,12 +35,11 @@ type Model struct {
 func buildList(entry scraper.SourceDefinition, entries []list.Item) list.Model {
 	windowSize := tui.GetWindowSize()
 
-	l := list.New(entries, list.NewDefaultDelegate(), windowSize.Width, windowSize.Height)
+	delegate := newItemDelegate(newDelegateKeyMap())
+
+	l := list.New(entries, delegate, windowSize.Width, windowSize.Height)
 	l.Title = entry.Name
 	l.Styles.Title = tui.TitleStyle
-	// list.Styles.Spinner = tui.SpinnerStyle
-	// list.SetSpinner(spinner.Dot)
-	// list.StartSpinner()
 
 	return l
 }
@@ -91,6 +90,18 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, tea.Sequence(cmds...)
 	}
 
+	// handle link selection
+	if link, ok := msg.(Link); ok {
+		err := browser.OpenURL(link.Entry.Link)
+		if err != nil {
+			return m, func() tea.Msg {
+				return tui.Error(err)
+			}
+		}
+
+		return m, nil
+	}
+
 	switch msg := msg.(type) {
 	case readyMsg:
 	case tea.WindowSizeMsg:
@@ -131,11 +142,9 @@ func (m Model) View() string {
 
 func (m Model) loadLinks() tea.Cmd {
 	ctx, cancel := context.WithTimeout(m.ctx, time.Second*10)
-	logger := zerolog.Ctx(ctx)
 
 	return func() tea.Msg {
 		defer cancel()
-		logger.Info().Msg("loading links")
 
 		entries, err := scraper.FindEntries(ctx, m.entry)
 		if err != nil {
