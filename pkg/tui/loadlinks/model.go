@@ -90,6 +90,13 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, tea.Sequence(cmds...)
 	}
 
+	// handle esc key
+	if msg, ok := msg.(tea.KeyMsg); ok {
+		if msg.Type == tea.KeyEscape {
+			return m, tui.Back
+		}
+	}
+
 	// handle link selection
 	if link, ok := msg.(Link); ok {
 		err := browser.OpenURL(link.Entry.Link)
