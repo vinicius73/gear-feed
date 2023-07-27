@@ -1,0 +1,26 @@
+name: MEIO_BIT
+base_url: https://meiobit.com
+path: /tema/games/
+limit: 2
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: ".hero a.featured-link"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: ""
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: .caption h2
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .big-featured
+    attribute: style
+    parse_strategy: "style"
