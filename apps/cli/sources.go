@@ -12,7 +12,7 @@ func sourcesCMD() *cli.Command {
 	list := &cli.Command{
 		Name: "list",
 		Action: func(cmd *cli.Context) error {
-			list, err := sources.LoadDefinitions(cmd.Context)
+			list, err := sources.LoadDefinitions(cmd.Context, sources.LoadOptions{})
 			if err != nil {
 				return err
 			}
