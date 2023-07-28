@@ -14,7 +14,7 @@ func main() {
 		Name:  "gamerfeed",
 		Usage: "Gamer Feed Bot CLI",
 		Commands: []*cli.Command{
-			listCMD(),
+			sourcesCMD(),
 		},
 		Action: func(*cli.Context) error {
 			fmt.Println(pkg.VersionVerbose())

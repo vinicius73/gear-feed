@@ -8,8 +8,8 @@ import (
 	"github.com/vinicius73/gamer-feed/sources"
 )
 
-func listCMD() *cli.Command {
-	return &cli.Command{
+func sourcesCMD() *cli.Command {
+	list := &cli.Command{
 		Name: "list",
 		Action: func(cmd *cli.Context) error {
 			list, err := sources.LoadDefinitions(cmd.Context)
@@ -17,12 +17,16 @@ func listCMD() *cli.Command {
 				return err
 			}
 
-			f, err := support.LoggerToFile("gamer-feed.log")
-			if err != nil {
-				return err
-			}
+			logFile := cmd.String("log-file")
 
-			defer f.Close()
+			if logFile != "" {
+				f, err := support.LoggerToFile(logFile)
+				if err != nil {
+					return err
+				}
+
+				defer f.Close()
+			}
 
 			logger := support.Logger("tui", nil)
 
@@ -39,5 +43,18 @@ func listCMD() *cli.Command {
 
 			return nil
 		},
+	}
+
+	return &cli.Command{
+		Name:        "sources",
+		Description: "Interact with sources",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:  "log-file",
+				Value: "",
+				Usage: "Store logs in a file",
+			},
+		},
+		Subcommands: []*cli.Command{list},
 	}
 }
