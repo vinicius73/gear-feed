@@ -6,13 +6,18 @@ import (
 
 	"github.com/rs/zerolog"
 	"github.com/vinicius73/gamer-feed/pkg/scraper"
+	"github.com/vinicius73/gamer-feed/pkg/support"
 	"gopkg.in/yaml.v2"
 )
 
 //go:embed *.yml
 var files embed.FS
 
-func LoadDefinitions(ctx context.Context) ([]scraper.SourceDefinition, error) {
+type LoadOptions struct {
+	Only []string
+}
+
+func LoadDefinitions(ctx context.Context, options LoadOptions) ([]scraper.SourceDefinition, error) {
 	definitions := []scraper.SourceDefinition{}
 
 	dir, err := files.ReadDir(".")
@@ -33,7 +38,15 @@ func LoadDefinitions(ctx context.Context) ([]scraper.SourceDefinition, error) {
 			return definitions, err
 		}
 
-		if def.Enabled {
+		if len(options.Only) > 0 {
+			if support.Contains(options.Only, def.Name) {
+				definitions = append(definitions, def)
+			} else {
+				logger.Warn().
+					Msgf("Loader %s is not in the list of loaders to be loaded", def.Name)
+			}
+
+		} else if def.Enabled {
 			definitions = append(definitions, def)
 		} else {
 			logger.Warn().

@@ -12,10 +12,22 @@ func scrapCMD() *cli.Command {
 	load := &cli.Command{
 		Name:        "load",
 		Description: `Load scrap data from sources.`,
+		Flags: []cli.Flag{
+			&cli.StringSliceFlag{
+				Name:    "only",
+				Usage:   "Load only the specified loaders",
+				Aliases: []string{"o"},
+			},
+		},
 		Action: func(cmd *cli.Context) error {
 			logger := zerolog.Ctx(cmd.Context)
 
-			list, err := sources.LoadDefinitions(cmd.Context)
+			only := cmd.StringSlice("only")
+
+			list, err := sources.LoadDefinitions(cmd.Context, sources.LoadOptions{
+				Only: only,
+			})
+
 			if err != nil {
 				return err
 			}
@@ -31,9 +43,9 @@ func scrapCMD() *cli.Command {
 
 			logger.Info().Msgf("Found %d entries", len(entries))
 
-			for _, entry := range entries {
-				logger.Info().Msgf("Entry: %s", entry.Link)
-			}
+			// for _, entry := range entries {
+			// 	logger.Info().Msgf("Entry: %s", entry.Link)
+			// }
 
 			return nil
 		},
