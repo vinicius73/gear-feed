@@ -13,6 +13,8 @@ attributes:
       parse_strategy: ""
     allows:
       - games
+      - prime gaming
+      - capcom
       - playstation
       - playstation-4
       - playstation-5
@@ -25,6 +27,8 @@ attributes:
       - xbox-series-x
       - nintendo
       - nintendo-switch
+      - nintendo switch
+      - sega
       - stadia
       - pc
   link:
