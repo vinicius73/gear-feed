@@ -1,25 +1,22 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
 	"github.com/urfave/cli/v2"
-	"github.com/vinicius73/gamer-feed/pkg"
+	"github.com/vinicius73/gamer-feed/pkg/support"
 )
 
 func main() {
+	support.SetupLogger("DEBUG", "text", nil)
+
 	app := &cli.App{
 		Name:  "gamerfeed",
 		Usage: "Gamer Feed Bot CLI",
 		Commands: []*cli.Command{
 			sourcesCMD(),
-		},
-		Action: func(*cli.Context) error {
-			fmt.Println(pkg.VersionVerbose())
-
-			return nil
+			scrapCMD(),
 		},
 	}
 
