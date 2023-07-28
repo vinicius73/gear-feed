@@ -113,17 +113,21 @@ func visit(ctx context.Context, source SourceDefinition, callback func(e Element
 func onEntry(ctx context.Context, source SourceDefinition, el Element) (Entry, error) {
 	attributes := source.Attributes
 
+	title := attributes.Title.findAttribute(el)
+
 	categories := support.ToLower(attributes.Category.findCategories(el))
 
 	if !attributes.Category.isAllowed(categories) {
-		zerolog.Ctx(ctx).Debug().Strs("categories", categories).Msg("Category not allowed")
+		zerolog.Ctx(ctx).Debug().
+			Strs("categories", categories).
+			Str("title", title).
+			Msg(ErrCategoryNotAllowed.Error())
 
 		return Entry{}, ErrCategoryNotAllowed
 	}
 
 	link := attributes.Link.findAttribute(el)
 	image := attributes.Image.findAttribute(el)
-	title := attributes.Title.findAttribute(el)
 
 	if len(title) > titleLimit {
 		title = title[:titleLimit]
