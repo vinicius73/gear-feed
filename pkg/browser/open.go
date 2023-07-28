@@ -1,10 +1,12 @@
 package browser
 
 import (
-	"fmt"
+	"errors"
 	"os/exec"
 	"runtime"
 )
+
+var ErrUnsupportedPlatform = errors.New("unsupported platform")
 
 func OpenURL(url string) error {
 	switch runtime.GOOS {
@@ -15,6 +17,6 @@ func OpenURL(url string) error {
 	case "darwin":
 		return exec.Command("open", url).Start()
 	default:
-		return fmt.Errorf("unsupported platform")
+		return ErrUnsupportedPlatform
 	}
 }

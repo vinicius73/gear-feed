@@ -17,20 +17,24 @@ const (
 	detailMode
 )
 
+//nolint:containedctx
 type Model struct {
 	list     tea.Model
 	links    tea.Model
 	mode     mode
-	err      error
 	ctx      context.Context
+	err      error
 	quitting bool
 }
 
 func NewModel(ctx context.Context, sources []scraper.SourceDefinition) Model {
 	return Model{
-		ctx:  ctx,
-		mode: listMode,
-		list: sourcelist.New(sources),
+		ctx:      ctx,
+		mode:     listMode,
+		list:     sourcelist.New(sources),
+		quitting: false,
+		links:    nil,
+		err:      nil,
 	}
 }
 
@@ -47,17 +51,18 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	if msg, ok := msg.(tea.KeyMsg); ok {
-		k := msg.String()
-		if m.err != nil && (k == "esc") {
+		key := msg.String()
+		if m.err != nil && (key == "esc") {
 			m.err = nil
+
 			return m, nil
 		}
 
-		if k == "q" || k == "ctrl+c" {
+		if key == "q" || key == "ctrl+c" {
 			return m, tea.Quit
 		}
 
-		if m.mode != detailMode && k == "esc" {
+		if m.mode != detailMode && key == "esc" {
 			return m, tea.Quit
 		}
 	}
@@ -65,16 +70,20 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tui.BackMsg:
 		if m.mode == detailMode {
 			m.mode = listMode
+
 			return m, nil
 		}
+
 		return m, tea.Quit
 
-	case tui.ErrorMsg:
+	case tui.MsgError:
 		m.err = msg
+
 		return m, cmd
 	case scraper.SourceDefinition:
 		m.mode = detailMode
 		m.links = loadlinks.New(m.ctx, msg)
+
 		return m, m.links.Init()
 	}
 

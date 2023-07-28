@@ -13,6 +13,8 @@ import (
 	"github.com/vinicius73/gamer-feed/pkg/tui"
 )
 
+const loadTimeout = time.Second * 10
+
 type state int
 
 const (
@@ -24,12 +26,13 @@ type readyMsg struct {
 	entries []list.Item
 }
 
+//nolint:containedctx
 type Model struct {
 	ctx     context.Context
 	entry   scraper.SourceDefinition
-	list    list.Model
 	spinner spinner.Model
 	state   state
+	list    list.Model `exhaustruct:"optional"`
 }
 
 func buildList(entry scraper.SourceDefinition, entries []list.Item) list.Model {
@@ -45,13 +48,13 @@ func buildList(entry scraper.SourceDefinition, entries []list.Item) list.Model {
 }
 
 func New(ctx context.Context, entry scraper.SourceDefinition) Model {
-	s := spinner.New()
-	s.Spinner = spinner.Dot
-	s.Style = tui.SpinnerStyle
+	spn := spinner.New()
+	spn.Spinner = spinner.Dot
+	spn.Style = tui.SpinnerStyle
 
 	return Model{
 		ctx:     ctx,
-		spinner: s,
+		spinner: spn,
 		state:   loading,
 		entry:   entry,
 	}
@@ -148,7 +151,7 @@ func (m Model) View() string {
 }
 
 func (m Model) loadLinks() tea.Cmd {
-	ctx, cancel := context.WithTimeout(m.ctx, time.Second*10)
+	ctx, cancel := context.WithTimeout(m.ctx, loadTimeout)
 
 	return func() tea.Msg {
 		defer cancel()

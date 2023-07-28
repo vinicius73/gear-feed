@@ -12,9 +12,9 @@ type delegateKeyMap struct {
 }
 
 func newItemDelegate(keys *delegateKeyMap) list.DefaultDelegate {
-	d := list.NewDefaultDelegate()
+	def := list.NewDefaultDelegate()
 
-	d.UpdateFunc = func(msg tea.Msg, m *list.Model) tea.Cmd {
+	def.UpdateFunc = func(msg tea.Msg, m *list.Model) tea.Cmd {
 		// var title string
 		var item scraper.SourceDefinition
 
@@ -43,15 +43,15 @@ func newItemDelegate(keys *delegateKeyMap) list.DefaultDelegate {
 
 	help := []key.Binding{keys.choose}
 
-	d.ShortHelpFunc = func() []key.Binding {
+	def.ShortHelpFunc = func() []key.Binding {
 		return help
 	}
 
-	d.FullHelpFunc = func() [][]key.Binding {
+	def.FullHelpFunc = func() [][]key.Binding {
 		return [][]key.Binding{help}
 	}
 
-	return d
+	return def
 }
 
 func newDelegateKeyMap() *delegateKeyMap {

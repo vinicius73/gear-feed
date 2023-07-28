@@ -39,7 +39,6 @@ func LoadDefinitions(ctx context.Context) ([]scraper.SourceDefinition, error) {
 			logger.Warn().
 				Msgf("Loader %s is disabled", def.Name)
 		}
-
 	}
 
 	return definitions, nil

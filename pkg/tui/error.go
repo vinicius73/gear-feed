@@ -1,17 +1,17 @@
 package tui
 
-type ErrorMsg struct {
+type MsgError struct {
 	err error
 }
 
-func Error(err error) ErrorMsg {
-	return ErrorMsg{err}
+func Error(err error) MsgError {
+	return MsgError{err}
 }
 
-func (e ErrorMsg) Error() string {
+func (e MsgError) Error() string {
 	return e.err.Error()
 }
 
-func (e ErrorMsg) Unwrap() error {
+func (e MsgError) Unwrap() error {
 	return e.err
 }

@@ -23,9 +23,24 @@ linters:
     - unused
 
 linters-settings:
+  ireturn:
+    allow:
+      - anon
+      - error
+      - empty
+      - stdlib
+      - (or|er)$
+      - tea.Model
+      - tea.Msg
+  exhaustruct:
+    exclude:
+      - ".*_test.go"
+      - 'github.com/urfave/cli/v2\.Command$'
+      - 'github.com/urfave/cli/v2\.App$'
   varnamelen:
     ignore-type-assert-ok: true
     ignore-decls:
       - el Element
+      - s spinner.New
     ignore-names:
       - err
