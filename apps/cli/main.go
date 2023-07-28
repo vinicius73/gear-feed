@@ -18,6 +18,7 @@ func main() {
 		},
 		Action: func(*cli.Context) error {
 			fmt.Println(pkg.VersionVerbose())
+
 			return nil
 		},
 	}

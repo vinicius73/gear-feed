@@ -7,12 +7,12 @@ import (
 	"github.com/vinicius73/gamer-feed/pkg/tui"
 )
 
-type SourceListModel struct {
+type Model struct {
 	list         list.Model
 	delegateKeys *delegateKeyMap
 }
 
-func New(sources []scraper.SourceDefinition) SourceListModel {
+func New(sources []scraper.SourceDefinition) Model {
 	itens := make([]list.Item, len(sources))
 
 	for i, source := range sources {
@@ -27,17 +27,17 @@ func New(sources []scraper.SourceDefinition) SourceListModel {
 	list.Title = "Sources"
 	list.Styles.Title = tui.TitleStyle
 
-	return SourceListModel{
+	return Model{
 		list:         list,
 		delegateKeys: delegateKeys,
 	}
 }
 
-func (m SourceListModel) Init() tea.Cmd {
+func (m Model) Init() tea.Cmd {
 	return tea.EnterAltScreen
 }
 
-func (m SourceListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 
 	switch msg := msg.(type) {
@@ -53,9 +53,10 @@ func (m SourceListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	m.list, cmd = m.list.Update(msg)
+
 	return m, cmd
 }
 
-func (m SourceListModel) View() string {
+func (m Model) View() string {
 	return m.list.View()
 }
