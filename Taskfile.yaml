@@ -1,6 +1,6 @@
 # https://taskfile.dev
 
-version: '3'
+version: "3"
 
 vars:
   PKG_NAME: github.com/vinicius73/gamer-feed
@@ -12,11 +12,10 @@ vars:
   GIT_HASH:
     sh: git log -n 1 --format=%h | echo "unknown"
 
-
-dotenv: ['.env']
+dotenv: [".env"]
 
 env:
-  STAGE: 'development'
+  STAGE: "development"
   GOOS:
     sh: echo $(go env GOOS)
   GOARCH:
@@ -96,6 +95,16 @@ tasks:
     cmds:
       - rm -rf {{.DIR_DIST}}/{{.APP_BASE_NAME}}-*
 
+  test:coverage:
+    desc: Run tests with coverage
+    env:
+      AWS_REGION: us-east-1
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_ACCESS_KEY_ID: test
+    cmds:
+      - go test -v ./... -count=1 -coverprofile=coverage.out {{.CLI_ARGS}}
+      - go tool cover -html=coverage.out
+
   run:
     desc: Run app
     cmds:
@@ -117,9 +126,9 @@ tasks:
       LDFLAGS: -ldflags "-X {{.PKG_NAME}}/pkg.commit={{.GIT_HASH}} -X {{.PKG_NAME}}/pkg.version={{.APP_VERSION}} -X {{.PKG_NAME}}/pkg.buildDate={{.BUILD_DATE}}"
       GOOS: '{{default "linux" .GOOS}}'
       GOARCH: '{{default "amd64" .GOARCH}}'
-      CGO_ENABLED: '{{default 0 .CGO_ENABLED}}'
-      BIN_NAME: '{{.APP_BASE_NAME}}--{{.APP}}-{{.GOOS}}-{{.GOARCH}}'
-      APP: '{{.APP}}'
+      CGO_ENABLED: "{{default 0 .CGO_ENABLED}}"
+      BIN_NAME: "{{.APP_BASE_NAME}}--{{.APP}}-{{.GOOS}}-{{.GOARCH}}"
+      APP: "{{.APP}}"
     env:
       GOOS: "{{.GOOS}}"
       GOARCH: "{{.GOARCH}}"
