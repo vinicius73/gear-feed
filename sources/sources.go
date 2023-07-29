@@ -45,7 +45,6 @@ func LoadDefinitions(ctx context.Context, options LoadOptions) ([]scraper.Source
 				logger.Warn().
 					Msgf("Loader %s is not in the list of loaders to be loaded", def.Name)
 			}
-
 		} else if def.Enabled {
 			definitions = append(definitions, def)
 		} else {
