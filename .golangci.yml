@@ -42,5 +42,6 @@ linters-settings:
     ignore-decls:
       - el Element
       - s spinner.New
+      - wg sync.WaitGroup
     ignore-names:
       - err
