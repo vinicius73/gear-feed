@@ -175,6 +175,84 @@ attributes:
 	}
 }
 
+func (s *FindEntriesTestSuite) TestExample05XMLCategories() {
+	source := s.parseSource(`
+name: test_xml_categories
+path: /example_05.xml
+limit: 2
+parser: XML
+attributes:
+	entry_selector: //channel[1]/item
+	category:
+		path_finder:
+			path: /category
+		allows:
+			- "a1"
+			- "h7"
+	link:
+		path: /link
+	title:
+		path: /title
+	image:
+		path: enclosure
+		attribute: url
+	
+	`)
+
+	entries, err := scraper.FindEntries(context.TODO(), source)
+
+	assert.NoError(s.T(), err)
+
+	assert.Equal(s.T(), 4, len(entries))
+
+	for index, num := range []string{"1", "3", "4", "6"} {
+		entry := entries[index]
+		assert.Equal(s.T(), "XML Title in 200"+num, entry.Title)
+		assert.Equal(s.T(), "https://xmlsite.net/news-"+num+".html", entry.Link)
+		assert.Equal(s.T(), "https://xmlsite.net/news-"+num+".jpg", entry.Image)
+	}
+}
+
+func (s *FindEntriesTestSuite) TestExample06CategoriesFromAttributesFilter() {
+	source := s.parseSource(`
+name: test_06_categories_from_attributes
+enabled: true
+path: /example_06.html
+attributes:
+	entry_selector: "#last-news-games > article"
+	link:
+		path: "h2 a"
+		attribute: "href"
+	title:
+		path: "h2 a"
+	category:
+		path_finder:
+			path: ul.tags > li
+			attribute: "data-category"
+		allows:
+			- "cat-b"
+			- "cat-c"
+	image:
+		path: "figure img"
+		attribute: "src"
+	`)
+
+	entries, err := scraper.FindEntries(context.TODO(), source)
+
+	assert.NoError(s.T(), err)
+
+	assert.Equal(s.T(), 2, len(entries))
+
+	for index, num := range []string{"1", "5"} {
+		entry := entries[index]
+
+		assert.Equal(s.T(), "Game news "+num, entry.Title)
+		assert.Equal(s.T(), "http://foo.com/games/good-"+num, entry.Link)
+		assert.Equal(s.T(), "https://super.site/baz.jpg", entry.Image)
+	}
+}
+
 func TestFindEntriesSuite(t *testing.T) {
+	t.Parallel()
 	suite.Run(t, new(FindEntriesTestSuite))
 }
