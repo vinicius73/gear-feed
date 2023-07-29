@@ -4,14 +4,12 @@ import (
 	"context"
 	"net/http/httptest"
 	"strconv"
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"github.com/vinicius73/gamer-feed/pkg/scraper"
 	"github.com/vinicius73/gamer-feed/pkg/scraper/testdata"
-	"gopkg.in/yaml.v3"
 )
 
 type FindEntriesTestSuite struct {
@@ -28,17 +26,9 @@ func (s *FindEntriesTestSuite) TearDownTest() {
 }
 
 func (s *FindEntriesTestSuite) parseSource(input string) scraper.SourceDefinition {
-	var source scraper.SourceDefinition
-
-	input = strings.TrimSpace(input)
-	input = strings.ReplaceAll(input, "\t", "  ")
-	input = strings.TrimSpace(input)
-
-	err := yaml.Unmarshal([]byte(input), &source)
+	source, err := testdata.ParseSource(s.server.URL, input)
 
 	s.NoError(err)
-
-	source.BaseURL = s.server.URL
 
 	return source
 }
