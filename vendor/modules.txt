@@ -123,6 +123,8 @@ github.com/saintfish/chardet
 # github.com/stretchr/testify v1.7.2
 ## explicit; go 1.13
 github.com/stretchr/testify/assert
+github.com/stretchr/testify/require
+github.com/stretchr/testify/suite
 # github.com/temoto/robotstxt v1.1.2
 ## explicit; go 1.11
 github.com/temoto/robotstxt
@@ -207,9 +209,6 @@ google.golang.org/protobuf/reflect/protoregistry
 google.golang.org/protobuf/runtime/protoiface
 google.golang.org/protobuf/runtime/protoimpl
 google.golang.org/protobuf/types/descriptorpb
-# gopkg.in/yaml.v2 v2.4.0
-## explicit; go 1.15
-gopkg.in/yaml.v2
 # gopkg.in/yaml.v3 v3.0.1
 ## explicit
 gopkg.in/yaml.v3

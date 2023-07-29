@@ -7,7 +7,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/vinicius73/gamer-feed/pkg/scraper"
 	"github.com/vinicius73/gamer-feed/pkg/support"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 //go:embed *.yml
