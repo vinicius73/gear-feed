@@ -43,7 +43,7 @@ func (s *FindEntriesTestSuite) parseSource(input string) scraper.SourceDefinitio
 	return source
 }
 
-func (s *FindEntriesTestSuite) TestExample01() {
+func (s *FindEntriesTestSuite) TestExample01Simple() {
 	source := s.parseSource(`
 name: test
 enabled: true
@@ -73,7 +73,7 @@ attributes:
 	}
 }
 
-func (s *FindEntriesTestSuite) TestExample02() {
+func (s *FindEntriesTestSuite) TestExample02BaseURL() {
 	source := s.parseSource(`
 name: test_01
 enabled: true
@@ -103,6 +103,75 @@ attributes:
 		assert.Equal(s.T(), "Hot News "+num, entry.Title)
 		assert.Equal(s.T(), baseURL+"/hot-"+num+".htm", entry.Link)
 		assert.Equal(s.T(), baseURL+"/bang-"+num+".png", entry.Image)
+	}
+}
+
+func (s *FindEntriesTestSuite) TestExample03XML() {
+	source := s.parseSource(`
+name: test_xml
+path: /example_03.xml
+limit: 2
+parser: XML
+attributes:
+	entry_selector: //channel[1]/item
+	link:
+		path: /link
+	title:
+		path: /title
+	image:
+		path: enclosure
+		attribute: url
+	
+	`)
+
+	entries, err := scraper.FindEntries(context.TODO(), source)
+
+	assert.NoError(s.T(), err)
+
+	assert.Equal(s.T(), 3, len(entries))
+
+	for index, entry := range entries {
+		num := strconv.Itoa(index + 1)
+		assert.Equal(s.T(), "XML in 200"+num, entry.Title)
+		assert.Equal(s.T(), "https://xmlsite.net/news-"+num+".html", entry.Link)
+		assert.Equal(s.T(), "https://xmlsite.net/news-"+num+".jpg", entry.Image)
+	}
+}
+
+func (s *FindEntriesTestSuite) TestExample04CategoriesFilter() {
+	source := s.parseSource(`
+name: test_04
+enabled: true
+path: /example_04.html
+attributes:
+	entry_selector: "#last-news-games > article"
+	link:
+		path: "h2 a"
+		attribute: "href"
+	title:
+		path: "h2 a"
+	category:
+		path_finder:
+			path: ul.tags > li > a
+		allows:
+			- "d"
+	image:
+		path: "figure img"
+		attribute: "src"
+	`)
+
+	entries, err := scraper.FindEntries(context.TODO(), source)
+
+	assert.NoError(s.T(), err)
+
+	assert.Equal(s.T(), 2, len(entries))
+
+	for index, num := range []string{"2", "3"} {
+		entry := entries[index]
+
+		assert.Equal(s.T(), "Good news "+num, entry.Title)
+		assert.Equal(s.T(), "http://foo.com/games/good-"+num, entry.Link)
+		assert.Equal(s.T(), "https://super.site/foo.jpg", entry.Image)
 	}
 }
 
