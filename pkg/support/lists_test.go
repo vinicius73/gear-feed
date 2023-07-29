@@ -137,3 +137,27 @@ func TestToLower(t *testing.T) {
 		assert.Equal(t, test.result, support.ToLower(test.list))
 	}
 }
+
+func FuzzContains(f *testing.F) {
+	values := [][3]int32{
+		{1, 2, 3},
+		{1, 8, 4},
+		{9, 2, 2},
+		{0, 0, 0},
+		{3, 1, 7},
+	}
+
+	for _, v := range values {
+		f.Add(v[0], v[1], v[2])
+	}
+
+	f.Fuzz(func(t *testing.T, a, b, c int32) {
+		has := support.Contains([]int32{a, b}, c)
+
+		if !has {
+			assert.NotContains(t, []int32{a, b}, c)
+		} else {
+			assert.Contains(t, []int32{a, b}, c)
+		}
+	})
+}
