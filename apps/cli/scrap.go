@@ -27,7 +27,6 @@ func scrapCMD() *cli.Command {
 			list, err := sources.LoadDefinitions(cmd.Context, sources.LoadOptions{
 				Only: only,
 			})
-
 			if err != nil {
 				return err
 			}
