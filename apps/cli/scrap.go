@@ -33,7 +33,8 @@ func scrapCMD() *cli.Command {
 
 			collections, err := linkloader.FromSources(cmd.Context, linkloader.LoadOptions{
 				Workers: (len(list) + 1) / 2,
-			}, list)
+				Sources: list,
+			})
 			if err != nil {
 				return err
 			}

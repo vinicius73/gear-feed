@@ -13,7 +13,7 @@ type LoadOptions struct {
 	Sources []scraper.SourceDefinition
 }
 
-func FromSources(ctx context.Context, options LoadOptions, sources []scraper.SourceDefinition) (Collections, error) {
+func FromSources(ctx context.Context, options LoadOptions) (Collections, error) {
 	collections := Collections{}
 
 	chCollections := []<-chan Collection{}
@@ -52,7 +52,7 @@ func FromSources(ctx context.Context, options LoadOptions, sources []scraper.Sou
 		}
 	}()
 
-	for _, source := range sources {
+	for _, source := range options.Sources {
 		chSources <- source
 	}
 
