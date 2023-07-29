@@ -1,0 +1,23 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"
+    xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <channel>
+        <title>XML News</title>
+        <link>https://xmlsite.net</link>
+        <language>pt-br</language>
+        <item>
+            <title>XML in 2001</title>
+            <link>https://xmlsite.net/news-1.html</link>
+            <enclosure type="image/jpeg" url="https://xmlsite.net/news-1.jpg" />
+        </item>
+        <item>
+            <title>XML in 2002</title>
+            <link>https://xmlsite.net/news-2.html</link>
+            <enclosure type="image/jpeg" url="https://xmlsite.net/news-2.jpg" />
+        </item>
+        <item>
+            <title>XML in 2003</title>
+            <link>https://xmlsite.net/news-3.html</link>
+            <enclosure type="image/jpeg" url="https://xmlsite.net/news-3.jpg" />
+        </item>
+    </channel>
+</rss>

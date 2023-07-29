@@ -6,6 +6,7 @@ import (
 )
 
 //go:embed *.html
+//go:embed *.xml
 var files embed.FS
 
 func FileHandler() http.Handler {
