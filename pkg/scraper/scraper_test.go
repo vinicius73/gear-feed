@@ -252,6 +252,40 @@ attributes:
 	}
 }
 
+func (s *FindEntriesTestSuite) TestExample07CustomAttributeParser() {
+	source := s.parseSource(`
+name: test
+enabled: true
+path: /example_07.html
+attributes:
+	entry_selector: "#news > article"
+	link:
+		path: "h2 a"
+		attribute: "href"
+	title:
+		path: "h2 a"
+		attribute: "alt"
+	image:
+		path: "figure"
+		attribute: "style"
+		parse_strategy: "style"
+	`)
+
+	entries, err := scraper.FindEntries(context.TODO(), source)
+
+	assert.NoError(s.T(), err)
+
+	assert.Equal(s.T(), 3, len(entries))
+
+	for index, entry := range entries {
+		num := strconv.Itoa(index + 1)
+		title := "G@M3R news " + num + " Não há quem goste de dor, que a procure e a queira ter,"
+		assert.Equal(s.T(), title, entry.Title)
+		assert.Equal(s.T(), "http://foo.com/news/good-"+num, entry.Link)
+		assert.Equal(s.T(), "https://cdn.net/images/news-"+num+".png", entry.Image)
+	}
+}
+
 func TestFindEntriesSuite(t *testing.T) {
 	t.Parallel()
 	suite.Run(t, new(FindEntriesTestSuite))

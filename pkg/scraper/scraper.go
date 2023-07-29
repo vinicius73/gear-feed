@@ -16,7 +16,7 @@ var ErrCategoryNotAllowed = errors.New("category not allowed")
 
 const (
 	requestTimeout = time.Second * 15
-	titleLimit     = 150
+	titleLimit     = 70
 )
 
 func newCollector() *colly.Collector {
