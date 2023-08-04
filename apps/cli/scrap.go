@@ -4,7 +4,6 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/urfave/cli/v2"
 	"github.com/vinicius73/gamer-feed/pkg/linkloader"
-	"github.com/vinicius73/gamer-feed/pkg/support"
 	"github.com/vinicius73/gamer-feed/sources"
 )
 
@@ -43,10 +42,6 @@ func scrapCMD() *cli.Command {
 
 			logger.Info().Msgf("Found %d entries", len(entries))
 
-			// for _, entry := range entries {
-			// 	logger.Info().Msgf("Entry: %s", entry.Link)
-			// }
-
 			return nil
 		},
 	}
@@ -54,12 +49,5 @@ func scrapCMD() *cli.Command {
 	return &cli.Command{
 		Name:        "scrap",
 		Subcommands: []*cli.Command{load},
-		Before: func(cmd *cli.Context) error {
-			logger := support.Logger("scrap", nil)
-
-			cmd.Context = logger.WithContext(cmd.Context)
-
-			return nil
-		},
 	}
 }

@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-const AppName = "gamer-feed"
+const AppName = "gfeed"
 
 var (
 	version   string

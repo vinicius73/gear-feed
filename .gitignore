@@ -1,6 +1,9 @@
 bin/*
 !bin/.gitkeep
 
+data/*
+!data/.gitkeep
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -19,3 +22,5 @@ bin/*
 go.work
 
 coverage*
+
+gfeed*.yml
