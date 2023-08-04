@@ -16,9 +16,16 @@ import (
 var fileLog *os.File
 
 func main() {
+	var err error
+
 	defer func() {
 		if fileLog != nil {
 			fileLog.Close()
+		}
+
+		if err != nil {
+			zero.Fatal().Err(err).Msg("Fail run application")
+			os.Exit(1)
 		}
 	}()
 
@@ -60,10 +67,9 @@ func main() {
 	sort.Sort(cli.FlagsByName(app.Flags))
 	sort.Sort(cli.CommandsByName(app.Commands))
 
-	if err := app.Run(os.Args); err != nil {
-		zero.Fatal().Err(err).Msg("Fail run application")
-		os.Exit(1)
-	}
+	// catch on defer
+	// nolint:errcheck
+	err = app.Run(os.Args)
 }
 
 func beforeRun(cmd *cli.Context) error {

@@ -28,6 +28,18 @@ func ContainsSome[v comparable](list []v, vals []v) bool {
 	return false
 }
 
+func Shuffle[T any](list []T) []T {
+	size := len(list)
+	max := int32(size - 1)
+
+	for i := range list {
+		j, _ := RandInt(0, max)
+		list[i], list[j] = list[j], list[i]
+	}
+
+	return list
+}
+
 func ToLower(list []string) []string {
 	result := make([]string, len(list))
 
