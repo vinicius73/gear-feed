@@ -70,7 +70,6 @@ func beforeRun(cmd *cli.Context) error {
 	debug := cmd.Bool("debug")
 
 	appConfig, err := configurations.Load(cmd.String("config"))
-
 	if err != nil {
 		e, ok := err.(apperrors.BusinessError) //nolint:errorlint
 		if ok && e.ErrorCode == configurations.ConfigFileWasCreated.ErrorCode {
