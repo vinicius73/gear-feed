@@ -1,6 +1,9 @@
 package linkloader
 
-import "github.com/vinicius73/gamer-feed/pkg/scraper"
+import (
+	"github.com/vinicius73/gamer-feed/pkg/scraper"
+	"github.com/vinicius73/gamer-feed/pkg/support"
+)
 
 type Collection struct {
 	SourceName string
@@ -17,4 +20,8 @@ func (c Collections) Entries() []scraper.Entry {
 	}
 
 	return entries
+}
+
+func (c Collections) Shuffle() []scraper.Entry {
+	return support.Shuffle(c.Entries())
 }
