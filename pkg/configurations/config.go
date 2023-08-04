@@ -2,14 +2,17 @@ package configurations
 
 import (
 	"context"
+
+	"github.com/vinicius73/gamer-feed/pkg/telegram"
 )
 
 type ctxKey struct{}
 
 type AppConfig struct {
-	Debug    bool   `fig:"-" yaml:"-"`
-	Timezone string `fig:"timezone" yaml:"timezone"`
-	Logger   Logger `fig:"logger" yaml:"logger"`
+	Debug    bool            `fig:"-" yaml:"-"`
+	Timezone string          `fig:"timezone" yaml:"timezone"`
+	Logger   Logger          `fig:"logger" yaml:"logger"`
+	Telegram telegram.Config `fig:"telegram" yaml:"telegram"`
 }
 
 type Logger struct {

@@ -85,6 +85,14 @@ func applyDefaults(cfg AppConfig) (AppConfig, error) {
 		cfg.Timezone = time.Local.String()
 	}
 
+	if cfg.Telegram.Token == "" {
+		cfg.Telegram.Token = os.Getenv("TELEGRAM_TOKEN")
+	}
+
+	if cfg.Telegram.Token == "" {
+		return cfg, ErrMissingTelegramToken
+	}
+
 	return cfg, nil
 }
 
