@@ -19,16 +19,15 @@ type Storage[T storage.Hashable] struct {
 	db  *badger.DB
 }
 
-func NewStorage[T storage.Hashable](opt Options) (Storage[T], error) {
-	db, err := badger.Open(badger.DefaultOptions(opt.Path).
+func Open(opt Options) (*badger.DB, error) {
+	return badger.Open(badger.DefaultOptions(opt.Path).
 		WithMaxLevels(3).             //nolint:gomnd
 		WithValueLogMaxEntries(50).   //nolint:gomnd
 		WithIndexCacheSize(20 << 20), //nolint:gomnd // 20mb
 	)
-	if err != nil {
-		return Storage[T]{}, err
-	}
+}
 
+func NewStorage[T storage.Hashable](db *badger.DB, opt Options) (storage.Storage[T], error) {
 	return Storage[T]{
 		ttl: opt.TTL,
 		db:  db,
@@ -99,8 +98,4 @@ func (s Storage[T]) Where(opts storage.WhereOptions, list []T) ([]T, error) {
 	}
 
 	return result, nil
-}
-
-func (s Storage[T]) Close() error {
-	return s.db.Close()
 }

@@ -10,36 +10,38 @@ import (
 	"gopkg.in/telebot.v3"
 )
 
-type Serder interface {
-	Send(ctx context.Context, entry Sendable) error
-	SendCollection(ctx context.Context, entry []Sendable) error
+var _ Serder[Sendable] = (*TelegramSerder[Sendable])(nil) // Ensure interface implementation
+
+type Serder[T Sendable] interface {
+	Send(ctx context.Context, entry T) error
+	SendCollection(ctx context.Context, entry []T) error
 }
 
-type TelegramSerder struct {
+type TelegramSerder[T Sendable] struct {
 	chats   []telebot.Recipient
-	storage storage.Storage[Sendable]
+	storage storage.Storage[T]
 	bot     *telebot.Bot
 }
 
-type TelegramOptions struct {
+type TelegramOptions[T Sendable] struct {
 	Chats   []int64
-	Storage storage.Storage[Sendable]
+	Storage storage.Storage[T]
 }
 
-func NewTelegramSerder(bot *telebot.Bot, opts TelegramOptions) Serder {
+func NewTelegramSerder[T Sendable](bot *telebot.Bot, opts TelegramOptions[T]) TelegramSerder[T] {
 	ids := make([]telebot.Recipient, len(opts.Chats))
 	for index, chat := range opts.Chats {
 		ids[index] = telebot.ChatID(chat)
 	}
 
-	return TelegramSerder{
+	return TelegramSerder[T]{
 		chats:   ids,
 		bot:     bot,
 		storage: opts.Storage,
 	}
 }
 
-func (s TelegramSerder) Send(ctx context.Context, entry Sendable) error {
+func (s TelegramSerder[T]) Send(ctx context.Context, entry T) error {
 	logger := zerolog.Ctx(ctx)
 
 	msg := BuildMessage(entry)
@@ -50,7 +52,7 @@ func (s TelegramSerder) Send(ctx context.Context, entry Sendable) error {
 			return err
 		}
 
-		err = s.storage.Store(storage.Entry[Sendable]{
+		err = s.storage.Store(storage.Entry[T]{
 			Data:   entry,
 			Status: storage.StatusSent,
 		})
@@ -67,31 +69,10 @@ func (s TelegramSerder) Send(ctx context.Context, entry Sendable) error {
 	return nil
 }
 
-func (s TelegramSerder) SendCollection(ctx context.Context, entries []Sendable) error {
+func (s TelegramSerder[T]) SendCollection(ctx context.Context, entries []T) error {
 	logger := zerolog.Ctx(ctx)
-	originalSize := len(entries)
-
-	if originalSize == 0 {
-		logger.Info().Msg("No entries to send")
-		return nil
-	}
-
-	where := storage.Where(storage.WhereIs(storage.StatusNew), storage.WhereAllowMissed(true))
-	entries, err := s.storage.Where(where, entries)
-	if err != nil {
-		return err
-	}
 
 	size := len(entries)
-
-	if size == 0 {
-		logger.Info().Msg("No new entries to send")
-		return nil
-	}
-
-	if size != originalSize {
-		logger.Info().Msgf("Found %d new entries", size)
-	}
 
 	sendInterval := CalculeSendInterval(size)
 

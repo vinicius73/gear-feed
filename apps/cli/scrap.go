@@ -1,56 +1,9 @@
 package main
 
 import (
-	"context"
-
-	"github.com/rs/zerolog"
 	"github.com/urfave/cli/v2"
-	"github.com/vinicius73/gamer-feed/pkg/configurations"
-	"github.com/vinicius73/gamer-feed/pkg/linkloader"
-	"github.com/vinicius73/gamer-feed/pkg/scraper"
-	"github.com/vinicius73/gamer-feed/pkg/sender"
-	"github.com/vinicius73/gamer-feed/pkg/storage"
-	"github.com/vinicius73/gamer-feed/pkg/storage/local"
-	"github.com/vinicius73/gamer-feed/pkg/telegram"
-	"github.com/vinicius73/gamer-feed/sources"
+	"github.com/vinicius73/gamer-feed/apps/cli/actions"
 )
-
-func loadEntries(ctx context.Context, only []string) ([]scraper.Entry, error) {
-	list, err := sources.LoadDefinitions(ctx, sources.LoadOptions{
-		Only: only,
-	})
-	if err != nil {
-		return []scraper.Entry{}, err
-	}
-
-	collections, err := linkloader.FromSources(ctx, linkloader.LoadOptions{
-		Workers: (len(list) + 1) / 2,
-		Sources: list,
-	})
-	if err != nil {
-		return []scraper.Entry{}, err
-	}
-
-	return collections.Shuffle(), nil
-}
-
-type SenderOptions struct {
-	Chats    []int64
-	Storage  storage.Storage[sender.Sendable]
-	Telegram telegram.Config
-}
-
-func buildSender(opt SenderOptions) (sender.Serder, error) {
-	bot, err := telegram.NewBot(opt.Telegram)
-	if err != nil {
-		return nil, err
-	}
-
-	return sender.NewTelegramSerder(bot, sender.TelegramOptions{
-		Storage: opt.Storage,
-		Chats:   opt.Chats,
-	}), nil
-}
 
 func scrapCMD() *cli.Command {
 	load := &cli.Command{
@@ -82,51 +35,15 @@ func scrapCMD() *cli.Command {
 			},
 		},
 		Action: func(cmd *cli.Context) error {
-			logger := zerolog.Ctx(cmd.Context)
-
 			only := cmd.StringSlice("only")
 			limit := cmd.Int("limit")
 			to := cmd.Int64("to")
 
-			entries, err := loadEntries(cmd.Context, only)
-			if err != nil {
-				return err
-			}
-
-			logger.Info().Msgf("Found %d entries", len(entries))
-
-			if limit > 0 && len(entries) > limit {
-				logger.Warn().Msgf("Limiting to %d entries", limit)
-				entries = entries[:limit]
-			}
-
-			config := configurations.Ctx(cmd.Context)
-
-			store, err := local.NewStorage[sender.Sendable](config.Storage)
-			if err != nil {
-				return err
-			}
-
-			defer store.Close()
-
-			botSender, err := buildSender(SenderOptions{
-				Chats:    []int64{to},
-				Storage:  store,
-				Telegram: config.Telegram,
+			return actions.Load(cmd.Context, actions.LoadOptions{
+				Only:  only,
+				To:    to,
+				Limit: limit,
 			})
-			if err != nil {
-				return err
-			}
-
-			sendables := make([]sender.Sendable, len(entries))
-
-			for index, entry := range entries {
-				sendables[index] = entry
-			}
-
-			botSender.SendCollection(cmd.Context, sendables)
-
-			return nil
 		},
 	}
 

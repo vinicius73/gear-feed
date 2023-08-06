@@ -29,7 +29,6 @@ type Storage[T Hashable] interface {
 	Has(hash string) (bool, error)
 	Store(entry Entry[T]) error
 	Where(opts WhereOptions, list []T) ([]T, error)
-	Close() error
 }
 
 func (e Entry[T]) Hash() ([]byte, error) {
