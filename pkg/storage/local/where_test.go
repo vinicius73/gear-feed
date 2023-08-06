@@ -118,6 +118,7 @@ func TestWhere(t *testing.T) {
 	for _, tt := range tests {
 		current := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got := local.ApplyWhere(current.where, current.item, current.rerr)
 
 			assert.Equal(t, current.want, got)

@@ -43,6 +43,7 @@ func (s Storage[T]) Has(hash string) (bool, error) {
 		}
 
 		has = err == nil
+
 		return nil
 	})
 	if err != nil {

@@ -30,14 +30,14 @@ func (e Entry) Key() string {
 	return e.Source + ":" + e.Title
 }
 
-func (s Entry) Text() string {
-	return s.Title
+func (e Entry) Text() string {
+	return e.Title
 }
 
-func (s Entry) Link() string {
-	return s.URL
+func (e Entry) Link() string {
+	return e.URL
 }
 
-func (s Entry) Tags() []string {
-	return []string{s.Source}
+func (e Entry) Tags() []string {
+	return []string{e.Source}
 }

@@ -27,7 +27,7 @@ var (
 func Load(file string) (AppConfig, error) {
 	var err error
 
-	cfg := AppConfig{}
+	var cfg AppConfig
 
 	if file != "" {
 		err = fig.Load(&cfg,
@@ -112,7 +112,7 @@ func applyDefaults(cfg AppConfig) (AppConfig, error) {
 func ensureConfig() (AppConfig, error) {
 	var err error
 
-	cfg := AppConfig{}
+	var cfg AppConfig
 
 	if err = defaults.Set(&cfg); err != nil {
 		return cfg, ErrFailEnsureConfig.WithErr(err)

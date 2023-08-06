@@ -44,6 +44,8 @@ attributes:
 `
 
 func TestFromSources(t *testing.T) {
+	t.Parallel()
+
 	server := httptest.NewServer(testdata.FileHandler())
 
 	defer server.Close()
