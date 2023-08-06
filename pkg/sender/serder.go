@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/rs/zerolog"
+	"github.com/vinicius73/gamer-feed/pkg/storage"
 	"gopkg.in/telebot.v3"
 )
 
@@ -15,20 +16,26 @@ type Serder interface {
 }
 
 type TelegramSerder struct {
-	chats []telebot.Recipient
-
-	bot *telebot.Bot
+	chats   []telebot.Recipient
+	storage storage.Storage[Sendable]
+	bot     *telebot.Bot
 }
 
-func NewTelegramSerder(bot *telebot.Bot, chats []int64) Serder {
-	ids := make([]telebot.Recipient, len(chats))
-	for index, chat := range chats {
+type TelegramOptions struct {
+	Chats   []int64
+	Storage storage.Storage[Sendable]
+}
+
+func NewTelegramSerder(bot *telebot.Bot, opts TelegramOptions) Serder {
+	ids := make([]telebot.Recipient, len(opts.Chats))
+	for index, chat := range opts.Chats {
 		ids[index] = telebot.ChatID(chat)
 	}
 
 	return TelegramSerder{
-		chats: ids,
-		bot:   bot,
+		chats:   ids,
+		bot:     bot,
+		storage: opts.Storage,
 	}
 }
 
@@ -39,6 +46,14 @@ func (s TelegramSerder) Send(ctx context.Context, entry Sendable) error {
 
 	for _, chat := range s.chats {
 		_, err := s.bot.Send(chat, msg)
+		if err != nil {
+			return err
+		}
+
+		err = s.storage.Store(storage.Entry[Sendable]{
+			Data:   entry,
+			Status: storage.StatusSent,
+		})
 		if err != nil {
 			return err
 		}
@@ -54,8 +69,29 @@ func (s TelegramSerder) Send(ctx context.Context, entry Sendable) error {
 
 func (s TelegramSerder) SendCollection(ctx context.Context, entries []Sendable) error {
 	logger := zerolog.Ctx(ctx)
+	originalSize := len(entries)
+
+	if originalSize == 0 {
+		logger.Info().Msg("No entries to send")
+		return nil
+	}
+
+	where := storage.Where(storage.WhereIs(storage.StatusNew), storage.WhereAllowMissed(true))
+	entries, err := s.storage.Where(where, entries)
+	if err != nil {
+		return err
+	}
 
 	size := len(entries)
+
+	if size == 0 {
+		logger.Info().Msg("No new entries to send")
+		return nil
+	}
+
+	if size != originalSize {
+		logger.Info().Msgf("Found %d new entries", size)
+	}
 
 	sendInterval := CalculeSendInterval(size)
 
