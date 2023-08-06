@@ -8,6 +8,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
+	"github.com/vinicius73/gamer-feed/pkg/model"
 	"github.com/vinicius73/gamer-feed/pkg/scraper"
 	"github.com/vinicius73/gamer-feed/pkg/scraper/testdata"
 )
@@ -50,7 +51,7 @@ attributes:
 		attribute: "src"
 	`)
 
-	entries, err := scraper.FindEntries(context.TODO(), source)
+	entries, err := scraper.FindEntries[model.Entry](context.TODO(), source)
 
 	assert.NoError(s.T(), err)
 
@@ -80,7 +81,7 @@ attributes:
 		attribute: "data-src"
 	`)
 
-	entries, err := scraper.FindEntries(context.TODO(), source)
+	entries, err := scraper.FindEntries[model.Entry](context.TODO(), source)
 
 	assert.NoError(s.T(), err)
 
@@ -114,7 +115,7 @@ attributes:
 	
 	`)
 
-	entries, err := scraper.FindEntries(context.TODO(), source)
+	entries, err := scraper.FindEntries[model.Entry](context.TODO(), source)
 
 	assert.NoError(s.T(), err)
 
@@ -150,7 +151,7 @@ attributes:
 		attribute: "src"
 	`)
 
-	entries, err := scraper.FindEntries(context.TODO(), source)
+	entries, err := scraper.FindEntries[model.Entry](context.TODO(), source)
 
 	assert.NoError(s.T(), err)
 
@@ -189,7 +190,7 @@ attributes:
 	
 	`)
 
-	entries, err := scraper.FindEntries(context.TODO(), source)
+	entries, err := scraper.FindEntries[model.Entry](context.TODO(), source)
 
 	assert.NoError(s.T(), err)
 
@@ -227,7 +228,7 @@ attributes:
 		attribute: "src"
 	`)
 
-	entries, err := scraper.FindEntries(context.TODO(), source)
+	entries, err := scraper.FindEntries[model.Entry](context.TODO(), source)
 
 	assert.NoError(s.T(), err)
 
@@ -261,7 +262,7 @@ attributes:
 		parse_strategy: "style"
 	`)
 
-	entries, err := scraper.FindEntries(context.TODO(), source)
+	entries, err := scraper.FindEntries[model.Entry](context.TODO(), source)
 
 	assert.NoError(s.T(), err)
 

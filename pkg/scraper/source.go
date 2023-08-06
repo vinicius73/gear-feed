@@ -75,7 +75,7 @@ func (d SourceDefinition) visitURL() string {
 	return d.BaseURL + d.Path
 }
 
-func (d SourceDefinition) buildEntry(title, link, image string, categories []string) model.Entry {
+func (d SourceDefinition) buildEntry(title, link, image string, categories []string) model.IEntry {
 	return model.Entry{
 		Source:     d.Name,
 		Title:      title,

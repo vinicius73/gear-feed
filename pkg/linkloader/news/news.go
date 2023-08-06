@@ -9,18 +9,18 @@ import (
 	"github.com/vinicius73/gamer-feed/pkg/storage"
 )
 
-type LoadOptions struct {
-	linkloader.LoadOptions
-	Storage storage.Storage[model.Entry]
-	Limit   int
+type LoadOptions[T model.IEntry] struct {
+	LoadOptions linkloader.LoadOptions
+	Storage     storage.Storage[T]
+	Limit       int
 }
 
-func LoadEntries(ctx context.Context, opt LoadOptions) ([]model.Entry, error) {
+func LoadEntries[T model.IEntry](ctx context.Context, opt LoadOptions[T]) ([]T, error) {
 	logger := zerolog.Ctx(ctx)
 
-	entries, err := linkloader.LoadEntries(ctx, opt.LoadOptions)
+	entries, err := linkloader.LoadEntries[T](ctx, opt.LoadOptions)
 	if err != nil {
-		return []model.Entry{}, err
+		return []T{}, err
 	}
 
 	logger.Info().Int("entries", len(entries)).Msg("loaded entries")
@@ -29,7 +29,7 @@ func LoadEntries(ctx context.Context, opt LoadOptions) ([]model.Entry, error) {
 		where := storage.Where(storage.WhereIs(storage.StatusNew), storage.WhereAllowMissed(true))
 		entries, err = opt.Storage.Where(where, entries)
 		if err != nil {
-			return []model.Entry{}, err
+			return []T{}, err
 		}
 
 		logger.Info().Int("entries", len(entries)).Msg("filtered entries")

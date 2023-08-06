@@ -5,6 +5,7 @@ import (
 	"sync"
 
 	"github.com/rs/zerolog"
+	"github.com/vinicius73/gamer-feed/pkg/model"
 	"github.com/vinicius73/gamer-feed/pkg/scraper"
 )
 
@@ -13,10 +14,10 @@ type LoadOptions struct {
 	Sources []scraper.SourceDefinition
 }
 
-func FromSources(ctx context.Context, options LoadOptions) (Collections, error) {
-	collections := Collections{}
+func FromSources[T model.IEntry](ctx context.Context, options LoadOptions) (Collections[T], error) {
+	collections := Collections[T]{}
 
-	chCollections := []<-chan Collection{}
+	chCollections := []<-chan Collection[T]{}
 	chErrors := []<-chan error{}
 	chSources := make(chan scraper.SourceDefinition, options.Workers)
 
@@ -26,7 +27,7 @@ func FromSources(ctx context.Context, options LoadOptions) (Collections, error) 
 
 	for i := 0; i < options.Workers; i++ {
 		wg.Add(1)
-		out, errc := loadWorker(&wg, ctx, chSources)
+		out, errc := loadWorker[T](&wg, ctx, chSources)
 
 		chCollections = append(chCollections, out)
 		chErrors = append(chErrors, errc)
@@ -68,21 +69,21 @@ func FromSources(ctx context.Context, options LoadOptions) (Collections, error) 
 	return collections, nil
 }
 
-func FromSource(ctx context.Context, source scraper.SourceDefinition) (Collection, error) {
-	entries, err := scraper.FindEntries(ctx, source)
+func FromSource[T model.IEntry](ctx context.Context, source scraper.SourceDefinition) (Collection[T], error) {
+	entries, err := scraper.FindEntries[T](ctx, source)
 	if err != nil {
-		return Collection{}, err
+		return Collection[T]{}, err
 	}
 
-	return Collection{
+	return Collection[T]{
 		SourceName: source.Name,
 		Entries:    entries,
 	}, nil
 }
 
-func loadWorker(wg *sync.WaitGroup, ctx context.Context, in <-chan scraper.SourceDefinition) (<-chan Collection, <-chan error) {
+func loadWorker[T model.IEntry](wg *sync.WaitGroup, ctx context.Context, in <-chan scraper.SourceDefinition) (<-chan Collection[T], <-chan error) {
 	//nolint:gomnd
-	out := make(chan Collection, 2)
+	out := make(chan Collection[T], 2)
 	errc := make(chan error, 1)
 
 	go func() {
@@ -92,7 +93,7 @@ func loadWorker(wg *sync.WaitGroup, ctx context.Context, in <-chan scraper.Sourc
 		defer wg.Done()
 
 		for source := range in {
-			collection, err := FromSource(ctx, source)
+			collection, err := FromSource[T](ctx, source)
 			if err != nil {
 				errc <- err
 			}

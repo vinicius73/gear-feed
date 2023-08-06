@@ -9,6 +9,7 @@ import (
 	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/vinicius73/gamer-feed/pkg/browser"
+	"github.com/vinicius73/gamer-feed/pkg/model"
 	"github.com/vinicius73/gamer-feed/pkg/scraper"
 	"github.com/vinicius73/gamer-feed/pkg/tui"
 )
@@ -156,7 +157,7 @@ func (m Model) loadLinks() tea.Cmd {
 	return func() tea.Msg {
 		defer cancel()
 
-		entries, err := scraper.FindEntries(ctx, m.entry)
+		entries, err := scraper.FindEntries[model.Entry](ctx, m.entry)
 		if err != nil {
 			return tui.Error(err)
 		}

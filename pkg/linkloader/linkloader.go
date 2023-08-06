@@ -6,15 +6,15 @@ import (
 	"github.com/vinicius73/gamer-feed/pkg/model"
 )
 
-func LoadEntries(ctx context.Context, opt LoadOptions) ([]model.Entry, error) {
+func LoadEntries[T model.IEntry](ctx context.Context, opt LoadOptions) ([]T, error) {
 	if opt.Workers < 1 {
 		//nolint:gomnd
 		opt.Workers = (len(opt.Sources) + 1) / 2
 	}
 
-	collections, err := FromSources(ctx, opt)
+	collections, err := FromSources[T](ctx, opt)
 	if err != nil {
-		return []model.Entry{}, err
+		return []T{}, err
 	}
 
 	return collections.Shuffle(), nil

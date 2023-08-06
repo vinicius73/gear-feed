@@ -5,15 +5,15 @@ import (
 	"github.com/vinicius73/gamer-feed/pkg/support"
 )
 
-type Collection struct {
+type Collection[T model.IEntry] struct {
 	SourceName string
-	Entries    []model.Entry
+	Entries    []T
 }
 
-type Collections []Collection
+type Collections[T model.IEntry] []Collection[T]
 
-func (c Collections) Entries() []model.Entry {
-	entries := []model.Entry{}
+func (c Collections[T]) Entries() []T {
+	entries := []T{}
 
 	for _, collection := range c {
 		entries = append(entries, collection.Entries...)
@@ -22,6 +22,6 @@ func (c Collections) Entries() []model.Entry {
 	return entries
 }
 
-func (c Collections) Shuffle() []model.Entry {
+func (c Collections[T]) Shuffle() []T {
 	return support.Shuffle(c.Entries())
 }
