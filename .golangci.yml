@@ -37,11 +37,25 @@ linters-settings:
       - ".*_test.go"
       - 'github.com/urfave/cli/v2\.Command$'
       - 'github.com/urfave/cli/v2\.App$'
+      - 'github.com/urfave/cli/v2\.IntFlag$'
+      - 'github.com/urfave/cli/v2\.StringFlag$'
+      - 'github.com/urfave/cli/v2\.StringSliceFlag$'
+      - 'github.com/urfave/cli/v2\.BoolFlag$'
+      - 'github.com/urfave/cli/v2\.Int64Flag$'
   varnamelen:
     ignore-type-assert-ok: true
     ignore-decls:
       - el Element
       - s spinner.New
       - wg sync.WaitGroup
+      - db *badger.DB
     ignore-names:
       - err
+
+issues:
+  exclude-rules:
+    - path: _test.go
+      linters:
+        - funlen
+        - varnamelen
+        - exhaustruct
