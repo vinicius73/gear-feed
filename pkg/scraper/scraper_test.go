@@ -58,7 +58,7 @@ attributes:
 
 	for index, entry := range entries {
 		assert.Equal(s.T(), "Good news "+strconv.Itoa(index+1), entry.Title)
-		assert.Equal(s.T(), "http://foo.com/news/good-"+strconv.Itoa(index+1), entry.Link)
+		assert.Equal(s.T(), "http://foo.com/news/good-"+strconv.Itoa(index+1), entry.URL)
 		assert.Equal(s.T(), "http://bar.bang/foo.jpg", entry.Image)
 	}
 }
@@ -91,7 +91,7 @@ attributes:
 	for index, entry := range entries {
 		num := strconv.Itoa(index + 1)
 		assert.Equal(s.T(), "Hot News "+num, entry.Title)
-		assert.Equal(s.T(), baseURL+"/hot-"+num+".htm", entry.Link)
+		assert.Equal(s.T(), baseURL+"/hot-"+num+".htm", entry.URL)
 		assert.Equal(s.T(), baseURL+"/bang-"+num+".png", entry.Image)
 	}
 }
@@ -123,7 +123,7 @@ attributes:
 	for index, entry := range entries {
 		num := strconv.Itoa(index + 1)
 		assert.Equal(s.T(), "XML in 200"+num, entry.Title)
-		assert.Equal(s.T(), "https://xmlsite.net/news-"+num+".html", entry.Link)
+		assert.Equal(s.T(), "https://xmlsite.net/news-"+num+".html", entry.URL)
 		assert.Equal(s.T(), "https://xmlsite.net/news-"+num+".jpg", entry.Image)
 	}
 }
@@ -160,7 +160,7 @@ attributes:
 		entry := entries[index]
 
 		assert.Equal(s.T(), "Good news "+num, entry.Title)
-		assert.Equal(s.T(), "http://foo.com/games/good-"+num, entry.Link)
+		assert.Equal(s.T(), "http://foo.com/games/good-"+num, entry.URL)
 		assert.Equal(s.T(), "https://super.site/foo.jpg", entry.Image)
 	}
 }
@@ -198,7 +198,7 @@ attributes:
 	for index, num := range []string{"1", "3", "4", "6"} {
 		entry := entries[index]
 		assert.Equal(s.T(), "XML Title in 200"+num, entry.Title)
-		assert.Equal(s.T(), "https://xmlsite.net/news-"+num+".html", entry.Link)
+		assert.Equal(s.T(), "https://xmlsite.net/news-"+num+".html", entry.URL)
 		assert.Equal(s.T(), "https://xmlsite.net/news-"+num+".jpg", entry.Image)
 	}
 }
@@ -237,7 +237,7 @@ attributes:
 		entry := entries[index]
 
 		assert.Equal(s.T(), "Game news "+num, entry.Title)
-		assert.Equal(s.T(), "http://foo.com/games/good-"+num, entry.Link)
+		assert.Equal(s.T(), "http://foo.com/games/good-"+num, entry.URL)
 		assert.Equal(s.T(), "https://super.site/baz.jpg", entry.Image)
 	}
 }
@@ -271,7 +271,7 @@ attributes:
 		num := strconv.Itoa(index + 1)
 		title := "G@M3R news " + num + " Não há quem goste de dor, que a procure e a queira ter,"
 		assert.Equal(s.T(), title, entry.Title)
-		assert.Equal(s.T(), "http://foo.com/news/good-"+num, entry.Link)
+		assert.Equal(s.T(), "http://foo.com/news/good-"+num, entry.URL)
 		assert.Equal(s.T(), "https://cdn.net/images/news-"+num+".png", entry.Image)
 	}
 }

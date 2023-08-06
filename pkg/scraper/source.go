@@ -76,10 +76,10 @@ func (d SourceDefinition) visitURL() string {
 
 func (d SourceDefinition) buildEntry(title, link, image string, categories []string) Entry {
 	return Entry{
-		Type:       d.Name,
+		Source:     d.Name,
 		Title:      title,
 		Categories: categories,
-		Link:       d.absouteURL(link),
+		URL:        d.absouteURL(link),
 		Image:      d.absouteURL(image),
 	}
 }

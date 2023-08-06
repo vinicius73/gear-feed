@@ -7,17 +7,17 @@ import (
 
 type Entry struct {
 	Title      string
-	Link       string
+	URL        string
 	Image      string
 	Categories []string
-	Type       string
+	Source     string
 }
 
 // Hash of entry.
 func (e Entry) Hash() (string, error) {
 	hasher := sha256.New()
 
-	_, err := hasher.Write([]byte(e.Link))
+	_, err := hasher.Write([]byte(e.URL))
 	if err != nil {
 		return "", err
 	}
@@ -27,5 +27,17 @@ func (e Entry) Hash() (string, error) {
 
 // Key of entry.
 func (e Entry) Key() string {
-	return e.Type + ":" + e.Title
+	return e.Source + ":" + e.Title
+}
+
+func (s Entry) Text() string {
+	return s.Title
+}
+
+func (s Entry) Link() string {
+	return s.URL
+}
+
+func (s Entry) Tags() []string {
+	return []string{s.Source}
 }

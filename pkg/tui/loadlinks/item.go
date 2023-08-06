@@ -7,5 +7,5 @@ type Link struct {
 }
 
 func (i Link) Title() string       { return i.Entry.Title }
-func (i Link) Description() string { return i.Link }
+func (i Link) Description() string { return i.URL }
 func (i Link) FilterValue() string { return i.Entry.Title }

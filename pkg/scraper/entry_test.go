@@ -17,20 +17,20 @@ func TestEntry_Hash(t *testing.T) {
 		{
 			input: scraper.Entry{
 				Title:      "The Last of Us Part II",
-				Link:       "https://www.gamereactor.eu/the-last-of-us-part-ii-review/",
+				URL:        "https://www.gamereactor.eu/the-last-of-us-part-ii-review/",
 				Image:      "https://images.gamereactor.eu/remote/articles/611893/The-Last-of-Us-Part-II-Review-0.jpg",
 				Categories: []string{"review"},
-				Type:       "gamereactor",
+				Source:     "gamereactor",
 			},
 			want: "9311deeecac5fb039a8e3f6102659821f103ee48f486c55ce7c3868151ee25aa",
 		},
 		{
 			input: scraper.Entry{
 				Title:      "The Amazing Spider-Man",
-				Link:       "https://www.gamereactor.eu/the-amazing-spiderman-review/",
+				URL:        "https://www.gamereactor.eu/the-amazing-spiderman-review/",
 				Image:      "https://images.gamereactor.eu/remote/articles/611893/The-Last-of-Us-Part-II-Review-0.jpg",
 				Categories: []string{"review"},
-				Type:       "gamereactor",
+				Source:     "gamereactor",
 			},
 			want: "d3be2aa13ed6d3b659e5536016e1351e3e5ac2f85088e80e13524aa706c693e0",
 		},
@@ -55,10 +55,10 @@ func TestEntry_Key(t *testing.T) {
 		{
 			input: scraper.Entry{
 				Title:      "The Last of Us Part II",
-				Link:       "https://www.gamereactor.eu/the-last-of-us-part-ii-review/",
+				URL:        "https://www.gamereactor.eu/the-last-of-us-part-ii-review/",
 				Image:      "https://images.gamereactor.eu/remote/articles/611893/The-Last-of-Us-Part-II-Review-0.jpg",
 				Categories: []string{"review"},
-				Type:       "gamereactor",
+				Source:     "gamereactor",
 			},
 			want: "gamereactor:The Last of Us Part II",
 		},

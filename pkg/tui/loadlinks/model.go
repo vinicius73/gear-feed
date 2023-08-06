@@ -102,7 +102,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	// handle link selection
 	if link, ok := msg.(Link); ok {
-		err := browser.OpenURL(link.Entry.Link)
+		err := browser.OpenURL(link.Entry.URL)
 		if err != nil {
 			return m, func() tea.Msg {
 				return tui.Error(err)
