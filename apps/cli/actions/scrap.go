@@ -42,6 +42,7 @@ func Load(ctx context.Context, opt LoadOptions) error {
 	entries, err := news.LoadEntries(ctx, news.LoadOptions{
 		LoadOptions: linkloader.LoadOptions{
 			Sources: definitions,
+			Workers: 0, // dynamic
 		},
 		Limit:   opt.Limit,
 		Storage: store,

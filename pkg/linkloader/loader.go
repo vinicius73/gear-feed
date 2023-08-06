@@ -32,7 +32,8 @@ func FromSources(ctx context.Context, options LoadOptions) (Collections, error) 
 		chErrors = append(chErrors, errc)
 	}
 
-	wg.Add(2)
+	//nolint:gomnd
+	wg.Add(2) // collections and errors
 
 	go func() {
 		defer wg.Done()
@@ -80,6 +81,7 @@ func FromSource(ctx context.Context, source scraper.SourceDefinition) (Collectio
 }
 
 func loadWorker(wg *sync.WaitGroup, ctx context.Context, in <-chan scraper.SourceDefinition) (<-chan Collection, <-chan error) {
+	//nolint:gomnd
 	out := make(chan Collection, 2)
 	errc := make(chan error, 1)
 

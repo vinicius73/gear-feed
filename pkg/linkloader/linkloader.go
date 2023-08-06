@@ -8,6 +8,7 @@ import (
 
 func LoadEntries(ctx context.Context, opt LoadOptions) ([]model.Entry, error) {
 	if opt.Workers < 1 {
+		//nolint:gomnd
 		opt.Workers = (len(opt.Sources) + 1) / 2
 	}
 

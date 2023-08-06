@@ -69,6 +69,7 @@ func TestCalculeSendInterval(t *testing.T) {
 	for _, tt := range tests {
 		actual := tt
 		t.Run(fmt.Sprintf("CalculeSendInterval(%v) shold be %v", actual.count, actual.want), func(t *testing.T) {
+			t.Parallel()
 			got := sender.CalculeSendInterval(actual.count)
 			assert.Equal(t, actual.want, got)
 		})

@@ -8,6 +8,8 @@ import (
 )
 
 func TestFindIndex(t *testing.T) {
+	t.Parallel()
+
 	type testDefiniton[T any] struct {
 		list  []T
 		test  func(T) bool
@@ -49,6 +51,8 @@ func TestFindIndex(t *testing.T) {
 }
 
 func TestContains(t *testing.T) {
+	t.Parallel()
+
 	type testDefiniton[T comparable] struct {
 		list []T
 		val  T
@@ -83,6 +87,8 @@ func TestContains(t *testing.T) {
 }
 
 func TestContainsSome(t *testing.T) {
+	t.Parallel()
+
 	type testDefiniton[T comparable] struct {
 		list []T
 		vals []T
@@ -117,6 +123,8 @@ func TestContainsSome(t *testing.T) {
 }
 
 func TestToLower(t *testing.T) {
+	t.Parallel()
+
 	type testDefiniton struct {
 		list   []string
 		result []string

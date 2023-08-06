@@ -8,6 +8,8 @@ import (
 )
 
 func TestEntry_Hash(t *testing.T) {
+	t.Parallel()
+
 	type testFields struct {
 		input model.Entry
 		want  string
@@ -46,6 +48,8 @@ func TestEntry_Hash(t *testing.T) {
 }
 
 func TestEntry_Key(t *testing.T) {
+	t.Parallel()
+
 	type testFields struct {
 		input model.Entry
 		want  string

@@ -6,7 +6,7 @@ import (
 	"github.com/vinicius73/gamer-feed/pkg/model"
 )
 
-var _ Sendable = model.Entry{} // Ensure that Entry implements Sendable.
+var _ Sendable = (*model.Entry)(nil) // Ensure that Entry implements Sendable.
 
 type Sendable interface {
 	Text() string
