@@ -9,6 +9,7 @@ import (
 
 	"github.com/gocolly/colly"
 	"github.com/rs/zerolog"
+	"github.com/vinicius73/gamer-feed/pkg/model"
 	"github.com/vinicius73/gamer-feed/pkg/support"
 )
 
@@ -26,12 +27,12 @@ func newCollector() *colly.Collector {
 	return c
 }
 
-func FindEntries(ctx context.Context, source SourceDefinition) ([]Entry, error) {
+func FindEntries(ctx context.Context, source SourceDefinition) ([]model.Entry, error) {
 	logger := zerolog.Ctx(ctx).With().Str("source", source.Name).Logger()
 
 	ctx = logger.WithContext(ctx)
 
-	entries := []Entry{}
+	entries := []model.Entry{}
 
 	callback := func(e Element) {
 		entry, err := onEntry(ctx, source, e)
@@ -110,7 +111,7 @@ func visit(ctx context.Context, source SourceDefinition, callback func(e Element
 	return nil
 }
 
-func onEntry(ctx context.Context, source SourceDefinition, el Element) (Entry, error) {
+func onEntry(ctx context.Context, source SourceDefinition, el Element) (model.Entry, error) {
 	attributes := source.Attributes
 
 	title := attributes.Title.findAttribute(el)
@@ -123,7 +124,7 @@ func onEntry(ctx context.Context, source SourceDefinition, el Element) (Entry, e
 			Str("title", title).
 			Msg(ErrCategoryNotAllowed.Error())
 
-		return Entry{}, ErrCategoryNotAllowed
+		return model.Entry{}, ErrCategoryNotAllowed
 	}
 
 	link := attributes.Link.findAttribute(el)

@@ -1,19 +1,19 @@
 package linkloader
 
 import (
-	"github.com/vinicius73/gamer-feed/pkg/scraper"
+	"github.com/vinicius73/gamer-feed/pkg/model"
 	"github.com/vinicius73/gamer-feed/pkg/support"
 )
 
 type Collection struct {
 	SourceName string
-	Entries    []scraper.Entry
+	Entries    []model.Entry
 }
 
 type Collections []Collection
 
-func (c Collections) Entries() []scraper.Entry {
-	entries := []scraper.Entry{}
+func (c Collections) Entries() []model.Entry {
+	entries := []model.Entry{}
 
 	for _, collection := range c {
 		entries = append(entries, collection.Entries...)
@@ -22,6 +22,6 @@ func (c Collections) Entries() []scraper.Entry {
 	return entries
 }
 
-func (c Collections) Shuffle() []scraper.Entry {
+func (c Collections) Shuffle() []model.Entry {
 	return support.Shuffle(c.Entries())
 }
