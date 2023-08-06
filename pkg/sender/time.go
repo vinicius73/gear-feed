@@ -3,16 +3,13 @@ package sender
 import "time"
 
 func CalculeSendInterval(count int) time.Duration {
-	// we cant sent more than 20 messages per minute
-	if count >= 20 {
+	switch {
+	case count >= 20:
+		// we cant sent more than 20 messages per minute
 		return time.Second * 3
+	case count >= 10:
+		return time.Second * 2
+	default:
+		return time.Second
 	}
-
-	dur := time.Duration(30/count) * time.Second
-
-	if dur > time.Second*2 {
-		return time.Second * 1
-	}
-
-	return dur
 }
