@@ -9,6 +9,8 @@ import (
 	"github.com/vinicius73/gamer-feed/pkg/linkloader"
 	"github.com/vinicius73/gamer-feed/pkg/scraper"
 	"github.com/vinicius73/gamer-feed/pkg/sender"
+	"github.com/vinicius73/gamer-feed/pkg/storage"
+	"github.com/vinicius73/gamer-feed/pkg/storage/local"
 	"github.com/vinicius73/gamer-feed/pkg/telegram"
 	"github.com/vinicius73/gamer-feed/sources"
 )
@@ -32,15 +34,22 @@ func loadEntries(ctx context.Context, only []string) ([]scraper.Entry, error) {
 	return collections.Shuffle(), nil
 }
 
-func buildSender(ctx context.Context, chats []int64) (sender.Serder, error) {
-	config := configurations.Ctx(ctx)
+type SenderOptions struct {
+	Chats    []int64
+	Storage  storage.Storage[sender.Sendable]
+	Telegram telegram.Config
+}
 
-	bot, err := telegram.NewBot(config.Telegram)
+func buildSender(opt SenderOptions) (sender.Serder, error) {
+	bot, err := telegram.NewBot(opt.Telegram)
 	if err != nil {
 		return nil, err
 	}
 
-	return sender.NewTelegramSerder(bot, chats), nil
+	return sender.NewTelegramSerder(bot, sender.TelegramOptions{
+		Storage: opt.Storage,
+		Chats:   opt.Chats,
+	}), nil
 }
 
 func scrapCMD() *cli.Command {
@@ -91,7 +100,20 @@ func scrapCMD() *cli.Command {
 				entries = entries[:limit]
 			}
 
-			botSender, err := buildSender(cmd.Context, []int64{to})
+			config := configurations.Ctx(cmd.Context)
+
+			store, err := local.NewStorage[sender.Sendable](config.Storage)
+			if err != nil {
+				return err
+			}
+
+			defer store.Close()
+
+			botSender, err := buildSender(SenderOptions{
+				Chats:    []int64{to},
+				Storage:  store,
+				Telegram: config.Telegram,
+			})
 			if err != nil {
 				return err
 			}
@@ -99,7 +121,7 @@ func scrapCMD() *cli.Command {
 			sendables := make([]sender.Sendable, len(entries))
 
 			for index, entry := range entries {
-				sendables[index] = sender.NewScrapEntry(entry)
+				sendables[index] = entry
 			}
 
 			botSender.SendCollection(cmd.Context, sendables)

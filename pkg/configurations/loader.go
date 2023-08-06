@@ -93,6 +93,19 @@ func applyDefaults(cfg AppConfig) (AppConfig, error) {
 		return cfg, ErrMissingTelegramToken
 	}
 
+	if cfg.Storage.Path == "" {
+		cfg.Storage.Path = "./." + configBaseName + ".db"
+	}
+
+	if path.IsAbs(cfg.Storage.Path) {
+		pwd, _ := os.Getwd()
+		cfg.Storage.Path = path.Join(pwd, cfg.Storage.Path)
+	}
+
+	if cfg.Storage.TTL == 0 {
+		cfg.Storage.TTL = 30 * 24 * time.Hour
+	}
+
 	return cfg, nil
 }
 
