@@ -6,16 +6,7 @@ import (
 	"github.com/vinicius73/gamer-feed/pkg/model"
 )
 
-var _ Sendable = (*model.Entry)(nil) // Ensure that Entry implements Sendable.
-
-type Sendable interface {
-	Text() string
-	Link() string
-	Tags() []string
-	Hash() (string, error)
-}
-
-func BuildMessage(entry Sendable) string {
+func BuildMessage(entry model.IEntry) string {
 	var builder strings.Builder
 
 	builder.WriteString(entry.Text())

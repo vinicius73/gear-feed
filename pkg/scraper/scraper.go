@@ -27,15 +27,15 @@ func newCollector() *colly.Collector {
 	return c
 }
 
-func FindEntries(ctx context.Context, source SourceDefinition) ([]model.Entry, error) {
+func FindEntries[T model.IEntry](ctx context.Context, source SourceDefinition) ([]T, error) {
 	logger := zerolog.Ctx(ctx).With().Str("source", source.Name).Logger()
 
 	ctx = logger.WithContext(ctx)
 
-	entries := []model.Entry{}
+	entries := []T{}
 
 	callback := func(e Element) {
-		entry, err := onEntry(ctx, source, e)
+		entry, err := onEntry[T](ctx, source, e)
 		if err != nil {
 			if !errors.Is(err, ErrCategoryNotAllowed) {
 				logger.Error().Err(err).Msg("Error on entry")
@@ -46,7 +46,7 @@ func FindEntries(ctx context.Context, source SourceDefinition) ([]model.Entry, e
 
 		logger.
 			Debug().
-			Msgf("New entry: %s", entry.URL)
+			Msgf("New entry: %s", entry.Link())
 
 		entries = append(entries, entry)
 	}
@@ -111,7 +111,8 @@ func visit(ctx context.Context, source SourceDefinition, callback func(e Element
 	return nil
 }
 
-func onEntry(ctx context.Context, source SourceDefinition, el Element) (model.Entry, error) {
+func onEntry[T model.IEntry](ctx context.Context, source SourceDefinition, el Element) (T, error) {
+	var result T
 	attributes := source.Attributes
 
 	title := attributes.Title.findAttribute(el)
@@ -124,7 +125,7 @@ func onEntry(ctx context.Context, source SourceDefinition, el Element) (model.En
 			Str("title", title).
 			Msg(ErrCategoryNotAllowed.Error())
 
-		return model.Entry{}, ErrCategoryNotAllowed
+		return result, ErrCategoryNotAllowed
 	}
 
 	link := attributes.Link.findAttribute(el)
@@ -134,5 +135,7 @@ func onEntry(ctx context.Context, source SourceDefinition, el Element) (model.En
 		title = title[:titleLimit]
 	}
 
-	return source.buildEntry(title, link, image, categories), nil
+	result = source.buildEntry(title, link, image, categories).(T)
+
+	return result, nil
 }

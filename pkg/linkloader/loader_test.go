@@ -7,6 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/vinicius73/gamer-feed/pkg/linkloader"
+	"github.com/vinicius73/gamer-feed/pkg/model"
 	"github.com/vinicius73/gamer-feed/pkg/scraper"
 	"github.com/vinicius73/gamer-feed/pkg/scraper/testdata"
 )
@@ -60,7 +61,7 @@ func TestFromSources(t *testing.T) {
 
 	sources := []scraper.SourceDefinition{demo01, demo02}
 
-	entries, err := linkloader.FromSources(context.TODO(), linkloader.LoadOptions{
+	entries, err := linkloader.FromSources[model.Entry](context.TODO(), linkloader.LoadOptions{
 		Sources: sources,
 		Workers: 2,
 	})

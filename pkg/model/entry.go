@@ -5,6 +5,15 @@ import (
 	"encoding/hex"
 )
 
+var _ IEntry = (*Entry)(nil) // Ensure that Entry implements IEntry.
+
+type IEntry interface {
+	Text() string
+	Link() string
+	Tags() []string
+	Hash() (string, error)
+}
+
 type Entry struct {
 	Title      string   `json:"title"`
 	URL        string   `json:"url"`

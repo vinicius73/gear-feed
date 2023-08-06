@@ -39,7 +39,7 @@ func Load(ctx context.Context, opt LoadOptions) error {
 		return err
 	}
 
-	entries, err := news.LoadEntries(ctx, news.LoadOptions{
+	entries, err := news.LoadEntries(ctx, news.LoadOptions[model.Entry]{
 		LoadOptions: linkloader.LoadOptions{
 			Sources: definitions,
 			Workers: 0, // dynamic

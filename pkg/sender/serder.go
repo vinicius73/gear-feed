@@ -6,29 +6,30 @@ import (
 	"time"
 
 	"github.com/rs/zerolog"
+	"github.com/vinicius73/gamer-feed/pkg/model"
 	"github.com/vinicius73/gamer-feed/pkg/storage"
 	"gopkg.in/telebot.v3"
 )
 
-var _ Serder[Sendable] = (*TelegramSerder[Sendable])(nil) // Ensure interface implementation
+var _ Serder[model.IEntry] = (*TelegramSerder[model.IEntry])(nil) // Ensure interface implementation
 
-type Serder[T Sendable] interface {
+type Serder[T model.IEntry] interface {
 	Send(ctx context.Context, entry T) error
 	SendCollection(ctx context.Context, entry []T) error
 }
 
-type TelegramSerder[T Sendable] struct {
+type TelegramSerder[T model.IEntry] struct {
 	chats   []telebot.Recipient
 	storage storage.Storage[T]
 	bot     *telebot.Bot
 }
 
-type TelegramOptions[T Sendable] struct {
+type TelegramOptions[T model.IEntry] struct {
 	Chats   []int64
 	Storage storage.Storage[T]
 }
 
-func NewTelegramSerder[T Sendable](bot *telebot.Bot, opts TelegramOptions[T]) TelegramSerder[T] {
+func NewTelegramSerder[T model.IEntry](bot *telebot.Bot, opts TelegramOptions[T]) TelegramSerder[T] {
 	ids := make([]telebot.Recipient, len(opts.Chats))
 	for index, chat := range opts.Chats {
 		ids[index] = telebot.ChatID(chat)
