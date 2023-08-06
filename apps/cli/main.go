@@ -68,7 +68,7 @@ func main() {
 	sort.Sort(cli.CommandsByName(app.Commands))
 
 	// catch on defer
-	// nolint:errcheck
+	//nolint:errcheck
 	err = app.Run(os.Args)
 }
 
