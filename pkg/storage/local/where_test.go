@@ -122,6 +122,5 @@ func TestWhere(t *testing.T) {
 
 			assert.Equal(t, current.want, got)
 		})
-
 	}
 }

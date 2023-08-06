@@ -10,16 +10,16 @@ import (
 type ctxKey struct{}
 
 type AppConfig struct {
-	Debug    bool            `fig:"-" yaml:"-"`
+	Debug    bool            `fig:"-"        yaml:"-"`
 	Timezone string          `fig:"timezone" yaml:"timezone"`
-	Logger   Logger          `fig:"logger" yaml:"logger"`
+	Logger   Logger          `fig:"logger"   yaml:"logger"`
 	Telegram telegram.Config `fig:"telegram" yaml:"telegram"`
-	Storage  local.Options   `fig:"storage" yaml:"storage"`
+	Storage  local.Options   `fig:"storage"  yaml:"storage"`
 }
 
 type Logger struct {
-	Level  string `fig:"level" yaml:"level" default:"info"`
-	Format string `fig:"format" yaml:"format" default:"text"`
+	Level  string `default:"info" fig:"level"  yaml:"level"`
+	Format string `default:"text" fig:"format" yaml:"format"`
 }
 
 func (l Logger) Debug(level string) bool {
