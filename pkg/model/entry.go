@@ -1,4 +1,4 @@
-package scraper
+package model
 
 import (
 	"crypto/sha256"

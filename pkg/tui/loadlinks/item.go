@@ -1,9 +1,9 @@
 package loadlinks
 
-import "github.com/vinicius73/gamer-feed/pkg/scraper"
+import "github.com/vinicius73/gamer-feed/pkg/model"
 
 type Link struct {
-	scraper.Entry
+	model.Entry
 }
 
 func (i Link) Title() string       { return i.Entry.Title }

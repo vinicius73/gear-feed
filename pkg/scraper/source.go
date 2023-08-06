@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/gocolly/colly"
+	"github.com/vinicius73/gamer-feed/pkg/model"
 	"github.com/vinicius73/gamer-feed/pkg/support"
 )
 
@@ -74,8 +75,8 @@ func (d SourceDefinition) visitURL() string {
 	return d.BaseURL + d.Path
 }
 
-func (d SourceDefinition) buildEntry(title, link, image string, categories []string) Entry {
-	return Entry{
+func (d SourceDefinition) buildEntry(title, link, image string, categories []string) model.Entry {
+	return model.Entry{
 		Source:     d.Name,
 		Title:      title,
 		Categories: categories,
