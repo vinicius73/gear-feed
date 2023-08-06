@@ -6,11 +6,11 @@ import (
 )
 
 type Entry struct {
-	Title      string
-	URL        string
-	Image      string
-	Categories []string
-	Source     string
+	Title      string   `json:"title"`
+	URL        string   `json:"url"`
+	Image      string   `json:"image"`
+	Categories []string `json:"categories"`
+	Source     string   `json:"source"`
 }
 
 // Hash of entry.
