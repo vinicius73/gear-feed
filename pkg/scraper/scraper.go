@@ -45,7 +45,7 @@ func FindEntries(ctx context.Context, source SourceDefinition) ([]Entry, error) 
 
 		logger.
 			Debug().
-			Msgf("New entry: %s", entry.Link)
+			Msgf("New entry: %s", entry.URL)
 
 		entries = append(entries, entry)
 	}
