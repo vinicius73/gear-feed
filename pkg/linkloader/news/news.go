@@ -26,7 +26,8 @@ func LoadEntries(ctx context.Context, opt LoadOptions) ([]model.Entry, error) {
 	logger.Info().Int("entries", len(entries)).Msg("loaded entries")
 
 	if opt.Storage != nil {
-		entries, err := opt.Storage.Where(storage.WhereOptions{}, entries)
+		where := storage.Where(storage.WhereIs(storage.StatusNew), storage.WhereAllowMissed(true))
+		entries, err = opt.Storage.Where(where, entries)
 		if err != nil {
 			return []model.Entry{}, err
 		}
