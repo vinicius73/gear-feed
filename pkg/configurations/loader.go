@@ -106,6 +106,8 @@ func applyDefaults(cfg AppConfig) (AppConfig, error) {
 		cfg.Storage.TTL = 30 * 24 * time.Hour
 	}
 
+	cfg.Cron.Timezone, _ = time.LoadLocation(cfg.Timezone)
+
 	return cfg, nil
 }
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"sort"
@@ -28,6 +29,10 @@ func main() {
 			os.Exit(1)
 		}
 	}()
+
+	mainCtx, cancel := support.WithKillSignal(context.Background())
+
+	defer cancel()
 
 	app := &cli.App{
 		EnableBashCompletion: true,
@@ -60,6 +65,7 @@ func main() {
 		Commands: []*cli.Command{
 			sourcesCMD(),
 			scrapCMD(),
+			botCMD(),
 		},
 		Before: beforeRun,
 	}
@@ -69,7 +75,7 @@ func main() {
 
 	// catch on defer
 	//nolint:errcheck
-	err = app.Run(os.Args)
+	err = app.RunContext(mainCtx, os.Args)
 }
 
 func beforeRun(cmd *cli.Context) error {
