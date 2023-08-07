@@ -270,7 +270,7 @@ attributes:
 
 	for index, entry := range entries {
 		num := strconv.Itoa(index + 1)
-		title := "G@M3R news " + num + " Não há quem goste de dor, que a procure e a queira ter,"
+		title := "G@M3R news " + num + " Não há quem goste de dor, que a procure e a queira ter, simplesmente porque é dor..."
 		assert.Equal(s.T(), title, entry.Title)
 		assert.Equal(s.T(), "http://foo.com/news/good-"+num, entry.URL)
 		assert.Equal(s.T(), "https://cdn.net/images/news-"+num+".png", entry.Image)
