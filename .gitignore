@@ -24,3 +24,4 @@ go.work
 coverage*
 
 gfeed*.yml
+.gfeed.*
