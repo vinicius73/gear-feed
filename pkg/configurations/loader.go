@@ -15,7 +15,10 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-const configBaseName = "gfeed"
+const (
+	configBaseName = "gfeed"
+	defaultTTL     = time.Hour * 30 * 24 // 30 days
+)
 
 var (
 	ConfigFileWasCreated    = apperrors.Business("a new config file was created (%s)", "CONF:001")
@@ -82,7 +85,9 @@ func applyDefaults(cfg AppConfig) (AppConfig, error) {
 	}
 
 	if cfg.Timezone == "" {
-		cfg.Timezone = time.Local.String()
+		loc, _ := time.LoadLocation("Local")
+
+		cfg.Timezone = loc.String()
 	}
 
 	if cfg.Telegram.Token == "" {
@@ -103,7 +108,7 @@ func applyDefaults(cfg AppConfig) (AppConfig, error) {
 	}
 
 	if cfg.Storage.TTL == 0 {
-		cfg.Storage.TTL = 30 * 24 * time.Hour
+		cfg.Storage.TTL = defaultTTL
 	}
 
 	cfg.Cron.Timezone, _ = time.LoadLocation(cfg.Timezone)

@@ -10,8 +10,10 @@ import (
 	"github.com/vinicius73/gamer-feed/pkg/storage"
 )
 
+const stopTimeout = time.Second * 30
+
 type Config[T model.IEntry] struct {
-	Cron cron.CronTasksConfig[T]
+	Cron cron.TasksConfig[T]
 }
 
 type BotOptions[T model.IEntry] struct {
@@ -42,10 +44,11 @@ func (b Bot[T]) Run(ctx context.Context) error {
 
 	<-ctx.Done()
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+	ctx, cancel := context.WithTimeout(context.Background(), stopTimeout)
 
 	defer cancel()
 
+	//nolint:contextcheck
 	return runner.Stop(ctx)
 }
 

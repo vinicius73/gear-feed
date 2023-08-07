@@ -8,10 +8,13 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/vinicius73/gamer-feed/pkg/model"
 	"github.com/vinicius73/gamer-feed/pkg/storage"
+	"github.com/vinicius73/gamer-feed/pkg/support/apperrors"
 	"gopkg.in/telebot.v3"
 )
 
 var _ Serder[model.IEntry] = (*TelegramSerder[model.IEntry])(nil) // Ensure interface implementation
+
+var ErrNoChats = apperrors.Business("no chats to send message", "SENDER:NO_CHATS")
 
 type Serder[T model.IEntry] interface {
 	Send(ctx context.Context, entry T) error
@@ -47,7 +50,7 @@ func (s TelegramSerder[T]) Send(ctx context.Context, entry T) error {
 	logger := zerolog.Ctx(ctx)
 
 	if len(s.chats) == 0 {
-		return fmt.Errorf("no chats to send message")
+		return ErrNoChats
 	}
 
 	msg := BuildMessage(entry)
@@ -88,7 +91,8 @@ func (s TelegramSerder[T]) SendCollection(ctx context.Context, entries []T) erro
 
 	sendInterval := CalculeSendInterval(size)
 
-	logger.Info().Msgf("Sending %d entries with %s interval, speding %s", size, sendInterval, sendInterval*time.Duration(size))
+	logger.Info().
+		Msgf("Sending %d entries with %s interval, speding %s", size, sendInterval, sendInterval*time.Duration(size))
 
 	startedAt := time.Now()
 

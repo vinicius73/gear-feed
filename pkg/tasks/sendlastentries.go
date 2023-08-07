@@ -11,6 +11,8 @@ import (
 
 var _ Task[model.IEntry] = SendLastEntries[model.IEntry]{}
 
+const defaultSendLastEntriesLimit = 10
+
 type SendLastEntries[T model.IEntry] struct {
 	Limit int      `fig:"limit" yaml:"limit"`
 	Only  []string `fig:"only"  yaml:"only"`
@@ -33,7 +35,7 @@ func (t SendLastEntries[T]) Run(ctx context.Context, opts TaskRunOptions[T]) err
 			Sources: definitions,
 			Workers: 0, // dynamic
 		},
-		Limit:   10,
+		Limit:   defaultSendLastEntriesLimit,
 		Storage: opts.Storage,
 	})
 	if err != nil {

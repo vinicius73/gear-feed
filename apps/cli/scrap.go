@@ -14,7 +14,7 @@ func scrapCMD() *cli.Command {
 				Name:    "limit",
 				Usage:   "Limit the number of entries to send",
 				Aliases: []string{"l"},
-				Value:   10,
+				Value:   10, //nolint:gomnd // default value
 				Action: func(c *cli.Context, val int) error {
 					if val < 1 {
 						return cli.Exit("Limit must be greater than 1", 1)

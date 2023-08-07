@@ -68,6 +68,7 @@ func (m Model) Init() tea.Cmd {
 	)
 }
 
+//nolint:funlen,cyclop
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	cmds := []tea.Cmd{}
 

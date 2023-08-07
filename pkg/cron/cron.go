@@ -14,7 +14,7 @@ import (
 	"github.com/vinicius73/gamer-feed/pkg/tasks"
 )
 
-type CronTasksConfig[T model.IEntry] struct {
+type TasksConfig[T model.IEntry] struct {
 	Timezone        *time.Location                    `fig:"-"                 yaml:"-"`
 	SendLastEntries Task[T, tasks.SendLastEntries[T]] `fig:"send_last_entries" yaml:"send_last_entries"`
 }
@@ -22,12 +22,12 @@ type CronTasksConfig[T model.IEntry] struct {
 type Runner[T model.IEntry] struct {
 	storage   storage.Storage[T]
 	sender    sender.Serder[T]
-	config    CronTasksConfig[T]
+	config    TasksConfig[T]
 	scheduler *gocron.Scheduler
 }
 
 type RunnerOptions[T model.IEntry] struct {
-	Config  CronTasksConfig[T]
+	Config  TasksConfig[T]
 	Storage storage.Storage[T]
 	Sender  sender.Serder[T]
 }
@@ -74,7 +74,7 @@ func (r Runner[T]) Start(ctx context.Context) error {
 	return nil
 }
 
-func (r Runner[T]) Stop(ctx context.Context) error {
+func (r Runner[T]) Stop(_ context.Context) error {
 	r.scheduler.Clear()
 	r.scheduler.Stop()
 
@@ -86,6 +86,7 @@ func (r Runner[T]) register(ctx context.Context, task Task[T, tasks.Task[T]]) er
 
 	if len(task.Schedules) == 0 {
 		logger.Warn().Msg("Task has no schedules")
+
 		return nil
 	}
 
@@ -95,7 +96,7 @@ func (r Runner[T]) register(ctx context.Context, task Task[T, tasks.Task[T]]) er
 			return err
 		}
 
-		hash, err := support.HashSHA1(schedule)
+		hash, err := support.HashSHA256(schedule)
 		if err != nil {
 			return err
 		}

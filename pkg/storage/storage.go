@@ -13,7 +13,7 @@ const (
 )
 
 type Options struct {
-	TTL time.Duration
+	TTL time.Duration `fig:"ttl" yaml:"ttl"`
 }
 
 type Hashable interface {

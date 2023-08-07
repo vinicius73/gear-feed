@@ -1,6 +1,7 @@
 package local
 
 import (
+	"errors"
 	"time"
 
 	"github.com/dgraph-io/badger/v4"
@@ -10,8 +11,8 @@ import (
 var _ storage.Storage[storage.Hashable] = Storage[storage.Hashable]{} // Ensure interface implementation
 
 type Options struct {
-	storage.Options
-	Path string
+	storage.Options `fig:",squash" yaml:",inline"`
+	Path            string `fig:"path"    yaml:"path"`
 }
 
 type Storage[T storage.Hashable] struct {
@@ -38,7 +39,7 @@ func (s Storage[T]) Has(hash string) (bool, error) {
 	var has bool
 	err := s.db.View(func(txn *badger.Txn) error {
 		_, err := txn.Get([]byte(hash))
-		if err != nil && err != badger.ErrKeyNotFound {
+		if err != nil && !errors.Is(err, badger.ErrKeyNotFound) {
 			return err
 		}
 

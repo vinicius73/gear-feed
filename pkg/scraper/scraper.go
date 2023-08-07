@@ -1,3 +1,4 @@
+//nolint:ireturn
 package scraper
 
 import (
@@ -135,6 +136,7 @@ func onEntry[T model.IEntry](ctx context.Context, source SourceDefinition, el El
 		title = title[:titleLimit]
 	}
 
+	//nolint:forcetypeassert
 	result = source.buildEntry(title, link, image, categories).(T)
 
 	return result, nil

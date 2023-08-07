@@ -47,10 +47,12 @@ linters-settings:
     ignore-decls:
       - el Element
       - s spinner.New
+      - wg *sync.WaitGroup
       - wg sync.WaitGroup
-      - db *badger.DB
+      - db badger.DB
     ignore-names:
       - err
+      - db
 
 issues:
   exclude-rules:
