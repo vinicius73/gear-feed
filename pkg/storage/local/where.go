@@ -1,6 +1,8 @@
 package local
 
 import (
+	"errors"
+
 	"github.com/dgraph-io/badger/v4"
 	"github.com/vinicius73/gamer-feed/pkg/storage"
 )
@@ -12,7 +14,7 @@ type Record interface {
 
 func ApplyWhere(where storage.WhereOptions, item Record, rerr error) bool {
 	if rerr != nil {
-		if where.AllowMissed != nil && *where.AllowMissed && rerr == badger.ErrKeyNotFound {
+		if where.AllowMissed != nil && *where.AllowMissed && errors.Is(rerr, badger.ErrKeyNotFound) {
 			return true
 		}
 

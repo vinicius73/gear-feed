@@ -81,7 +81,8 @@ func FromSource[T model.IEntry](ctx context.Context, source scraper.SourceDefini
 	}, nil
 }
 
-func loadWorker[T model.IEntry](wg *sync.WaitGroup, ctx context.Context, in <-chan scraper.SourceDefinition) (<-chan Collection[T], <-chan error) {
+//nolint:lll,revive
+func loadWorker[T model.IEntry](wg *sync.WaitGroup, ctx context.Context, input <-chan scraper.SourceDefinition) (<-chan Collection[T], <-chan error) {
 	//nolint:gomnd
 	out := make(chan Collection[T], 2)
 	errc := make(chan error, 1)
@@ -92,7 +93,7 @@ func loadWorker[T model.IEntry](wg *sync.WaitGroup, ctx context.Context, in <-ch
 
 		defer wg.Done()
 
-		for source := range in {
+		for source := range input {
 			collection, err := FromSource[T](ctx, source)
 			if err != nil {
 				errc <- err
@@ -105,7 +106,7 @@ func loadWorker[T model.IEntry](wg *sync.WaitGroup, ctx context.Context, in <-ch
 	return out, errc
 }
 
-func mergeChanners[T any](cs ...<-chan T) <-chan T {
+func mergeChanners[T any](list ...<-chan T) <-chan T {
 	var wg sync.WaitGroup
 
 	out := make(chan T)
@@ -118,9 +119,9 @@ func mergeChanners[T any](cs ...<-chan T) <-chan T {
 		}
 	}
 
-	wg.Add(len(cs))
+	wg.Add(len(list))
 
-	for _, c := range cs {
+	for _, c := range list {
 		go output(c)
 	}
 

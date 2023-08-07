@@ -2,6 +2,7 @@ package sender
 
 import "time"
 
+//nolint:gomnd
 func CalculeSendInterval(count int) time.Duration {
 	switch {
 	case count >= 20:

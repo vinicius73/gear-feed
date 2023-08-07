@@ -23,16 +23,12 @@ func newItemDelegate(keys *delegateKeyMap) list.DefaultDelegate {
 			return nil
 		}
 
-		switch msg := msg.(type) {
-		case tea.KeyMsg:
-			switch {
-			case key.Matches(msg, keys.open):
-				return tea.Batch(
-					func() tea.Msg {
-						return item
-					},
-				)
-			}
+		if msg, ok := msg.(tea.KeyMsg); ok && key.Matches(msg, keys.open) {
+			return tea.Batch(
+				func() tea.Msg {
+					return item
+				},
+			)
 		}
 
 		return nil

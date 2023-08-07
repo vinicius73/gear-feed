@@ -42,6 +42,7 @@ func (m Model) Init() tea.Cmd {
 	return nil
 }
 
+//nolint:cyclop
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 

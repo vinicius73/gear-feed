@@ -38,16 +38,17 @@ func LoadDefinitions(ctx context.Context, options LoadOptions) ([]scraper.Source
 			return definitions, err
 		}
 
-		if len(options.Only) > 0 {
+		switch {
+		case len(options.Only) > 0:
 			if support.Contains(options.Only, def.Name) {
 				definitions = append(definitions, def)
 			} else {
 				logger.Warn().
 					Msgf("Loader %s is not in the list of loaders to be loaded", def.Name)
 			}
-		} else if def.Enabled {
+		case def.Enabled:
 			definitions = append(definitions, def)
-		} else {
+		default:
 			logger.Warn().
 				Msgf("Loader %s is disabled", def.Name)
 		}

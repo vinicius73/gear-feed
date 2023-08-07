@@ -15,27 +15,20 @@ func newItemDelegate(keys *delegateKeyMap) list.DefaultDelegate {
 	def := list.NewDefaultDelegate()
 
 	def.UpdateFunc = func(msg tea.Msg, m *list.Model) tea.Cmd {
-		// var title string
 		var item scraper.SourceDefinition
 
 		if i, ok := m.SelectedItem().(SourceItem); ok {
-			// title = i.Title()
 			item = i.SourceDefinition
 		} else {
 			return nil
 		}
 
-		switch msg := msg.(type) {
-		case tea.KeyMsg:
-			switch {
-			case key.Matches(msg, keys.choose):
-				return tea.Batch(
-					// m.NewStatusMessage(tui.StatusMessageStyle.Render("You chose "+title)),
-					func() tea.Msg {
-						return item
-					},
-				)
-			}
+		if msg, ok := msg.(tea.KeyMsg); ok && key.Matches(msg, keys.choose) {
+			return tea.Batch(
+				func() tea.Msg {
+					return item
+				},
+			)
 		}
 
 		return nil
