@@ -3,6 +3,8 @@ package configurations
 import (
 	"context"
 
+	"github.com/vinicius73/gamer-feed/pkg/cron"
+	"github.com/vinicius73/gamer-feed/pkg/model"
 	"github.com/vinicius73/gamer-feed/pkg/storage/local"
 	"github.com/vinicius73/gamer-feed/pkg/telegram"
 )
@@ -10,11 +12,12 @@ import (
 type ctxKey struct{}
 
 type AppConfig struct {
-	Debug    bool            `fig:"-"        yaml:"-"`
-	Timezone string          `fig:"timezone" yaml:"timezone"`
-	Logger   Logger          `fig:"logger"   yaml:"logger"`
-	Telegram telegram.Config `fig:"telegram" yaml:"telegram"`
-	Storage  local.Options   `fig:"storage"  yaml:"storage"`
+	Debug    bool                              `fig:"-"        yaml:"-"`
+	Timezone string                            `fig:"timezone" yaml:"timezone"`
+	Logger   Logger                            `fig:"logger"   yaml:"logger"`
+	Telegram telegram.Config                   `fig:"telegram" yaml:"telegram"`
+	Storage  local.Options                     `fig:"storage"  yaml:"storage"`
+	Cron     cron.CronTasksConfig[model.Entry] `fig:"cron"     yaml:"cron"`
 }
 
 type Logger struct {

@@ -11,7 +11,8 @@ import (
 const poolingTiming = 10 * time.Second
 
 type Config struct {
-	Token string `fig:"token" yaml:"token"`
+	Token     string  `fig:"token"     yaml:"token"`
+	Broadcast []int64 `fig:"broadcast" yaml:"broadcast"`
 }
 
 const LoggerKey = "bot:logger"

@@ -1,8 +1,7 @@
 package model
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
+	"github.com/vinicius73/gamer-feed/pkg/support"
 )
 
 var _ IEntry = (*Entry)(nil) // Ensure that Entry implements IEntry.
@@ -24,14 +23,7 @@ type Entry struct {
 
 // Hash of entry.
 func (e Entry) Hash() (string, error) {
-	hasher := sha256.New()
-
-	_, err := hasher.Write([]byte(e.URL))
-	if err != nil {
-		return "", err
-	}
-
-	return hex.EncodeToString(hasher.Sum(nil)), nil
+	return support.HashSHA256(e.URL)
 }
 
 // Key of entry.
