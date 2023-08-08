@@ -5,7 +5,7 @@ import (
 
 	"github.com/vinicius73/gamer-feed/pkg/cron"
 	"github.com/vinicius73/gamer-feed/pkg/model"
-	"github.com/vinicius73/gamer-feed/pkg/storage/local"
+	"github.com/vinicius73/gamer-feed/pkg/storage/database"
 	"github.com/vinicius73/gamer-feed/pkg/telegram"
 )
 
@@ -16,7 +16,7 @@ type AppConfig struct {
 	Timezone string                        `fig:"timezone" yaml:"timezone"`
 	Logger   Logger                        `fig:"logger"   yaml:"logger"`
 	Telegram telegram.Config               `fig:"telegram" yaml:"telegram"`
-	Storage  local.Options                 `fig:"storage"  yaml:"storage"`
+	Storage  database.Options              `fig:"storage"  yaml:"storage"`
 	Cron     cron.TasksConfig[model.Entry] `fig:"cron"     yaml:"cron"`
 }
 

@@ -7,7 +7,7 @@ import (
 	"github.com/vinicius73/gamer-feed/pkg/botworker"
 	"github.com/vinicius73/gamer-feed/pkg/configurations"
 	"github.com/vinicius73/gamer-feed/pkg/model"
-	"github.com/vinicius73/gamer-feed/pkg/storage/local"
+	"github.com/vinicius73/gamer-feed/pkg/storage/database"
 )
 
 func BotWorker(ctx context.Context) error {
@@ -15,14 +15,14 @@ func BotWorker(ctx context.Context) error {
 
 	config := configurations.Ctx(ctx)
 
-	db, err := local.Open(config.Storage)
+	db, err := database.Open(ctx, config.Storage)
 	if err != nil {
 		return err
 	}
 
 	defer db.Close()
 
-	store, err := local.NewStorage[model.Entry](db, config.Storage)
+	store, err := database.NewStorage[model.Entry](db, config.Storage)
 	if err != nil {
 		return err
 	}
