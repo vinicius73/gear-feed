@@ -113,6 +113,10 @@ tasks:
       - pkg/**/*.go
       - apps/**/*.go
     method: none
+    vars:
+      CGO_ENABLED: "{{default 0 .CGO_ENABLED}}"
+    env:
+      CGO_ENABLED: "{{.CGO_ENABLED}}"
 
   _build:
     desc: Build
