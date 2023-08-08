@@ -61,18 +61,18 @@ func (s TelegramSerder[T]) Send(ctx context.Context, entry T) error {
 			return err
 		}
 
-		err = s.storage.Store(storage.Entry[T]{
-			Data:   entry,
-			Status: storage.StatusSent,
-		})
-		if err != nil {
-			return err
-		}
-
 		logger.Info().
 			Str("recipient", chat.Recipient()).
 			Strs("tags", entry.Tags()).
 			Msgf("Message sent %s", entry.Link())
+	}
+
+	err := s.storage.Store(storage.Entry[T]{
+		Data:   entry,
+		Status: storage.StatusSent,
+	})
+	if err != nil {
+		return err
 	}
 
 	return nil
