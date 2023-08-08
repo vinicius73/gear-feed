@@ -112,7 +112,7 @@ attributes:
 	image:
 		path: enclosure
 		attribute: url
-	
+
 	`)
 
 	entries, err := scraper.FindEntries[model.Entry](context.TODO(), source)
@@ -187,7 +187,7 @@ attributes:
 	image:
 		path: enclosure
 		attribute: url
-	
+
 	`)
 
 	entries, err := scraper.FindEntries[model.Entry](context.TODO(), source)

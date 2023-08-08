@@ -1,3 +1,4 @@
+//nolint:ireturn
 package model
 
 import (
@@ -10,15 +11,19 @@ type IEntry interface {
 	Text() string
 	Link() string
 	Tags() []string
+	Source() string
+	ImageURL() string
 	Hash() (string, error)
+
+	FillFrom(IEntry) IEntry
 }
 
 type Entry struct {
 	Title      string   `json:"title"`
 	URL        string   `json:"url"`
-	Image      string   `json:"image"`
+	Image      string   `json:"image_url"`
 	Categories []string `json:"categories"`
-	Source     string   `json:"source"`
+	SourceName string   `json:"source"`
 }
 
 // Hash of entry.
@@ -26,13 +31,12 @@ func (e Entry) Hash() (string, error) {
 	return support.HashSHA256(e.URL)
 }
 
-// Key of entry.
-func (e Entry) Key() string {
-	return e.Source + ":" + e.Title
-}
-
 func (e Entry) Text() string {
 	return e.Title
+}
+
+func (e Entry) ImageURL() string {
+	return e.Image
 }
 
 func (e Entry) Link() string {
@@ -40,5 +44,23 @@ func (e Entry) Link() string {
 }
 
 func (e Entry) Tags() []string {
-	return []string{e.Source}
+	return e.Categories
+}
+
+func (e Entry) Source() string {
+	return e.SourceName
+}
+
+func (e Entry) FillFrom(input IEntry) IEntry {
+	if actual, ok := input.(Entry); ok {
+		return actual
+	}
+
+	e.Title = input.Text()
+	e.URL = input.Link()
+	e.Image = input.ImageURL()
+	e.Categories = input.Tags()
+	e.SourceName = input.Source()
+
+	return e
 }

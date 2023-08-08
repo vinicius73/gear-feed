@@ -78,7 +78,7 @@ func (d SourceDefinition) visitURL() string {
 
 func (d SourceDefinition) buildEntry(title, link, image string, categories []string) model.IEntry {
 	return model.Entry{
-		Source:     d.Name,
+		SourceName: d.Name,
 		Title:      title,
 		Categories: categories,
 		URL:        d.absouteURL(link),
