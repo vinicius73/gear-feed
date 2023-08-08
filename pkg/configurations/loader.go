@@ -39,7 +39,7 @@ func Load(file string) (AppConfig, error) {
 		)
 
 		if err != nil {
-			return cfg, ErrFailToLoadConfig.WithErr(err)
+			return cfg, ErrFailToLoadConfig.Wrap(err)
 		}
 
 		return applyDefaults(cfg)
@@ -47,7 +47,7 @@ func Load(file string) (AppConfig, error) {
 
 	home, err := homedir.Dir()
 	if err != nil {
-		return cfg, ErrFailToLoadConfig.WithErr(err)
+		return cfg, ErrFailToLoadConfig.Wrap(err)
 	}
 
 	err = fig.Load(&cfg,
@@ -122,18 +122,18 @@ func ensureConfig() (AppConfig, error) {
 	var cfg AppConfig
 
 	if err = defaults.Set(&cfg); err != nil {
-		return cfg, ErrFailEnsureConfig.WithErr(err)
+		return cfg, ErrFailEnsureConfig.Wrap(err)
 	}
 
 	cfg, err = applyDefaults(cfg)
 
 	if err != nil {
-		return cfg, ErrFailEnsureConfig.WithErr(err)
+		return cfg, ErrFailEnsureConfig.Wrap(err)
 	}
 
 	buf, err := yaml.Marshal(cfg)
 	if err != nil {
-		return cfg, ErrFailEnsureConfig.WithErr(err)
+		return cfg, ErrFailEnsureConfig.Wrap(err)
 	}
 
 	pwd, _ := os.Getwd()
@@ -143,7 +143,7 @@ func ensureConfig() (AppConfig, error) {
 	err = os.WriteFile(configFile, buf, os.ModePerm)
 
 	if err != nil {
-		return cfg, ErrFailEnsureConfig.WithErr(err)
+		return cfg, ErrFailEnsureConfig.Wrap(err)
 	}
 
 	return cfg, ConfigFileWasCreated.Msgf(configFile)

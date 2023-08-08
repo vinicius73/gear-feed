@@ -57,7 +57,7 @@ func (s Storage[T]) Has(hash string) (bool, error) {
 func (s Storage[T]) Store(value storage.Entry[T]) error {
 	data, err := value.Marshal()
 	if err != nil {
-		return storage.ErrFailToMarshalData.WithErr(err)
+		return storage.ErrFailToMarshalData.Wrap(err)
 	}
 
 	hash, err := value.Hash()
