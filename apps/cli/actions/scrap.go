@@ -7,7 +7,7 @@ import (
 	"github.com/vinicius73/gamer-feed/pkg/linkloader"
 	"github.com/vinicius73/gamer-feed/pkg/linkloader/news"
 	"github.com/vinicius73/gamer-feed/pkg/model"
-	"github.com/vinicius73/gamer-feed/pkg/storage/local"
+	"github.com/vinicius73/gamer-feed/pkg/storage/database"
 	"github.com/vinicius73/gamer-feed/sources"
 )
 
@@ -20,21 +20,24 @@ type LoadOptions struct {
 func Load(ctx context.Context, opt LoadOptions) error {
 	config := configurations.Ctx(ctx)
 
-	definitions, err := sources.LoadDefinitions(ctx, sources.LoadOptions{
-		Only: opt.Only,
+	db, err := database.Open(ctx, database.Options{
+		Options: config.Storage.Options,
+		Path:    config.Storage.Path,
 	})
-	if err != nil {
-		return err
-	}
-
-	db, err := local.Open(config.Storage)
 	if err != nil {
 		return err
 	}
 
 	defer db.Close()
 
-	store, err := local.NewStorage[model.Entry](db, config.Storage)
+	store, err := database.NewStorage[model.Entry](db, config.Storage)
+	if err != nil {
+		return err
+	}
+
+	definitions, err := sources.LoadDefinitions(ctx, sources.LoadOptions{
+		Only: opt.Only,
+	})
 	if err != nil {
 		return err
 	}
