@@ -14,7 +14,7 @@ func System(reason error, message, code string) SystemError {
 	}
 }
 
-func (e SystemError) WithErr(err error) SystemError {
+func (e SystemError) Wrap(err error) SystemError {
 	e.Reason = err
 
 	return e
