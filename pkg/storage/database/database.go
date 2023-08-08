@@ -7,7 +7,10 @@ import (
 	"github.com/go-gorp/gorp/v3"
 	"github.com/vinicius73/gamer-feed/pkg/model"
 	"github.com/vinicius73/gamer-feed/pkg/storage"
+	"github.com/vinicius73/gamer-feed/pkg/support/apperrors"
 )
+
+var ErrFailedToCreateEntry = apperrors.System(nil, "failed to create entry", "DB:FailedToCreateEntry")
 
 type Storage[T model.IEntry] struct {
 	ttl time.Duration
@@ -41,7 +44,13 @@ func (s Storage[T]) Store(entry storage.Entry[T]) error {
 		return err
 	}
 
-	return s.db.Insert(&record)
+	err = s.db.Insert(&record)
+
+	if err != nil {
+		return ErrFailedToCreateEntry.Wrap(err)
+	}
+
+	return nil
 }
 
 func (s Storage[T]) Where(where storage.WhereOptions, list []T) ([]T, error) {
@@ -52,7 +61,8 @@ func (s Storage[T]) Where(where storage.WhereOptions, list []T) ([]T, error) {
 
 	found := []DBEntry[T]{}
 
-	_, err = s.db.Select(&found, "SELECT hash FROM entries WHERE hash IN (:hashs)", map[string]interface{}{
+	// Select only fields that are needed (hash and status)
+	_, err = s.db.Select(&found, "SELECT hash, status FROM entries WHERE hash IN (:hashs)", map[string]interface{}{
 		"hashs": hashs,
 	})
 
@@ -69,10 +79,6 @@ func (s Storage[T]) Where(where storage.WhereOptions, list []T) ([]T, error) {
 	result := []T{}
 
 	for hash, entry := range hashMap {
-		if where.AllowMissed == nil {
-			continue
-		}
-
 		dbEntry, has := foundMap[hash]
 
 		if Where(where, has, dbEntry) {
