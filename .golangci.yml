@@ -32,6 +32,8 @@ linters-settings:
       - (or|er)$
       - tea.Model
       - tea.Msg
+      - model.IEntry
+      - T
   exhaustruct:
     exclude:
       - ".*_test.go"
