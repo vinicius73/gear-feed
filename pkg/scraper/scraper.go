@@ -1,4 +1,3 @@
-//nolint:ireturn
 package scraper
 
 import (
@@ -112,7 +111,7 @@ func visit(ctx context.Context, source SourceDefinition, callback func(e Element
 	return nil
 }
 
-func onEntry[T model.IEntry](ctx context.Context, source SourceDefinition, el Element) (T, error) {
+func onEntry[T model.IEntry](ctx context.Context, source SourceDefinition, el Element) (T, error) { //nolint:ireturn
 	var result T
 	attributes := source.Attributes
 
