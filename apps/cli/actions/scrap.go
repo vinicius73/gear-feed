@@ -4,11 +4,9 @@ import (
 	"context"
 
 	"github.com/vinicius73/gamer-feed/pkg/configurations"
-	"github.com/vinicius73/gamer-feed/pkg/linkloader"
-	"github.com/vinicius73/gamer-feed/pkg/linkloader/news"
 	"github.com/vinicius73/gamer-feed/pkg/model"
 	"github.com/vinicius73/gamer-feed/pkg/storage/database"
-	"github.com/vinicius73/gamer-feed/sources"
+	"github.com/vinicius73/gamer-feed/pkg/tasks"
 )
 
 type LoadOptions struct {
@@ -35,25 +33,6 @@ func Load(ctx context.Context, opt LoadOptions) error {
 		return err
 	}
 
-	definitions, err := sources.LoadDefinitions(ctx, sources.LoadOptions{
-		Only: opt.Only,
-	})
-	if err != nil {
-		return err
-	}
-
-	entries, err := news.LoadEntries(ctx, news.LoadOptions[model.Entry]{
-		LoadOptions: linkloader.LoadOptions{
-			Sources: definitions,
-			Workers: 0, // dynamic
-		},
-		Limit:   opt.Limit,
-		Storage: store,
-	})
-	if err != nil {
-		return err
-	}
-
 	botSender, err := buildSender(SenderOptions{
 		Chats:    []int64{opt.To},
 		Storage:  store,
@@ -63,7 +42,12 @@ func Load(ctx context.Context, opt LoadOptions) error {
 		return err
 	}
 
-	err = botSender.SendCollection(ctx, entries)
-
-	return err
+	return tasks.SendLastEntries[model.Entry]{
+		Limit: opt.Limit,
+		Only:  opt.Only,
+	}.
+		Run(ctx, tasks.TaskRunOptions[model.Entry]{
+			Storage: store,
+			Sender:  botSender,
+		})
 }
