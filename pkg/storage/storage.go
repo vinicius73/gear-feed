@@ -3,6 +3,8 @@ package storage
 import (
 	"encoding/json"
 	"time"
+
+	"github.com/vinicius73/gamer-feed/pkg/model"
 )
 
 type Status byte
@@ -16,16 +18,12 @@ type Options struct {
 	TTL time.Duration `fig:"ttl" yaml:"ttl"`
 }
 
-type Hashable interface {
-	Hash() (string, error)
-}
-
-type Entry[T Hashable] struct {
+type Entry[T model.IEntry] struct {
 	Data   T
 	Status Status
 }
 
-type Storage[T Hashable] interface {
+type Storage[T model.IEntry] interface {
 	Has(hash string) (bool, error)
 	Store(entry Entry[T]) error
 	Where(opts WhereOptions, list []T) ([]T, error)
