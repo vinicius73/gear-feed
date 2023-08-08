@@ -26,7 +26,7 @@ func LoadEntries[T model.IEntry](ctx context.Context, opt LoadOptions[T]) ([]T, 
 	logger.Info().Int("entries", len(entries)).Msg("loaded entries")
 
 	if opt.Storage != nil {
-		where := storage.Where(storage.WhereIs(storage.StatusNew), storage.WhereAllowMissed(true))
+		where := storage.WhereNotSent()
 		entries, err = opt.Storage.Where(where, entries)
 		if err != nil {
 			return []T{}, err
