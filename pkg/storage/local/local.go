@@ -5,17 +5,18 @@ import (
 	"time"
 
 	"github.com/dgraph-io/badger/v4"
+	"github.com/vinicius73/gamer-feed/pkg/model"
 	"github.com/vinicius73/gamer-feed/pkg/storage"
 )
 
-var _ storage.Storage[storage.Hashable] = Storage[storage.Hashable]{} // Ensure interface implementation
+var _ storage.Storage[model.IEntry] = Storage[model.IEntry]{} // Ensure interface implementation
 
 type Options struct {
 	storage.Options `fig:",squash" yaml:",inline"`
 	Path            string `fig:"path"    yaml:"path"`
 }
 
-type Storage[T storage.Hashable] struct {
+type Storage[T model.IEntry] struct {
 	ttl time.Duration
 	db  *badger.DB
 }
@@ -28,7 +29,7 @@ func Open(opt Options) (*badger.DB, error) {
 	)
 }
 
-func NewStorage[T storage.Hashable](db *badger.DB, opt Options) (storage.Storage[T], error) {
+func NewStorage[T model.IEntry](db *badger.DB, opt Options) (storage.Storage[T], error) {
 	return Storage[T]{
 		ttl: opt.TTL,
 		db:  db,
