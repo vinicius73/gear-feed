@@ -8,6 +8,8 @@ import (
 func Where[T model.IEntry](where storage.WhereOptions, has bool, entry DBEntry[T]) bool {
 	if !has {
 		return where.AllowMissed != nil && *where.AllowMissed
+	} else if where.AllowMissed != nil && !*where.AllowMissed {
+		return false
 	}
 
 	if condition := where.Is; condition != nil {

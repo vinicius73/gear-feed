@@ -8,6 +8,13 @@ type WhereOptions struct {
 
 type WhereOption func(opts *WhereOptions)
 
+func WhereNotSent() WhereOptions {
+	return Where(
+		WhereAllowMissed(true),
+		WhereNot(StatusSent),
+	)
+}
+
 func Where(opts ...WhereOption) WhereOptions {
 	var options WhereOptions
 
