@@ -1,0 +1,26 @@
+name: INTOXIANIME
+base_url: https://www.intoxianime.com
+path: /category/noticias/
+limit: 3
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: "#content #grid-wrapper .post-row > article"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: .post-title a
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: .post-title a
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .post-thumbnail img
+    attribute: src
+    parse_strategy: ""
