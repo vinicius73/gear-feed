@@ -12,9 +12,7 @@ import (
 	migrate "github.com/rubenv/sql-migrate"
 	"github.com/vinicius73/gamer-feed/pkg/storage"
 	"github.com/vinicius73/gamer-feed/pkg/support/apperrors"
-
-	// Enable sqlite driver.
-	_ "modernc.org/sqlite"
+	_ "modernc.org/sqlite" // Enable sqlite driver.
 )
 
 //go:embed migrations/*.sql
