@@ -6,6 +6,7 @@ import (
 	"embed"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/rs/zerolog"
 	migrate "github.com/rubenv/sql-migrate"
@@ -66,13 +67,17 @@ func applyMigrations(ctx context.Context, conn *sql.DB) error {
 }
 
 func checkDatabaseFile(filename string) (string, error) {
+	if strings.HasSuffix(filename, ".sqlite") {
+		return filename, nil
+	}
+
 	stat, err := os.Stat(filename)
-	if err != nil {
+	if err != nil && !os.IsNotExist(err) {
 		return "", err
 	}
 
 	if stat.IsDir() {
-		return filepath.Join(filename, "gfeed.db"), nil
+		return filepath.Join(filename, "gfeed.sqlite"), nil
 	}
 
 	return filename, nil
