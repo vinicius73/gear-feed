@@ -19,7 +19,7 @@ import (
 var migrationsFS embed.FS
 
 var (
-	ErrFailToOpenDatabase = apperrors.System(nil, "fail to open database", "DB:FAIL_TO_OPEN_DATABASE")
+	ErrFailToOpenDatabase = apperrors.System(nil, "fail to open database: %s", "DB:FAIL_TO_OPEN_DATABASE")
 	ErrFailToRunMigration = apperrors.System(nil, "fail to run migration", "DB:FAIL_TO_RUN_MIGRATION")
 )
 
@@ -31,7 +31,7 @@ type Options struct {
 func Open(ctx context.Context, conf Options) (*sql.DB, error) {
 	filename, err := checkDatabaseFile(conf.Path)
 	if err != nil {
-		return nil, ErrFailToOpenDatabase.Wrap(err)
+		return nil, ErrFailToOpenDatabase.Wrap(err).Msgf(filename)
 	}
 
 	conn, err := sql.Open("sqlite", filename)
