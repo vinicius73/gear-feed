@@ -40,7 +40,11 @@ LABEL org.opencontainers.image.title="gearsfeed" \
 ENV BUILD_NUMBER=$BUILD_NUMBER \
   APP_VERSION=$BUILD_NUMBER
 
-WORKDIR /app
+ENV UID=1000
+ENV GID=1000
+ENV UMASK=022
+
+WORKDIR /gfeed
 
 COPY --from=builder /app/bin /sbin
 
