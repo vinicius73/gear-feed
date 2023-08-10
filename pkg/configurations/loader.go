@@ -100,7 +100,7 @@ func applyDefaults(cfg AppConfig) (AppConfig, error) {
 	}
 
 	if cfg.Storage.Path == "" {
-		cfg.Storage.Path = "./." + configBaseName + ".db"
+		cfg.Storage.Path = support.GetEnvString("GFEED_DATABASE", "./."+configBaseName+".sqlite")
 	}
 
 	if path.IsAbs(cfg.Storage.Path) {

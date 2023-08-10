@@ -44,6 +44,7 @@ func main() {
 				Name:        "config",
 				Aliases:     []string{"c"},
 				Usage:       "Load configuration from",
+				Value:       support.GetEnvString("GFEED_CONFIG", ""),
 				DefaultText: fmt.Sprintf("%s/gfeed.yml", support.GetBinDirPath()),
 			},
 			&cli.StringFlag{
