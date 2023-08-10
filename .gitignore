@@ -25,3 +25,4 @@ coverage*
 
 gfeed*.yml
 .gfeed.*
+.env
