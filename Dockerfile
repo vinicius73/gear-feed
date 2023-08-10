@@ -21,6 +21,8 @@ RUN go build \
 
 FROM alpine:3
 
+RUN apk add --update --no-cache ca-certificates tzdata sqlite
+
 # args
 ARG BUILD_NUMBER=unknown
 ARG BUILD_DATE=unknown
