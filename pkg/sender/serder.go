@@ -2,7 +2,6 @@ package sender
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/rs/zerolog"
@@ -14,7 +13,10 @@ import (
 
 var _ Serder[model.IEntry] = (*TelegramSerder[model.IEntry])(nil) // Ensure interface implementation
 
-var ErrNoChats = apperrors.Business("no chats to send message", "SENDER:NO_CHATS")
+var (
+	ErrNoChats    = apperrors.Business("no chats to send message", "SENDER:NO_CHATS")
+	ErrFailToSend = apperrors.System(nil, "fail to send message", "SENDER:FAIL_TO_SEND")
+)
 
 type Serder[T model.IEntry] interface {
 	Send(ctx context.Context, entry T) error
@@ -58,7 +60,7 @@ func (s TelegramSerder[T]) Send(ctx context.Context, entry T) error {
 	for _, chat := range s.chats {
 		_, err := s.bot.Send(chat, msg)
 		if err != nil {
-			return err
+			return ErrFailToSend.Wrap(err)
 		}
 
 		logger.Info().
@@ -97,14 +99,17 @@ func (s TelegramSerder[T]) SendCollection(ctx context.Context, entries []T) erro
 	startedAt := time.Now()
 
 	for _, item := range entries {
-		err := s.Send(ctx, item)
-		if err != nil {
-			logger.Error().Err(err).Msg("Error sending message")
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		case <-time.After(sendInterval):
+			err := s.Send(ctx, item)
+			if err != nil {
+				logger.Error().Err(err).Msg("Error sending message")
 
-			return fmt.Errorf("error sending message: %w", err)
+				return err
+			}
 		}
-
-		time.Sleep(sendInterval)
 	}
 
 	dur := time.Since(startedAt)
