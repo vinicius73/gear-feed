@@ -1,0 +1,26 @@
+name: EI_NERD
+base_url: https://www.einerd.com.br
+path: /secao/otaku/
+limit: 3
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: "#main .cat-layout article.def"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: .entry h3 a
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: .entry h3 a
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: picture img
+    attribute: data-src
+    parse_strategy: ""
