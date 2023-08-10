@@ -52,6 +52,7 @@ func Load(file string) (AppConfig, error) {
 
 	err = fig.Load(&cfg,
 		fig.File(configBaseName+".yml"),
+		fig.UseEnv("GFEED"),
 		fig.Dirs(
 			".",
 			path.Join(home, "."+configBaseName),
