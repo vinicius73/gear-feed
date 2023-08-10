@@ -4,16 +4,30 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/rs/zerolog"
 	"github.com/urfave/cli/v2"
+	"github.com/vinicius73/gamer-feed/pkg/sources"
 	layout "github.com/vinicius73/gamer-feed/pkg/tui/sources"
-	"github.com/vinicius73/gamer-feed/sources"
 )
 
 func sourcesCMD() *cli.Command {
 	list := &cli.Command{
 		Name: "list",
+		Flags: []cli.Flag{
+			&cli.StringSliceFlag{
+				Name:    "only",
+				Aliases: []string{"o"},
+				Usage:   "Only show the specified sources",
+			},
+			&cli.StringSliceFlag{
+				Name:     "sources",
+				Aliases:  []string{"s"},
+				Usage:    "Load sources from the specified paths",
+				Required: true,
+			},
+		},
 		Action: func(cmd *cli.Context) error {
-			list, err := sources.LoadDefinitions(cmd.Context, sources.LoadOptions{
-				Only: []string{},
+			list, err := sources.Load(cmd.Context, sources.LoadOptions{
+				Only:  cmd.StringSlice("only"),
+				Paths: cmd.StringSlice("sources"),
 			})
 			if err != nil {
 				return err

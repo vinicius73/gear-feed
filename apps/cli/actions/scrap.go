@@ -5,14 +5,15 @@ import (
 
 	"github.com/vinicius73/gamer-feed/pkg/configurations"
 	"github.com/vinicius73/gamer-feed/pkg/model"
+	"github.com/vinicius73/gamer-feed/pkg/sources"
 	"github.com/vinicius73/gamer-feed/pkg/storage/database"
 	"github.com/vinicius73/gamer-feed/pkg/tasks"
 )
 
 type LoadOptions struct {
-	Only  []string
-	To    int64
-	Limit int
+	To      int64
+	Limit   int
+	Sources sources.LoadOptions
 }
 
 func Load(ctx context.Context, opt LoadOptions) error {
@@ -43,8 +44,8 @@ func Load(ctx context.Context, opt LoadOptions) error {
 	}
 
 	return tasks.SendLastEntries[model.Entry]{
-		Limit: opt.Limit,
-		Only:  opt.Only,
+		Limit:   opt.Limit,
+		Sources: opt.Sources,
 	}.
 		Run(ctx, tasks.TaskRunOptions[model.Entry]{
 			Storage: store,
