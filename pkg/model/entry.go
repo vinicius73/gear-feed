@@ -43,7 +43,7 @@ func (e Entry) Link() string {
 }
 
 func (e Entry) Tags() []string {
-	return e.Categories
+	return []string{e.SourceName}
 }
 
 func (e Entry) Source() string {
