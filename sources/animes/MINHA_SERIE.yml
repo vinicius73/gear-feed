@@ -1,0 +1,26 @@
+name: MINHA_SERIE
+base_url: https://www.tecmundo.com.br/
+path: minha-serie/tag/anime
+limit: 2
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: ".tec--list__item article"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: h4.tec--card__title a
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: h4.tec--card__title a
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: figure img
+    attribute: data-src
+    parse_strategy: ""

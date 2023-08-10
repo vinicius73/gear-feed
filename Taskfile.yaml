@@ -1,0 +1,160 @@
+# https://taskfile.dev
+
+version: "3"
+
+vars:
+  PKG_NAME: github.com/vinicius73/gamer-feed
+  APP_BASE_NAME: gamer-feed
+  DIR_DIST: ./bin
+  BUILD_DATE: '{{now | date "2006-01-02T15:04:05"}}'
+  APP_VERSION:
+    sh: git describe --dirty --always --tags | echo "unknown"
+  GIT_HASH:
+    sh: git log -n 1 --format=%h | echo "unknown"
+
+dotenv: [".env"]
+
+env:
+  STAGE: "development"
+  GOOS:
+    sh: echo $(go env GOOS)
+  GOARCH:
+    sh: echo $(go env GOARCH)
+  GOARM:
+    sh: echo $(go env GOARM)
+
+tasks:
+  install:
+    desc: Install dependencies
+    cmds:
+      - go get ./...
+      - go mod tidy
+      - go mod vendor
+
+  install:lint:
+    internal: true
+    status:
+      - test -f $(go env GOPATH)/bin/golangci-lint
+    cmds:
+      - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
+
+  install:gofumpt:
+    internal: true
+    status:
+      - test -f $(go env GOPATH)/bin/gofumpt
+    cmds:
+      - go install mvdan.cc/gofumpt@latest
+
+  setup:
+    desc: Setup project dependencies
+    deps:
+      - install
+      - install:lint
+      - install:gofumpt
+
+  update:
+    desc: Update dependencies
+    cmds:
+      - go get -u ./...
+      - go mod tidy
+      - go mod vendor
+
+  generate:
+    cmds:
+      - go generate ./...
+
+  format:
+    desc: Format source code
+    cmds:
+      - go fmt ./...
+      - $(go env GOPATH)/bin/gofumpt -l -w .
+
+  vet:
+    desc: Apply vet to source code
+    cmds:
+      - go vet ./...
+
+  check:
+    desc: Check source code
+    deps:
+      - format
+      - vet
+    cmds:
+      - $(go env GOPATH)/bin/golangci-lint run ./... {{.CLI_ARGS}}
+
+  test:
+    desc: Run tests
+    cmds:
+      - go test -v ./... -count=1 {{.CLI_ARGS}}
+    env:
+      AWS_REGION: us-east-1
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_ACCESS_KEY_ID: test
+  clean:
+    desc: Remove old binaries
+    cmds:
+      - rm -rf {{.DIR_DIST}}/{{.APP_BASE_NAME}}-*
+
+  test:coverage:
+    desc: Run tests with coverage
+    env:
+      AWS_REGION: us-east-1
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_ACCESS_KEY_ID: test
+    cmds:
+      - go test -v ./... -count=1 -coverprofile=coverage.out {{.CLI_ARGS}}
+      - go tool cover -html=coverage.out
+
+  run:
+    desc: Run app
+    cmds:
+      - go run ./apps/cli {{.CLI_ARGS}}
+    sources:
+      - pkg/**/*.go
+      - apps/**/*.go
+    method: none
+    vars:
+      CGO_ENABLED: "{{default 0 .CGO_ENABLED}}"
+    env:
+      CGO_ENABLED: "{{.CGO_ENABLED}}"
+
+  _build:
+    desc: Build
+    internal: true
+    cmds:
+      - echo "Generating {{.BIN_NAME}}"
+      - "{{.EXTRA_ENVS}} go build {{.BUILDFLAGS}} {{.LDFLAGS}} -o {{.DIR_DIST}}/{{.BIN_NAME}} ./apps/{{.APP}}"
+      - chmod +x {{.DIR_DIST}}/{{.BIN_NAME}}
+      - cd {{.DIR_DIST}} && ls -lh | tr -s ' ' | cut -d ' ' -f 5,9-
+    vars:
+      LDFLAGS: -ldflags "-X {{.PKG_NAME}}/pkg.commit={{.GIT_HASH}} -X {{.PKG_NAME}}/pkg.version={{.APP_VERSION}} -X {{.PKG_NAME}}/pkg.buildDate={{.BUILD_DATE}}"
+      GOOS: '{{default "linux" .GOOS}}'
+      GOARCH: '{{default "amd64" .GOARCH}}'
+      CGO_ENABLED: "{{default 0 .CGO_ENABLED}}"
+      BIN_NAME: "{{.APP_BASE_NAME}}--{{.APP}}-{{.GOOS}}-{{.GOARCH}}"
+      APP: "{{.APP}}"
+    env:
+      GOOS: "{{.GOOS}}"
+      GOARCH: "{{.GOARCH}}"
+      GOARM: "{{.GOARM}}"
+      CGO_ENABLED: "{{.CGO_ENABLED}}"
+
+  build:
+    desc: build app (development)
+    deps:
+      - generate
+    cmds:
+      - task: _build
+        vars:
+          APP: cli
+
+  build:release:
+    desc: build app (production ready)
+    deps:
+      - generate
+    cmds:
+      - task: _build
+        vars:
+          BUILDFLAGS: -a -installsuffix cgo -ldflags '-s -w -extldflags "-static"'
+          CGO_ENABLED: 0
+          APP: cli

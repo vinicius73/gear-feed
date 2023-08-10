@@ -1,0 +1,26 @@
+name: TECNOBLOG
+base_url: https://tecnoblog.net
+path: /tema/games-jogos/
+limit: 2
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: "#sobresobre div.postsHere article.article-destaque"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: "a"
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: .texts h2
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .thumb img
+    attribute: src
+    parse_strategy: ""

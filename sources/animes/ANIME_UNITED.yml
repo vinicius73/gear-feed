@@ -1,0 +1,26 @@
+name: ANIME_UNITED
+base_url: https://www.animeunited.com.br/
+path: noticias/ultimas/
+limit: 3
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: "#main article.post-single"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: h1.entry-title a
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: h1.entry-title .entry-title-primary
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .thumbnail-container img
+    attribute: data-lazy-src
+    parse_strategy: ""

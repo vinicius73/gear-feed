@@ -1,0 +1,55 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"
+    xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <channel>
+        <title>XML News</title>
+        <link>https://xmlsite.net</link>
+        <language>pt-br</language>
+        <item>
+            <title>XML Title in 2001</title>
+            <link>https://xmlsite.net/news-1.html</link>
+            <enclosure type="image/jpeg" url="https://xmlsite.net/news-1.jpg" />
+            <category>A1</category>
+            <category>B2</category>
+            <category>C3</category>
+        </item>
+        <item>
+            <title>XML Title in 2002</title>
+            <link>https://xmlsite.net/news-2.html</link>
+            <enclosure type="image/jpeg" url="https://xmlsite.net/news-2.jpg" />
+            <category>C3</category>
+            <category>D4</category>
+            <category>E5</category>
+        </item>
+        <item>
+            <title>XML Title in 2003</title>
+            <link>https://xmlsite.net/news-3.html</link>
+            <enclosure type="image/jpeg" url="https://xmlsite.net/news-3.jpg" />
+            <category>F6</category>
+            <category>G7</category>
+            <category>H7</category>
+        </item>
+        <item>
+            <title>XML Title in 2004</title>
+            <link>https://xmlsite.net/news-4.html</link>
+            <enclosure type="image/jpeg" url="https://xmlsite.net/news-4.jpg" />
+            <category>F6</category>
+            <category>H7</category>
+        </item>
+        <item>
+            <title>XML Title in 2005</title>
+            <link>https://xmlsite.net/news-5.html</link>
+            <enclosure type="image/jpeg" url="https://xmlsite.net/news-5.jpg" />
+            <category>C3</category>
+            <category>E5</category>
+        </item>
+        <item>
+            <title>XML Title in 2006</title>
+            <link>https://xmlsite.net/news-6.html</link>
+            <enclosure type="image/jpeg" url="https://xmlsite.net/news-6.jpg" />
+            <category>C3</category>
+            <category>h7</category>
+            <category>f6</category>
+            <category>e3</category>
+        </item>
+    </channel>
+</rss>

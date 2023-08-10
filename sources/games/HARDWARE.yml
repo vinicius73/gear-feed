@@ -1,0 +1,26 @@
+name: HARDWARE
+base_url: https://www.hardware.com.br
+path: /games/
+limit: 3
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: ".archive-posts.row .new"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: a
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: h3
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: figure img
+    attribute: src
+    parse_strategy: ""

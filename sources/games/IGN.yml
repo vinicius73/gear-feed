@@ -1,0 +1,45 @@
+name: IGN
+base_url: https://br.ign.com
+path: /news.xml
+limit: 2
+enabled: true
+parser: XML
+attributes:
+  entry_selector: //channel[1]/item
+  category:
+    path_finder:
+      path: /category
+      attribute: ""
+      parse_strategy: ""
+    allows:
+      - games
+      - prime gaming
+      - capcom
+      - playstation
+      - playstation-4
+      - playstation-5
+      - ps4
+      - ps5
+      - xbox
+      - xbox-360
+      - xbox-one
+      - xbox-series-s
+      - xbox-series-x
+      - nintendo
+      - nintendo-switch
+      - nintendo switch
+      - sega
+      - stadia
+      - pc
+  link:
+    path: /link
+    attribute: ""
+    parse_strategy: ""
+  title:
+    path: /title
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: img
+    attribute: src
+    parse_strategy: ""
