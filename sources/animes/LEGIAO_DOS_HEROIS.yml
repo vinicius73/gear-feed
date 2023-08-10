@@ -1,0 +1,26 @@
+name: LEGIAO_DOS_HEROIS
+base_url: https://www.legiaodosherois.com.br/
+path: c/animes
+limit: 2
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: ".container.content .articles article"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: h2 a
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: h2 a
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .article-cover img
+    attribute: data-src
+    parse_strategy: ""

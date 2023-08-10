@@ -1,0 +1,26 @@
+name: JBOX
+base_url: https://www.jbox.com.br
+path: /categoria/anime/
+limit: 3
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: ".container .row .col-lg-9 > a"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: ""
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: .card-news__caption h3
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: figure img
+    attribute: src
+    parse_strategy: ""

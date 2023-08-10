@@ -1,0 +1,26 @@
+name: OMELETE
+base_url: https://www.omelete.com.br
+path: /busca?q=Anime
+limit: 3
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: "main.c-newslist article.featured"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: .featured__head > a
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: .mark__title h2
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .picture img
+    attribute: data-lazy-src
+    parse_strategy: ""

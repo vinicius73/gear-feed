@@ -1,0 +1,26 @@
+name: JOGO_VEIO
+base_url: https://jogoveio.com.br
+path: ?s=anime
+limit: 2
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: ".elementor-container .ecs-posts article.elementor-post"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: h1 a
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: h1.elementor-heading-title
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .elementor-widget-image img
+    attribute: src
+    parse_strategy: ""
