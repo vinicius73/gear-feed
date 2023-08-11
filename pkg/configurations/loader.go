@@ -5,6 +5,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/creasty/defaults"
@@ -76,7 +77,10 @@ func Load(file string) (AppConfig, error) {
 	return applyDefaults(cfg)
 }
 
+//nolint:cyclop
 func applyDefaults(cfg AppConfig) (AppConfig, error) {
+	var err error
+
 	if cfg.Logger.Level == "" {
 		cfg.Logger.Level = "info"
 	}
@@ -100,12 +104,22 @@ func applyDefaults(cfg AppConfig) (AppConfig, error) {
 	}
 
 	if cfg.Storage.Path == "" {
-		cfg.Storage.Path = support.GetEnvString("GFEED_DATABASE", "./."+configBaseName+".sqlite")
+		cfg.Storage.Path = support.GetEnvString("GFEED_DATABASE", "."+configBaseName+".sqlite")
 	}
 
-	if path.IsAbs(cfg.Storage.Path) {
-		pwd, _ := os.Getwd()
+	if !path.IsAbs(cfg.Storage.Path) {
+		pwd, err := os.Getwd()
+		if err != nil {
+			return cfg, err
+		}
+
 		cfg.Storage.Path = path.Join(pwd, cfg.Storage.Path)
+	}
+
+	cfg.Storage.Path, err = checkDatabaseFile(cfg.Storage.Path)
+
+	if err != nil {
+		return cfg, err
 	}
 
 	if cfg.Storage.TTL == 0 {
@@ -148,4 +162,21 @@ func ensureConfig() (AppConfig, error) {
 	}
 
 	return cfg, ConfigFileWasCreated.Msgf(configFile)
+}
+
+func checkDatabaseFile(filename string) (string, error) {
+	if strings.HasSuffix(filename, ".sqlite") {
+		return filename, nil
+	}
+
+	stat, err := os.Stat(filename)
+	if err != nil && !os.IsNotExist(err) {
+		return "", err
+	}
+
+	if stat.IsDir() {
+		return filepath.Join(filename, configBaseName+".sqlite"), nil
+	}
+
+	return filename, nil
 }

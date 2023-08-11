@@ -18,8 +18,8 @@ func BotWorker(ctx context.Context) error {
 	db, err := database.Open(ctx, config.Storage)
 	if err != nil {
 		logger.Error().Err(err).
-			Interface("storage", config.Storage).
 			Msg("Failed to open database")
+
 		return err
 	}
 

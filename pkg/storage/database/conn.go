@@ -4,9 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"embed"
-	"os"
-	"path/filepath"
-	"strings"
 
 	"github.com/rs/zerolog"
 	migrate "github.com/rubenv/sql-migrate"
@@ -29,14 +26,13 @@ type Options struct {
 }
 
 func Open(ctx context.Context, conf Options) (*sql.DB, error) {
-	filename, err := checkDatabaseFile(conf.Path)
-	if err != nil {
-		return nil, ErrFailToOpenDatabase.Wrap(err).Msgf(filename)
-	}
+	logger := zerolog.Ctx(ctx).With().Str("context", "db:open").Str("filename", conf.Path).Logger()
 
-	conn, err := sql.Open("sqlite", filename)
+	ctx = logger.WithContext(ctx)
+
+	conn, err := sql.Open("sqlite", conf.Path)
 	if err != nil {
-		return nil, ErrFailToOpenDatabase.Wrap(err)
+		return nil, ErrFailToOpenDatabase.Wrap(err).Msgf(conf.Path)
 	}
 
 	return conn, applyMigrations(ctx, conn)
@@ -62,21 +58,4 @@ func applyMigrations(ctx context.Context, conn *sql.DB) error {
 	}
 
 	return nil
-}
-
-func checkDatabaseFile(filename string) (string, error) {
-	if strings.HasSuffix(filename, ".sqlite") {
-		return filename, nil
-	}
-
-	stat, err := os.Stat(filename)
-	if err != nil && !os.IsNotExist(err) {
-		return "", err
-	}
-
-	if stat.IsDir() {
-		return filepath.Join(filename, "gfeed.sqlite"), nil
-	}
-
-	return filename, nil
 }
