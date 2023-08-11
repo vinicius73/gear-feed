@@ -1,7 +1,7 @@
 name: INTOXIANIME
 base_url: https://www.intoxianime.com
 path: /category/noticias/
-limit: 3
+limit: 5
 enabled: true
 parser: HTML
 attributes:

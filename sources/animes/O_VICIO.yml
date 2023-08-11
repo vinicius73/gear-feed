@@ -1,7 +1,7 @@
 name: O_VICIO
 base_url: https://ovicio.com.br
 path: /category/animes/
-limit: 3
+limit: 5
 enabled: true
 parser: HTML
 attributes:

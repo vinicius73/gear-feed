@@ -1,7 +1,7 @@
 name: EI_NERD
 base_url: https://www.einerd.com.br
 path: /secao/otaku/
-limit: 3
+limit: 5
 enabled: true
 parser: HTML
 attributes:

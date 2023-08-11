@@ -1,7 +1,7 @@
 name: VOCE_SABIA_ANIME
 base_url: https://vocesabianime.com
 path: /mundo-anime-categoria/
-limit: 3
+limit: 5
 enabled: true
 parser: HTML
 attributes:

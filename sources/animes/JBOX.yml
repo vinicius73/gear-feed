@@ -1,7 +1,7 @@
 name: JBOX
 base_url: https://www.jbox.com.br
 path: /categoria/anime/
-limit: 3
+limit: 5
 enabled: true
 parser: HTML
 attributes:

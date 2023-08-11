@@ -1,7 +1,7 @@
 name: ANIME_UNITED
 base_url: https://www.animeunited.com.br/
 path: noticias/ultimas/
-limit: 3
+limit: 5
 enabled: true
 parser: HTML
 attributes:
