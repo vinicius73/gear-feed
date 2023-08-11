@@ -19,10 +19,7 @@ type LoadOptions struct {
 func Load(ctx context.Context, opt LoadOptions) error {
 	config := configurations.Ctx(ctx)
 
-	db, err := database.Open(ctx, database.Options{
-		Options: config.Storage.Options,
-		Path:    config.Storage.Path,
-	})
+	db, err := database.Open(ctx, config.Storage)
 	if err != nil {
 		return err
 	}
