@@ -101,7 +101,7 @@ func (s *FindEntriesTestSuite) TestExample03XML() {
 	source := s.parseSource(`
 name: test_xml
 path: /example_03.xml
-limit: 2
+limit: 0
 parser: XML
 attributes:
 	entry_selector: //channel[1]/item
@@ -194,9 +194,9 @@ attributes:
 
 	assert.NoError(s.T(), err)
 
-	assert.Equal(s.T(), 4, len(entries))
+	assert.Equal(s.T(), 2, len(entries))
 
-	for index, num := range []string{"1", "3", "4", "6"} {
+	for index, num := range []string{"1", "3"} {
 		entry := entries[index]
 		assert.Equal(s.T(), "XML Title in 200"+num, entry.Title)
 		assert.Equal(s.T(), "https://xmlsite.net/news-"+num+".html", entry.URL)

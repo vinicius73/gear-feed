@@ -1,9 +1,11 @@
+//nolint:ireturn
 package scraper
 
 import (
 	"context"
 	"errors"
 	"fmt"
+	"math"
 	"strings"
 	"time"
 
@@ -34,7 +36,17 @@ func FindEntries[T model.IEntry](ctx context.Context, source SourceDefinition) (
 
 	entries := []T{}
 
+	limit := source.Limit
+
+	if limit == 0 {
+		limit = math.MaxInt
+	}
+
 	callback := func(e Element) {
+		if limit == 0 {
+			return
+		}
+
 		entry, err := onEntry[T](ctx, source, e)
 		if err != nil {
 			if !errors.Is(err, ErrCategoryNotAllowed) {
@@ -49,6 +61,12 @@ func FindEntries[T model.IEntry](ctx context.Context, source SourceDefinition) (
 			Msgf("New entry: %s", entry.Link())
 
 		entries = append(entries, entry)
+
+		limit--
+
+		if limit == 0 {
+			logger.Warn().Msgf("Limit reached (%v)", source.Limit)
+		}
 	}
 
 	startTime := time.Now()

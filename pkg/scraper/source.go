@@ -28,7 +28,7 @@ type SourceDefinition struct {
 	Enabled    bool             `yaml:"enabled"`
 	BaseURL    string           `yaml:"base_url"`
 	Path       string           `yaml:"path"`
-	Limit      int8             `yaml:"limit"`
+	Limit      int              `yaml:"limit"`
 	Parser     string           `yaml:"parser"`
 	Attributes AttributesFinder `yaml:"attributes"`
 }
