@@ -1,0 +1,26 @@
+name: VOCE_SABIA_ANIME
+base_url: https://vocesabianime.com
+path: /mundo-anime-categoria/
+limit: 3
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: "#cm-primary .cm-posts > article.post"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: header.cm-entry-header h2 a
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: header.cm-entry-header h2 a
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .cm-featured-image img
+    attribute: src
+    parse_strategy: ""
