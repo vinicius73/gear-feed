@@ -40,11 +40,17 @@ func scrapCMD() *cli.Command {
 				Usage:    "Send the loaded data to the specified channel",
 				Required: true,
 			},
+			&cli.Int64SliceFlag{
+				Name:    "send-resume-to",
+				Usage:   "Send the loaded data to the specified channel",
+				Aliases: []string{"r"},
+			},
 		},
 		Action: func(cmd *cli.Context) error {
 			return actions.Load(cmd.Context, actions.LoadOptions{
-				To:    cmd.Int64("to"),
-				Limit: cmd.Int("limit"),
+				To:           cmd.Int64("to"),
+				Limit:        cmd.Int("limit"),
+				SendResumeTo: cmd.Int64Slice("send-resume-to"),
 				Sources: sources.LoadOptions{
 					Only:  cmd.StringSlice("only"),
 					Paths: cmd.StringSlice("sources"),

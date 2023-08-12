@@ -7,6 +7,7 @@ import (
 	"github.com/vinicius73/gamer-feed/pkg/linkloader"
 	"github.com/vinicius73/gamer-feed/pkg/linkloader/news"
 	"github.com/vinicius73/gamer-feed/pkg/model"
+	"github.com/vinicius73/gamer-feed/pkg/sender"
 	"github.com/vinicius73/gamer-feed/pkg/sources"
 )
 
@@ -15,8 +16,9 @@ var _ Task[model.IEntry] = (*SendLastEntries[model.IEntry])(nil)
 const defaultSendLastEntriesLimit = 10
 
 type SendLastEntries[T model.IEntry] struct {
-	Limit   int                 `fig:"limit"   yaml:"limit"`
-	Sources sources.LoadOptions `fig:"sources" yaml:"sources"`
+	Limit        int                 `fig:"limit"          yaml:"limit"`
+	SendResumeTo []int64             `fig:"send_resume_to" yaml:"send_resume_to"`
+	Sources      sources.LoadOptions `fig:"sources"        yaml:"sources"`
 }
 
 func (t SendLastEntries[T]) Name() string {
@@ -50,5 +52,38 @@ func (t SendLastEntries[T]) Run(ctx context.Context, opts TaskRunOptions[T]) err
 		return err
 	}
 
-	return opts.Sender.SendCollection(ctx, entries)
+	err = opts.Sender.SendCollection(ctx, entries.Entries)
+
+	if err != nil {
+		return err
+	}
+
+	zerolog.Ctx(ctx).Info().Int("entries", len(entries.Entries)).Msg("sent entries")
+
+	if len(t.SendResumeTo) > 0 {
+		sources := make([]sender.ResumeSource, len(entries.Results))
+
+		for index, result := range entries.Results {
+			sources[index] = sender.ResumeSource{
+				Source:   result.Source,
+				Loaded:   result.Total,
+				Filtered: result.Filtered,
+			}
+		}
+
+		err = opts.Sender.SendResume(ctx, sender.SendResumeOptions{
+			Resume: sender.Resume{
+				Loaded:   entries.Loaded,
+				Filtered: entries.Filtered,
+				Sources:  sources,
+			},
+			Chats: t.SendResumeTo,
+		})
+
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

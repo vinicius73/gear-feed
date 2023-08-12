@@ -24,9 +24,15 @@ type SendFileOptions struct {
 	Caption  string
 }
 
+type SendResumeOptions struct {
+	Resume Resume
+	Chats  []int64
+}
+
 type Serder[T model.IEntry] interface {
 	Send(ctx context.Context, entry T) error
 	SendCollection(ctx context.Context, entry []T) error
+	SendResume(ctx context.Context, opt SendResumeOptions) error
 	SendFile(ctx context.Context, opt SendFileOptions) error
 	WithChats(ids []int64) Serder[T]
 }
@@ -146,6 +152,39 @@ func (s TelegramSerder[T]) SendCollection(ctx context.Context, entries []T) erro
 	dur := time.Since(startedAt)
 
 	logger.Info().Dur("spend", dur).Msgf("Finished sending %d entries in %s", size, dur)
+
+	return nil
+}
+
+func (s TelegramSerder[T]) SendResume(ctx context.Context, opt SendResumeOptions) error {
+	logger := zerolog.Ctx(ctx)
+
+	chats := s.chats
+
+	if len(opt.Chats) > 0 {
+		chats = make([]telebot.Recipient, len(opt.Chats))
+
+		for index, chat := range opt.Chats {
+			chats[index] = telebot.ChatID(chat)
+		}
+	}
+
+	if len(chats) == 0 {
+		return ErrNoChats
+	}
+
+	msg := opt.Resume.HTML()
+
+	for _, chat := range chats {
+		_, err := s.bot.Send(chat, msg, telebot.ModeHTML)
+		if err != nil {
+			return ErrFailToSend.Wrap(err)
+		}
+
+		logger.Info().
+			Str("recipient", chat.Recipient()).
+			Msgf("Resume sent")
+	}
 
 	return nil
 }

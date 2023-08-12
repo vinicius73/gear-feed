@@ -11,9 +11,10 @@ import (
 )
 
 type LoadOptions struct {
-	To      int64
-	Limit   int
-	Sources sources.LoadOptions
+	To           int64
+	SendResumeTo []int64
+	Limit        int
+	Sources      sources.LoadOptions
 }
 
 func Load(ctx context.Context, opt LoadOptions) error {
@@ -41,8 +42,9 @@ func Load(ctx context.Context, opt LoadOptions) error {
 	}
 
 	return tasks.SendLastEntries[model.Entry]{
-		Limit:   opt.Limit,
-		Sources: opt.Sources,
+		Limit:        opt.Limit,
+		Sources:      opt.Sources,
+		SendResumeTo: opt.SendResumeTo,
 	}.
 		Run(ctx, tasks.TaskRunOptions[model.Entry]{
 			Storage: store,
