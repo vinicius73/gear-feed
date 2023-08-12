@@ -31,6 +31,7 @@ func ContainsSome[v comparable](list []v, vals []v) bool {
 func Shuffle[T any](list []T) []T {
 	size := len(list)
 
+	//nolint:gomnd
 	if size < 2 {
 		return list
 	}
