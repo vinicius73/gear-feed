@@ -24,6 +24,7 @@ func NewStorage[T model.IEntry](db *sql.DB, opt Options) (storage.Storage[T], er
 		TypeConverter:   nil,
 	}
 
+	//nolint:exhaustruct
 	dbmap.AddTableWithName(DBEntry[T]{}, "entries")
 
 	return Storage[T]{

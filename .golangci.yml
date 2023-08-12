@@ -44,6 +44,7 @@ linters-settings:
       - 'github.com/urfave/cli/v2\.StringSliceFlag$'
       - 'github.com/urfave/cli/v2\.BoolFlag$'
       - 'github.com/urfave/cli/v2\.Int64Flag$'
+      - gopkg.in/telebot.v3\.Document
   varnamelen:
     ignore-type-assert-ok: true
     ignore-decls:

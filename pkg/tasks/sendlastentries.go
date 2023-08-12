@@ -10,7 +10,7 @@ import (
 	"github.com/vinicius73/gamer-feed/pkg/sources"
 )
 
-var _ Task[model.IEntry] = SendLastEntries[model.IEntry]{}
+var _ Task[model.IEntry] = (*SendLastEntries[model.IEntry])(nil)
 
 const defaultSendLastEntriesLimit = 10
 
