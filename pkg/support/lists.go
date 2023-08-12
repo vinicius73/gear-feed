@@ -30,6 +30,11 @@ func ContainsSome[v comparable](list []v, vals []v) bool {
 
 func Shuffle[T any](list []T) []T {
 	size := len(list)
+
+	if size < 2 {
+		return list
+	}
+
 	max := int32(size - 1)
 
 	for i := range list {
