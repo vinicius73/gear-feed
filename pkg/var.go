@@ -5,12 +5,15 @@ import (
 	"os"
 )
 
-const AppName = "gfeed"
+const (
+	AppName         = "gfeed"
+	maxCommitLength = 8
+)
 
 var (
-	version   string
-	buildDate string
-	commit    string
+	version   = "dev"
+	buildDate = "unknown"
+	commit    = "unknown"
 )
 
 func Version() string {
@@ -26,6 +29,10 @@ func BuildDate() string {
 }
 
 func Commit() string {
+	if len(commit) > maxCommitLength {
+		return commit[:maxCommitLength]
+	}
+
 	return commit
 }
 
