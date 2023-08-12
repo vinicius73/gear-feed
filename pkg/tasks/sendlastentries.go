@@ -52,38 +52,38 @@ func (t SendLastEntries[T]) Run(ctx context.Context, opts TaskRunOptions[T]) err
 		return err
 	}
 
-	err = opts.Sender.SendCollection(ctx, entries.Entries)
-
-	if err != nil {
+	if len(entries.Entries) == 0 {
+		zerolog.Ctx(ctx).Info().Msg("no entries to send")
+	} else if err = opts.Sender.SendCollection(ctx, entries.Entries); err != nil {
 		return err
 	}
 
-	zerolog.Ctx(ctx).Info().Int("entries", len(entries.Entries)).Msg("sent entries")
-
 	if len(t.SendResumeTo) > 0 {
-		sources := make([]sender.ResumeSource, len(entries.Results))
-
-		for index, result := range entries.Results {
-			sources[index] = sender.ResumeSource{
-				Source:   result.Source,
-				Loaded:   result.Total,
-				Filtered: result.Filtered,
-			}
-		}
-
-		err = opts.Sender.SendResume(ctx, sender.SendResumeOptions{
-			Resume: sender.Resume{
-				Loaded:   entries.Loaded,
-				Filtered: entries.Filtered,
-				Sources:  sources,
-			},
-			Chats: t.SendResumeTo,
-		})
-
-		if err != nil {
+		if err = t.sendResume(ctx, entries, opts); err != nil {
 			return err
 		}
 	}
 
 	return nil
+}
+
+func (t SendLastEntries[T]) sendResume(ctx context.Context, entries news.Result[T], opts TaskRunOptions[T]) error {
+	sources := make([]sender.ResumeSource, len(entries.Results))
+
+	for index, result := range entries.Results {
+		sources[index] = sender.ResumeSource{
+			Source:   result.Source,
+			Loaded:   result.Total,
+			Filtered: result.Filtered,
+		}
+	}
+
+	return opts.Sender.SendResume(ctx, sender.SendResumeOptions{
+		Chats: t.SendResumeTo,
+		Resume: sender.Resume{
+			Loaded:   entries.Loaded,
+			Filtered: entries.Filtered,
+			Sources:  sources,
+		},
+	})
 }
