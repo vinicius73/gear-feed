@@ -19,10 +19,13 @@ var ErrCategoryNotAllowed = errors.New("category not allowed")
 const (
 	requestTimeout = time.Second * 15
 	titleLimit     = 150
+	userAgent      = "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/116.0"
 )
 
 func newCollector() *colly.Collector {
-	c := colly.NewCollector()
+	c := colly.NewCollector(
+		colly.UserAgent(userAgent),
+	)
 	c.SetRequestTimeout(requestTimeout)
 
 	return c
