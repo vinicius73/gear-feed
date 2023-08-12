@@ -25,9 +25,9 @@ func (r Resume) HTML() string {
 
 	builder.WriteString("ℹ️ <b>")
 	builder.WriteString(pkg.AppName)
-	builder.WriteString(" - ")
+	builder.WriteString(" - <code>")
 	builder.WriteString(pkg.Host())
-	builder.WriteString("</b>\n🤖 <i>")
+	builder.WriteString("</code></b>\n🤖 <i>")
 	builder.WriteString(pkg.Version())
 	builder.WriteRune(' ')
 	builder.WriteString(pkg.Commit())
