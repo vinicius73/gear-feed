@@ -9,14 +9,14 @@ WORKDIR /app
 COPY . ./
 
 # args
-ARG BUILD_NUMBER=unknown
+ARG APP_REVISION=unknown
 ARG BUILD_DATE=unknown
 ARG BUILD_REF=unknown
 ARG PKG=github.com/vinicius73/gamer-feed
 
 RUN go build \
   -a -installsuffix cgo -ldflags '-s -w -extldflags "-static"' \
-  -ldflags "-X $PKG/pkg.commit=$BUILD_REF -X $PKG/pkg.version=$BUILD_NUMBER -X $PKG/pkg.buildDate=$BUILD_DATE" \
+  -ldflags "-X $PKG/pkg.commit=$BUILD_REF -X $PKG/pkg.version=$APP_REVISION -X $PKG/pkg.buildDate=$BUILD_DATE" \
   -o ./bin/gearsfeed ./apps/cli
 
 FROM alpine:3
@@ -24,7 +24,7 @@ FROM alpine:3
 RUN apk add --update --no-cache ca-certificates tzdata sqlite
 
 # args
-ARG BUILD_NUMBER=unknown
+ARG APP_REVISION=unknown
 ARG BUILD_DATE=unknown
 ARG BUILD_REF=unknown
 ARG PKG=github.com/vinicius73/gamer-feed
@@ -37,8 +37,8 @@ LABEL org.opencontainers.image.title="gearsfeed" \
   org.opencontainers.image.revision="$BUILD_REF"
 
 # Environment
-ENV BUILD_NUMBER=$BUILD_NUMBER \
-  APP_VERSION=$BUILD_NUMBER
+ENV APP_REVISION=$APP_REVISION \
+  APP_VERSION=$APP_REVISION
 
 ENV UID=1000
 ENV GID=1000

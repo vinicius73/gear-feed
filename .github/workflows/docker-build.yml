@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   build:
-    name: Build backend image
+    name: Build docker image
     runs-on:
       labels: ubuntu-latest
     steps:
@@ -54,7 +54,7 @@ jobs:
             MODE=production
             APP_VERSION=${{ github.version }}
             BUILD_NUMBER=${{ github.run_number }}
-            GIT_HASH=${{ github.sha }}
+            BUILD_REF=${{ github.sha }}
             BUILDER=${{ github.actor }}
             BUILD_DATE=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
             APP_REVISION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
