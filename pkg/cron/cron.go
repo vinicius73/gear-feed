@@ -17,6 +17,7 @@ import (
 type TasksConfig[T model.IEntry] struct {
 	Timezone        *time.Location                    `fig:"-"                 yaml:"-"`
 	SendLastEntries Task[T, tasks.SendLastEntries[T]] `fig:"send_last_entries" yaml:"send_last_entries"`
+	Backup          Task[T, tasks.Backup[T]]          `fig:"backup"            yaml:"backup"`
 }
 
 type Runner[T model.IEntry] struct {
@@ -57,6 +58,11 @@ func (r Runner[T]) Start(ctx context.Context) error {
 			Config:    r.config.SendLastEntries.Config,
 			ChatIDs:   r.config.SendLastEntries.ChatIDs,
 			Schedules: r.config.SendLastEntries.Schedules,
+		},
+		{
+			Config:    r.config.Backup.Config,
+			ChatIDs:   r.config.Backup.ChatIDs,
+			Schedules: r.config.Backup.Schedules,
 		},
 	}
 

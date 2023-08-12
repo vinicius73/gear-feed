@@ -77,9 +77,12 @@ func Load(file string) (AppConfig, error) {
 	return applyDefaults(cfg)
 }
 
-//nolint:cyclop
+//nolint:cyclop,funlen
 func applyDefaults(cfg AppConfig) (AppConfig, error) {
-	var err error
+	pwd, err := os.Getwd()
+	if err != nil {
+		return cfg, err
+	}
 
 	if cfg.Logger.Level == "" {
 		cfg.Logger.Level = "info"
@@ -108,11 +111,6 @@ func applyDefaults(cfg AppConfig) (AppConfig, error) {
 	}
 
 	if !path.IsAbs(cfg.Storage.Path) {
-		pwd, err := os.Getwd()
-		if err != nil {
-			return cfg, err
-		}
-
 		cfg.Storage.Path = path.Join(pwd, cfg.Storage.Path)
 	}
 
@@ -127,6 +125,19 @@ func applyDefaults(cfg AppConfig) (AppConfig, error) {
 	}
 
 	cfg.Cron.Timezone, _ = time.LoadLocation(cfg.Timezone)
+
+	if cfg.Cron.Backup.Config.Base != "" && !filepath.IsAbs(cfg.Cron.Backup.Config.Base) {
+		cfg.Cron.Backup.Config.Base = path.Join(pwd, cfg.Cron.Backup.Config.Base)
+	}
+
+	if cfg.Cron.Backup.Config.AliasName == "" {
+		hostname, err := os.Hostname()
+		if err != nil {
+			return cfg, err
+		}
+
+		cfg.Cron.Backup.Config.AliasName = hostname
+	}
 
 	return cfg, nil
 }

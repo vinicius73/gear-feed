@@ -2,6 +2,7 @@ package sender
 
 import (
 	"context"
+	"path/filepath"
 	"time"
 
 	"github.com/rs/zerolog"
@@ -18,9 +19,15 @@ var (
 	ErrFailToSend = apperrors.System(nil, "fail to send message", "SENDER:FAIL_TO_SEND")
 )
 
+type SendFileOptions struct {
+	FilePath string
+	Caption  string
+}
+
 type Serder[T model.IEntry] interface {
 	Send(ctx context.Context, entry T) error
 	SendCollection(ctx context.Context, entry []T) error
+	SendFile(ctx context.Context, opt SendFileOptions) error
 	WithChats(ids []int64) Serder[T]
 }
 
@@ -46,6 +53,30 @@ func NewTelegramSerder[T model.IEntry](bot *telebot.Bot, opts TelegramOptions[T]
 		bot:     bot,
 		storage: opts.Storage,
 	}
+}
+
+func (s TelegramSerder[T]) SendFile(ctx context.Context, opt SendFileOptions) error {
+	logger := zerolog.Ctx(ctx).With().Str("file", opt.FilePath).Logger()
+
+	file := &telebot.Document{
+		File:                 telebot.FromDisk(opt.FilePath),
+		Caption:              opt.Caption,
+		FileName:             filepath.Base(opt.FilePath),
+		DisableTypeDetection: true,
+	}
+
+	for _, chat := range s.chats {
+		_, err := s.bot.Send(chat, file, telebot.ModeHTML)
+		if err != nil {
+			return ErrFailToSend.Wrap(err)
+		}
+
+		logger.Info().
+			Str("recipient", chat.Recipient()).
+			Msgf("File sent")
+	}
+
+	return nil
 }
 
 func (s TelegramSerder[T]) Send(ctx context.Context, entry T) error {

@@ -16,6 +16,7 @@ const (
 var (
 	_ tasks.Task[model.IEntry] = (*Task[model.IEntry, tasks.Task[model.IEntry]])(nil)
 	_ tasks.Task[model.IEntry] = (*Task[model.IEntry, tasks.SendLastEntries[model.IEntry]])(nil)
+	_ tasks.Task[model.IEntry] = (*Task[model.IEntry, tasks.Backup[model.IEntry]])(nil)
 )
 
 type Task[A model.IEntry, T tasks.Task[A]] struct {
