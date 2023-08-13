@@ -36,7 +36,7 @@ type RunnerOptions[T model.IEntry] struct {
 func New[T model.IEntry](opts RunnerOptions[T]) Runner[T] {
 	scheduler := gocron.NewScheduler(opts.Config.Timezone)
 	scheduler.SingletonModeAll()
-	scheduler.SetMaxConcurrentJobs(1, gocron.RescheduleMode)
+	scheduler.SetMaxConcurrentJobs(1, gocron.WaitMode)
 
 	return Runner[T]{
 		config:    opts.Config,
@@ -53,17 +53,9 @@ func (r Runner[T]) Start(ctx context.Context) error {
 
 	logger.Info().Msg("Starting cron tasks")
 
-	tasks := []Task[T, tasks.Task[T]]{
-		{
-			Config:    r.config.SendLastEntries.Config,
-			ChatIDs:   r.config.SendLastEntries.ChatIDs,
-			Schedules: r.config.SendLastEntries.Schedules,
-		},
-		{
-			Config:    r.config.Backup.Config,
-			ChatIDs:   r.config.Backup.ChatIDs,
-			Schedules: r.config.Backup.Schedules,
-		},
+	tasks := []ScheduleTask[T]{
+		r.config.SendLastEntries,
+		r.config.Backup,
 	}
 
 	for _, task := range tasks {
@@ -87,16 +79,18 @@ func (r Runner[T]) Stop(_ context.Context) error {
 	return nil
 }
 
-func (r Runner[T]) register(ctx context.Context, task Task[T, tasks.Task[T]]) error {
-	logger := zerolog.Ctx(ctx).With().Str("task", task.Config.Name()).Logger()
+func (r Runner[T]) register(ctx context.Context, task ScheduleTask[T]) error {
+	logger := zerolog.Ctx(ctx).With().Str("task", task.Name()).Logger()
 
-	if len(task.Schedules) == 0 {
+	schedules := task.GetSchedules()
+
+	if len(schedules) == 0 {
 		logger.Warn().Msg("Task has no schedules")
 
 		return nil
 	}
 
-	for _, schedule := range task.Schedules {
+	for _, schedule := range schedules {
 		job, err := r.scheduler.Cron(schedule).Do(r.exec, ctx, task)
 		if err != nil {
 			return err
@@ -107,13 +101,13 @@ func (r Runner[T]) register(ctx context.Context, task Task[T, tasks.Task[T]]) er
 			return err
 		}
 
-		name := slug.Make(task.Config.Name() + "_" + hash)
+		name := slug.Make(task.Name() + "_" + hash)
 
 		job.Name(name)
-		job.Tag(task.Config.Name())
+		job.Tag(task.Name())
 
 		logger.Info().
-			Str("task", task.Config.Name()).
+			Str("task", task.Name()).
 			Str("schedule", schedule).
 			Msg("Task registered")
 	}
@@ -121,15 +115,15 @@ func (r Runner[T]) register(ctx context.Context, task Task[T, tasks.Task[T]]) er
 	return nil
 }
 
-func (r Runner[T]) exec(ctx context.Context, task Task[T, tasks.Task[T]]) {
-	logger := zerolog.Ctx(ctx).With().Str("task", task.Config.Name()).Logger()
+func (r Runner[T]) exec(ctx context.Context, task ScheduleTask[T]) {
+	logger := zerolog.Ctx(ctx).With().Str("task", task.Name()).Logger()
 	ctx = logger.WithContext(ctx)
 
 	logger.Info().Msg("Running task")
 
 	opts := tasks.TaskRunOptions[T]{
 		Storage: r.storage,
-		Sender:  r.sender.WithChats(task.ChatIDs),
+		Sender:  r.sender.WithChats(task.Chats()),
 	}
 
 	err := task.Run(ctx, opts)
