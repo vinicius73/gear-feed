@@ -3,9 +3,6 @@ package sender
 import (
 	"strconv"
 	"strings"
-	"time"
-
-	"github.com/vinicius73/gamer-feed/pkg"
 )
 
 type Resume struct {
@@ -23,16 +20,9 @@ type ResumeSource struct {
 func (r Resume) HTML() string {
 	var builder strings.Builder
 
-	builder.WriteString("ℹ️ <b>")
-	builder.WriteString(pkg.AppName)
-	builder.WriteString(" - <code>")
-	builder.WriteString(pkg.Host())
-	builder.WriteString("</code></b>\n🤖 <i>")
-	builder.WriteString(pkg.Version())
-	builder.WriteRune(' ')
-	builder.WriteString(pkg.Commit())
+	builder.WriteString(buildMsgHeader())
 
-	builder.WriteString("</i>\n")
+	builder.WriteRune('\n')
 	builder.WriteString("🗞 <b>Resume: </b>")
 	builder.WriteString("<code>")
 	builder.WriteString(strconv.Itoa(r.Loaded))
@@ -46,9 +36,7 @@ func (r Resume) HTML() string {
 		builder.WriteString(source.HTML())
 	}
 
-	builder.WriteString("\n\n 🕔 <i>")
-	builder.WriteString(time.Now().Format(time.RFC3339))
-	builder.WriteString("</i>")
+	builder.WriteString(buildMsgFooter())
 
 	return builder.String()
 }

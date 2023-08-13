@@ -24,7 +24,9 @@ func Cleanup(ctx context.Context) error {
 		return err
 	}
 
-	return tasks.Cleanup[model.Entry]{}.Run(ctx, tasks.TaskRunOptions[model.Entry]{
+	return tasks.Cleanup[model.Entry]{
+		Notify: false,
+	}.Run(ctx, tasks.TaskRunOptions[model.Entry]{
 		Storage: store,
 		Sender:  nil,
 	})

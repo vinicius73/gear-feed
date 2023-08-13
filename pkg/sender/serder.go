@@ -29,10 +29,15 @@ type SendResumeOptions struct {
 	Chats  []int64
 }
 
+type SendCleanupNotifyOptions struct {
+	Count int64
+}
+
 type Serder[T model.IEntry] interface {
 	Send(ctx context.Context, entry T) error
 	SendCollection(ctx context.Context, entry []T) error
 	SendResume(ctx context.Context, opt SendResumeOptions) error
+	SendCleanupNotify(ctx context.Context, opt SendCleanupNotifyOptions) error
 	SendFile(ctx context.Context, opt SendFileOptions) error
 	WithChats(ids []int64) Serder[T]
 }
@@ -184,6 +189,29 @@ func (s TelegramSerder[T]) SendResume(ctx context.Context, opt SendResumeOptions
 		logger.Info().
 			Str("recipient", chat.Recipient()).
 			Msgf("Resume sent")
+	}
+
+	return nil
+}
+
+func (s TelegramSerder[T]) SendCleanupNotify(ctx context.Context, opt SendCleanupNotifyOptions) error {
+	logger := zerolog.Ctx(ctx)
+
+	if len(s.chats) == 0 {
+		return ErrNoChats
+	}
+
+	msg := BuildCleanupMessage(opt.Count)
+
+	for _, chat := range s.chats {
+		_, err := s.bot.Send(chat, msg, telebot.ModeHTML)
+		if err != nil {
+			return ErrFailToSend.Wrap(err)
+		}
+
+		logger.Info().
+			Str("recipient", chat.Recipient()).
+			Msgf("Cleanup notify sent")
 	}
 
 	return nil
