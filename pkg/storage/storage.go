@@ -26,6 +26,7 @@ type Entry[T model.IEntry] struct {
 type Storage[T model.IEntry] interface {
 	Has(hash string) (bool, error)
 	Store(entry Entry[T]) error
+	Cleanup() (int64, error)
 	Where(opts WhereOptions, list []T) ([]T, error)
 }
 

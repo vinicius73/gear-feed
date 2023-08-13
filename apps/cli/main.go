@@ -35,40 +35,18 @@ func main() {
 	defer cancel()
 
 	app := &cli.App{
-		EnableBashCompletion: true,
-		Name:                 "gfeed",
-		Usage:                "Gamer Feed Bot CLI",
-		Version:              pkg.Version(),
-		Flags: []cli.Flag{
-			&cli.StringFlag{
-				Name:        "config",
-				Aliases:     []string{"c"},
-				Usage:       "Load configuration from",
-				Value:       support.GetEnvString("GFEED_CONFIG", ""),
-				DefaultText: fmt.Sprintf("%s/gfeed.yml", support.GetBinDirPath()),
-			},
-			&cli.StringFlag{
-				Name:        "level",
-				Aliases:     []string{"l"},
-				Usage:       "define log level",
-				DefaultText: "info",
-			},
-			&cli.BoolFlag{
-				Name:  "debug",
-				Usage: "enables debug level",
-			},
-			&cli.StringFlag{
-				Name:  "log-file",
-				Value: "",
-				Usage: "store logs in a file",
-			},
-		},
+		Name:    "gfeed",
+		Usage:   "Gamer Feed Bot CLI",
+		Version: pkg.Version(),
+		Flags:   buildFlags(),
+		Before:  beforeRun,
 		Commands: []*cli.Command{
 			sourcesCMD(),
 			scrapCMD(),
 			botCMD(),
+			dbCMD(),
 		},
-		Before: beforeRun,
+		EnableBashCompletion: true,
 	}
 
 	sort.Sort(cli.FlagsByName(app.Flags))
@@ -132,4 +110,31 @@ func beforeRun(cmd *cli.Context) error {
 	log.Debug().Msg("Application started")
 
 	return nil
+}
+
+func buildFlags() []cli.Flag {
+	return []cli.Flag{
+		&cli.StringFlag{
+			Name:        "config",
+			Aliases:     []string{"c"},
+			Usage:       "Load configuration from",
+			Value:       support.GetEnvString("GFEED_CONFIG", ""),
+			DefaultText: fmt.Sprintf("%s/gfeed.yml", support.GetBinDirPath()),
+		},
+		&cli.StringFlag{
+			Name:        "level",
+			Aliases:     []string{"l"},
+			Usage:       "define log level",
+			DefaultText: "info",
+		},
+		&cli.BoolFlag{
+			Name:  "debug",
+			Usage: "enables debug level",
+		},
+		&cli.StringFlag{
+			Name:  "log-file",
+			Value: "",
+			Usage: "store logs in a file",
+		},
+	}
 }

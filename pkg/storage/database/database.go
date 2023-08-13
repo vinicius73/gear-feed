@@ -90,6 +90,15 @@ func (s Storage[T]) Where(where storage.WhereOptions, list []T) ([]T, error) {
 	return result, nil
 }
 
+func (s Storage[T]) Cleanup() (int64, error) {
+	res, err := s.db.Exec("DELETE FROM entries WHERE ttl < ?", time.Now())
+	if err != nil {
+		return 0, err
+	}
+
+	return res.RowsAffected()
+}
+
 func GroupByHash[T model.IEntry](entries []T) (map[string]T, []string, error) {
 	hashMap := map[string]T{}
 	hashs := make([]string, len(entries))
