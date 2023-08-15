@@ -27,7 +27,6 @@ func new(file string) font {
 
 func readFont(name string) (*truetype.Font, error) {
 	file, err := ttfFS.ReadFile(name)
-
 	if err != nil {
 		return nil, err
 	}

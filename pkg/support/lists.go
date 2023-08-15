@@ -46,6 +46,18 @@ func Shuffle[T any](list []T) []T {
 	return list
 }
 
+func Random[T any](list []T) T {
+	size := len(list)
+
+	if size == 0 {
+		return list[0]
+	}
+
+	i, _ := RandInt(0, int32(size-1))
+
+	return list[i]
+}
+
 func ToLower(list []string) []string {
 	result := make([]string, len(list))
 
