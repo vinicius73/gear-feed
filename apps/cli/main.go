@@ -45,6 +45,7 @@ func main() {
 			scrapCMD(),
 			botCMD(),
 			dbCMD(),
+			storiesCMD(),
 		},
 		EnableBashCompletion: true,
 	}
