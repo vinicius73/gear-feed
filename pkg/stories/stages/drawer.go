@@ -17,13 +17,16 @@ import (
 	"github.com/golang/freetype/truetype"
 	"github.com/muesli/gamut"
 	"github.com/vinicius73/gamer-feed/assets/fonts"
+	"github.com/vinicius73/gamer-feed/pkg/stories/fetcher"
 )
 
 const (
-	boxMargin       = 15.0
+	maxTextLength   = 350
+	boxMargin       = 10.0
+	innerBoxMargin  = boxMargin * 2
 	minFontSize     = 50.0
 	footerSize      = 35.0
-	fontLineSpacing = 1.2
+	fontLineSpacing = 1.1
 	startFontSize   = 100.0
 )
 
@@ -48,7 +51,7 @@ type Draw struct {
 	height int
 }
 
-type drawPipe func(source FetchResult) error
+type drawPipe func(source fetcher.Result) error
 
 func NewCoverColors(im image.Image) CoverColors {
 	main := dominantcolor.Find(im)
@@ -100,7 +103,7 @@ func NewDraw(width, height int) (*Draw, error) {
 	}, nil
 }
 
-func (d *Draw) Draw(source FetchResult) error {
+func (d *Draw) Draw(source fetcher.Result) error {
 	if err := d.DrawBase(source); err != nil {
 		return err
 	}
@@ -112,7 +115,7 @@ func (d *Draw) Draw(source FetchResult) error {
 	return nil
 }
 
-func (d *Draw) DrawBase(source FetchResult) error {
+func (d *Draw) DrawBase(source fetcher.Result) error {
 	pipes := []drawPipe{
 		d.SetImage,
 	}
@@ -126,12 +129,7 @@ func (d *Draw) DrawBase(source FetchResult) error {
 	return nil
 }
 
-func (d *Draw) Reset() {
-	d.dc.Clear()
-	d.dc.SetRGBA(1, 1, 1, 0)
-}
-
-func (d *Draw) DrawOver(source FetchResult) error {
+func (d *Draw) DrawOver(source fetcher.Result) error {
 	pipes := []drawPipe{
 		d.SetBackground,
 		d.SetText,
@@ -146,14 +144,14 @@ func (d *Draw) DrawOver(source FetchResult) error {
 	return nil
 }
 
-func (d *Draw) SetBackground(_ FetchResult) error {
+func (d *Draw) SetBackground(_ fetcher.Result) error {
 	x := boxMargin
 	y := boxMargin
 
 	//nolint:gomnd
-	w := d.dc.Width() - (2.0 * boxMargin)
+	w := d.dc.Width() - (innerBoxMargin)
 	//nolint:gomnd
-	h := d.dc.Height() - (2.0 * boxMargin)
+	h := d.dc.Height() - (innerBoxMargin)
 
 	box := gg.NewContext(w, h)
 	box.SetColor(d.Colors.Box)
@@ -165,7 +163,7 @@ func (d *Draw) SetBackground(_ FetchResult) error {
 	return nil
 }
 
-func (d *Draw) SetImage(source FetchResult) error {
+func (d *Draw) SetImage(source fetcher.Result) error {
 	tmpFile, err := os.CreateTemp(os.TempDir(), "fetch-*--"+source.ImageName())
 	if err != nil {
 		return err
@@ -198,7 +196,7 @@ func (d *Draw) SetImage(source FetchResult) error {
 	return nil
 }
 
-func (d *Draw) SetText(source FetchResult) error {
+func (d *Draw) SetText(source fetcher.Result) error {
 	_, titleHeight, err := d.addTitleText(source.Title)
 	if err != nil {
 		return err
@@ -219,6 +217,11 @@ func (d *Draw) Write(target io.Writer) error {
 	return d.dc.EncodePNG(target)
 }
 
+func (d *Draw) Reset() {
+	d.dc.Clear()
+	d.dc.SetRGBA(1, 1, 1, 0)
+}
+
 func (d *Draw) detectColor() {
 	d.Colors = NewCoverColors(d.dc.Image())
 }
@@ -228,7 +231,7 @@ func (d *Draw) addTitleText(text string) (textWidth, textHeight float64, err err
 
 	W := dc.Width()
 	H := dc.Height()
-	P := boxMargin * 1.2
+	P := innerBoxMargin
 
 	yPad := P
 
@@ -286,7 +289,7 @@ func (d *Draw) addTitleText(text string) (textWidth, textHeight float64, err err
 	return
 }
 
-func (d *Draw) addFooter(source FetchResult) error {
+func (d *Draw) addFooter(source fetcher.Result) error {
 	text := fmt.Sprintf("by %s", source.SiteName)
 
 	if len(source.SiteName) == 0 {
@@ -297,11 +300,11 @@ func (d *Draw) addFooter(source FetchResult) error {
 
 	W := dc.Width()
 
-	P := boxMargin * 2
+	P := innerBoxMargin
 
 	maxWidth := float64(W) - (P * 2)
 
-	yPad := float64(dc.Height()) - (P * 2)
+	yPad := float64(dc.Height()) - (P * 3)
 
 	dc.SetFontFace(truetype.NewFace(d.fonts.Footer, &truetype.Options{
 		Size: footerSize,
@@ -315,15 +318,19 @@ func (d *Draw) addFooter(source FetchResult) error {
 }
 
 func (d *Draw) addDescription(paddingTop float64, text string) error {
-	if len(text) == 0 {
+	textLen := len(text)
+
+	if textLen == 0 {
 		return nil
+	} else if textLen > maxTextLength {
+		text = text[:maxTextLength] + "[…]"
 	}
 
 	dc := d.dc
 
 	W := dc.Width()
 
-	P := boxMargin * 2
+	P := innerBoxMargin
 
 	yPad := paddingTop + (P * 4)
 

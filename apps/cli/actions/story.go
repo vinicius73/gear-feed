@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/vinicius73/gamer-feed/pkg/stories/stages"
+	"github.com/vinicius73/gamer-feed/pkg/stories"
 )
 
 type BuildStoryOptions struct {
@@ -15,18 +15,13 @@ type BuildStoryOptions struct {
 }
 
 func Story(ctx context.Context, opt BuildStoryOptions) error {
-	entry, err := stages.Fetch(ctx, opt.URL)
-	if err != nil {
-		return err
-	}
-
 	out, err := filepath.Abs(opt.Output)
 	if err != nil {
 		return err
 	}
 
-	stage, err := stages.BuildStage(stages.BuildStageOptions{
-		Source:           entry,
+	stage, err := stories.BuildStory(ctx, stories.BuildStorieOptions{
+		SourceURL:        opt.URL,
 		TargetDir:        out,
 		TemplateFilename: opt.Template,
 	})

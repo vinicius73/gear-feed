@@ -1,10 +1,21 @@
 package stages
 
-import "os"
+import (
+	"context"
+	"os"
+
+	"github.com/vinicius73/gamer-feed/pkg/support/apperrors"
+)
+
+var (
+	ErrFailToCreateFile = apperrors.System(nil, "fail to create file", "STAGES:FAIL_TO_CREATE_FILE")
+	ErrFailToWriteFile  = apperrors.System(nil, "fail to write file", "STAGES:FAIL_TO_WRITE_FILE")
+	ErrFailToBuildStage = apperrors.System(nil, "fail to build stage", "STAGES:FAIL_TO_BUILD_STAGE")
+)
 
 const (
-	defaultWidth  = 1080
-	defaultHeight = 1920
+	DefaultWidth  = 1080
+	DefaultHeight = 1920
 )
 
 type Stage struct {
@@ -15,41 +26,34 @@ type Stage struct {
 	Foreground string
 }
 
-func BuildStage(opt BuildStageOptions) (Stage, error) {
+func BuildStage(ctx context.Context, opt BuildStageOptions) (Stage, error) {
 	files := Stage{
-
-		Width:  defaultWidth,
-		Height: defaultHeight,
+		Width:  DefaultWidth,
+		Height: DefaultHeight,
 	}
 
 	drawer, err := NewDraw(files.Width, files.Height)
-
-	if err != nil {
-		return files, err
-	}
-
-	tpl, err := opt.Template(opt.Source)
 	if err != nil {
 		return files, err
 	}
 
 	buildStageImage := func(build drawPipe, name string) (string, error) {
-		target, err := tpl.Render(name)
+		target, err := opt.Template.Render(name)
 		if err != nil {
 			return "", err
 		}
 
 		if err := build(opt.Source); err != nil {
-			return "", err
+			return "", ErrFailToBuildStage.Wrap(err)
 		}
 
 		targetFile, err := os.Create(target)
 		if err != nil {
-			return "", err
+			return "", ErrFailToCreateFile.Wrap(err)
 		}
 
 		if err = drawer.Write(targetFile); err != nil {
-			return "", err
+			return "", ErrFailToWriteFile.Wrap(err)
 		}
 
 		return target, nil
@@ -59,17 +63,17 @@ func BuildStage(opt BuildStageOptions) (Stage, error) {
 		return files, err
 	}
 
+	drawer.Reset()
+
 	if files.Background, err = buildStageImage(drawer.DrawBase, "background.png"); err != nil {
 		return files, err
 	}
 
+	drawer.Reset()
+
 	if files.Foreground, err = buildStageImage(drawer.DrawOver, "foreground.png"); err != nil {
 		return files, err
 	}
-
-	_, err = BuildVideo(BuildVideoOptions{
-		Stage: files,
-	})
 
 	return files, err
 }

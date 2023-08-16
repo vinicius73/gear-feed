@@ -1,4 +1,4 @@
-package stages
+package fetcher
 
 import (
 	"context"
@@ -13,13 +13,19 @@ import (
 	"github.com/vinicius73/gamer-feed/pkg/support/apperrors"
 )
 
-var ErrMissingImageURL = apperrors.Business("missing image url", "COVER:MISSING_IMAGE_URL")
+var ErrMissingImageURL = apperrors.Business("missing image url", "FETCHER:MISSING_IMAGE_URL")
 
 const (
 	requestTimeout = 10 * time.Second
 )
 
-type FetchResult struct {
+type Options struct {
+	SourceURL     string
+	DefaultWidth  int
+	DefaultHeight int
+}
+
+type Result struct {
 	Title      string
 	Text       string
 	SiteName   string
@@ -28,7 +34,7 @@ type FetchResult struct {
 	URL        string
 }
 
-func Fetch(ctx context.Context, source string) (FetchResult, error) {
+func Fetch(ctx context.Context, opt Options) (Result, error) {
 	httpClient := &http.Client{
 		Timeout: requestTimeout,
 	}
@@ -38,12 +44,12 @@ func Fetch(ctx context.Context, source string) (FetchResult, error) {
 		HTTPClient: httpClient,
 	}
 
-	ogp, err := opengraph.Fetch(source, intent)
+	ogp, err := opengraph.Fetch(opt.SourceURL, intent)
 	if err != nil {
-		return FetchResult{}, err
+		return Result{}, err
 	}
 
-	image := findBestImage(ogp.Image)
+	image := findBestImage(opt, ogp.Image)
 
 	title := ogp.Title
 	siteName := ogp.SiteName
@@ -54,15 +60,15 @@ func Fetch(ctx context.Context, source string) (FetchResult, error) {
 	}
 
 	if ogp.URL == "" {
-		siteURL = source
+		siteURL = opt.SourceURL
 	}
 
 	parsed, err := url.Parse(siteURL)
 	if err != nil {
-		return FetchResult{}, err
+		return Result{}, err
 	}
 
-	return FetchResult{
+	return Result{
 		Title:      title,
 		Text:       ogp.Description,
 		ImageURL:   image.URL,
@@ -72,7 +78,7 @@ func Fetch(ctx context.Context, source string) (FetchResult, error) {
 	}, nil
 }
 
-func (f FetchResult) FetchImage(target io.Writer) error {
+func (f Result) FetchImage(target io.Writer) error {
 	if f.ImageURL == "" {
 		return ErrMissingImageURL
 	}
@@ -97,11 +103,11 @@ func (f FetchResult) FetchImage(target io.Writer) error {
 	return err
 }
 
-func (f FetchResult) ImageName() string {
+func (f Result) ImageName() string {
 	return filepath.Base(f.ImageURL)
 }
 
-func findBestImage(images []opengraph.Image) opengraph.Image {
+func findBestImage(opt Options, images []opengraph.Image) opengraph.Image {
 	if len(images) == 0 {
 		return opengraph.Image{}
 	}
@@ -110,7 +116,7 @@ func findBestImage(images []opengraph.Image) opengraph.Image {
 	found := false
 
 	for _, image := range images {
-		if image.Width > defaultWidth && image.Height > defaultHeight {
+		if image.Width > opt.DefaultWidth && image.Height > opt.DefaultHeight {
 			if bestImage.Width == 0 || bestImage.Height == 0 {
 				bestImage = image
 				found = true
