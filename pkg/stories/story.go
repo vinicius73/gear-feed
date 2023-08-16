@@ -6,15 +6,16 @@ import (
 	"github.com/vinicius73/gamer-feed/pkg/stories/stages"
 )
 
-type Storie struct {
+type Story struct {
 	Stage stages.Stage
 	Video string
+	Hash  string
 }
 
-func (s Storie) MoveVideo(target string) error {
+func (s Story) MoveVideo(target string) error {
 	return os.Rename(s.Video, target)
 }
 
-func (s Storie) RemoveStage() error {
+func (s Story) RemoveStage() error {
 	return s.Stage.RemoveAll()
 }

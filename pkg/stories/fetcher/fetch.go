@@ -10,10 +10,14 @@ import (
 	"time"
 
 	"github.com/otiai10/opengraph/v2"
+	"github.com/vinicius73/gamer-feed/pkg/support"
 	"github.com/vinicius73/gamer-feed/pkg/support/apperrors"
 )
 
-var ErrMissingImageURL = apperrors.Business("missing image url", "FETCHER:MISSING_IMAGE_URL")
+var (
+	ErrMissingImageURL = apperrors.Business("missing image url", "FETCHER:MISSING_IMAGE_URL")
+	ErrFailToHash      = apperrors.System(nil, "fail to hash", "STAGES:FAIL_TO_HASH")
+)
 
 const (
 	requestTimeout = 10 * time.Second
@@ -32,6 +36,7 @@ type Result struct {
 	ImageURL   string
 	DomainName string
 	URL        string
+	Hash       string
 }
 
 func Fetch(ctx context.Context, opt Options) (Result, error) {
@@ -70,8 +75,15 @@ func Fetch(ctx context.Context, opt Options) (Result, error) {
 		return Result{}, err
 	}
 
+	hash, err := support.HashSHA256(opt.SourceURL)
+	if err != nil {
+		//nolint:exhaustruct
+		return Result{}, ErrFailToHash.Wrap(err)
+	}
+
 	return Result{
 		Title:      title,
+		Hash:       hash,
 		Text:       ogp.Description,
 		ImageURL:   image.URL,
 		SiteName:   siteName,

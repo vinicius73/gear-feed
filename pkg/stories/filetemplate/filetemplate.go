@@ -13,10 +13,13 @@ import (
 	"github.com/vinicius73/gamer-feed/pkg/support/apperrors"
 )
 
-const maxTitleName = 10
+const (
+	maxTitleName = 10
+	hashSize     = 8
+)
 
 var (
-	ErrEmptyTarget         = apperrors.Business("target cannot be empty", "STAGES:EMPTY_TARGET")
+	ErrEmptyDir            = apperrors.Business("base dir cannot be empty", "STAGES:EMPTY_TARGET")
 	ErrFailtoCreateDir     = apperrors.System(nil, "fail to create dir", "STAGES:FAIL_TO_CREATE_DIR")
 	ErrFailToParseTemplate = apperrors.System(nil, "fail to parse template", "STAGES:FAIL_TO_PARSE_TEMPLATE")
 	ErrFailtoBuildFilename = apperrors.System(nil, "fail to build filename", "STAGES:FAIL_TO_BUILD_FILENAME")
@@ -28,6 +31,7 @@ type Template struct {
 	Date    string
 	Site    string
 	Title   string
+	Hash    string
 }
 
 type Options struct {
@@ -36,16 +40,25 @@ type Options struct {
 	BaseDir  string
 }
 
+//nolint:exhaustruct
 func New(opt Options) (Template, error) {
+	if opt.BaseDir == "" {
+		return Template{}, ErrEmptyDir
+	}
+
+	if err := support.DirMustExist(opt.BaseDir); err != nil {
+		return Template{}, ErrFailtoCreateDir.Wrap(err)
+	}
+
 	tpl, err := template.New("").Parse(opt.Template)
 	if err != nil {
-		//nolint:exhaustruct
 		return Template{}, ErrFailToParseTemplate.Wrap(err)
 	}
 
-	if err = support.DirMustExist(opt.BaseDir); err != nil {
-		//nolint:exhaustruct
-		return Template{}, ErrFailtoCreateDir.Wrap(err)
+	hash := opt.Source.Hash
+
+	if len(hash) > hashSize {
+		hash = hash[:hashSize]
 	}
 
 	title := opt.Source.Title
@@ -56,6 +69,7 @@ func New(opt Options) (Template, error) {
 
 	return Template{
 		tpl:     tpl,
+		Hash:    hash,
 		BaseDir: opt.BaseDir,
 		Site:    slug.Make(opt.Source.SiteName),
 		Title:   slug.Make(title),
@@ -72,6 +86,7 @@ func (t Template) Render(filename string) (string, error) {
 		"site":     t.Site,
 		"title":    t.Title,
 		"filename": filename,
+		"hash":     t.Hash,
 	})
 	if err != nil {
 		return "", ErrFailtoBuildFilename.Wrap(err)

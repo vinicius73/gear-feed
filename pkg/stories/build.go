@@ -28,7 +28,7 @@ func (bo BuildStorieOptions) Template(source fetcher.Result) (filetemplate.Templ
 	return tpl, nil
 }
 
-func BuildStory(ctx context.Context, opt BuildStorieOptions) (Storie, error) {
+func BuildStory(ctx context.Context, opt BuildStorieOptions) (Story, error) {
 	logger := zerolog.Ctx(ctx).With().Str("component", "stories").Logger()
 	ctx = logger.WithContext(ctx)
 
@@ -38,14 +38,17 @@ func BuildStory(ctx context.Context, opt BuildStorieOptions) (Storie, error) {
 		DefaultHeight: stages.DefaultHeight,
 	})
 	if err != nil {
-		return Storie{}, err
+		return Story{}, err
 	}
 
-	logger.Info().Str("title", entry.Title).Msg("entry data loades")
+	logger = logger.With().Str("title", entry.Title).Logger()
+	ctx = logger.WithContext(ctx)
+
+	logger.Info().Msg("entry data loades")
 
 	tpl, err := opt.Template(entry)
 	if err != nil {
-		return Storie{}, err
+		return Story{}, err
 	}
 
 	stage, err := stages.BuildStage(ctx, stages.BuildStageOptions{
@@ -53,14 +56,14 @@ func BuildStory(ctx context.Context, opt BuildStorieOptions) (Storie, error) {
 		Template: tpl,
 	})
 	if err != nil {
-		return Storie{}, err
+		return Story{}, err
 	}
 
-	logger.Info().Str("title", entry.Title).Msg("stage builded")
+	logger.Info().Msg("stage builded")
 
 	videoFile, err := tpl.Render("video.mp4")
 	if err != nil {
-		return Storie{}, err
+		return Story{}, err
 	}
 
 	videoFile, err = stages.BuildVideo(ctx, stages.BuildVideoOptions{
@@ -68,13 +71,14 @@ func BuildStory(ctx context.Context, opt BuildStorieOptions) (Storie, error) {
 		Target: videoFile,
 	})
 	if err != nil {
-		return Storie{}, err
+		return Story{}, err
 	}
 
-	logger.Info().Str("title", entry.Title).Msg("video builded")
+	logger.Info().Msg("video builded")
 
-	return Storie{
+	return Story{
 		Stage: stage,
 		Video: videoFile,
+		Hash:  entry.Hash,
 	}, nil
 }

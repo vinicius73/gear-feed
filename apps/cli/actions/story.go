@@ -20,7 +20,7 @@ func VideoStory(ctx context.Context, opt BuildStoryOptions) error {
 		return err
 	}
 
-	tmp, err := os.MkdirTemp(os.TempDir(), "gamer-feed")
+	tmp, err := os.MkdirTemp(os.TempDir(), "gamer-feed-*")
 	if err != nil {
 		return err
 	}
@@ -28,7 +28,7 @@ func VideoStory(ctx context.Context, opt BuildStoryOptions) error {
 	story, err := stories.BuildStory(ctx, stories.BuildStorieOptions{
 		SourceURL:        opt.URL,
 		TargetDir:        tmp,
-		TemplateFilename: "{{.date}}-{{.site}}--{{.filename}}",
+		TemplateFilename: "{{.date}}-{{.site}}-{{.hash}}--{{.filename}}",
 	})
 	if err != nil {
 		return err
