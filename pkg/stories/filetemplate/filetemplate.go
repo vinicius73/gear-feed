@@ -39,10 +39,12 @@ type Options struct {
 func New(opt Options) (Template, error) {
 	tpl, err := template.New("").Parse(opt.Template)
 	if err != nil {
+		//nolint:exhaustruct
 		return Template{}, ErrFailToParseTemplate.Wrap(err)
 	}
 
 	if err = support.DirMustExist(opt.BaseDir); err != nil {
+		//nolint:exhaustruct
 		return Template{}, ErrFailtoCreateDir.Wrap(err)
 	}
 

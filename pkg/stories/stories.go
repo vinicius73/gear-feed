@@ -65,6 +65,10 @@ func BuildStory(ctx context.Context, opt BuildStorieOptions) (Storie, error) {
 		Target: videoFile,
 	})
 
+	if err != nil {
+		return Storie{}, err
+	}
+
 	return Storie{
 		Stage: stage,
 		Video: videoFile,

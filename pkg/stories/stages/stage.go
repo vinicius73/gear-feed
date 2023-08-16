@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 
+	"github.com/vinicius73/gamer-feed/pkg/stories/drawer"
 	"github.com/vinicius73/gamer-feed/pkg/support/apperrors"
 )
 
@@ -28,22 +29,25 @@ type Stage struct {
 
 func BuildStage(ctx context.Context, opt BuildStageOptions) (Stage, error) {
 	files := Stage{
-		Width:  DefaultWidth,
-		Height: DefaultHeight,
+		Width:      DefaultWidth,
+		Height:     DefaultHeight,
+		Full:       "",
+		Background: "",
+		Foreground: "",
 	}
 
-	drawer, err := NewDraw(files.Width, files.Height)
+	draw, err := drawer.NewDraw(files.Width, files.Height)
 	if err != nil {
 		return files, err
 	}
 
-	buildStageImage := func(build drawPipe, name string) (string, error) {
+	buildStageImage := func(build drawer.DrawPipe, name string) (string, error) {
 		target, err := opt.Template.Render(name)
 		if err != nil {
 			return "", err
 		}
 
-		if err := build(opt.Source); err != nil {
+		if err := build(ctx, opt.Source); err != nil {
 			return "", ErrFailToBuildStage.Wrap(err)
 		}
 
@@ -52,26 +56,26 @@ func BuildStage(ctx context.Context, opt BuildStageOptions) (Stage, error) {
 			return "", ErrFailToCreateFile.Wrap(err)
 		}
 
-		if err = drawer.Write(targetFile); err != nil {
+		if err = draw.Write(targetFile); err != nil {
 			return "", ErrFailToWriteFile.Wrap(err)
 		}
 
 		return target, nil
 	}
 
-	if files.Full, err = buildStageImage(drawer.Draw, "full.png"); err != nil {
+	if files.Full, err = buildStageImage(draw.Draw, "full.png"); err != nil {
 		return files, err
 	}
 
-	drawer.Reset()
+	draw.Reset()
 
-	if files.Background, err = buildStageImage(drawer.DrawBase, "background.png"); err != nil {
+	if files.Background, err = buildStageImage(draw.DrawBase, "background.png"); err != nil {
 		return files, err
 	}
 
-	drawer.Reset()
+	draw.Reset()
 
-	if files.Foreground, err = buildStageImage(drawer.DrawOver, "foreground.png"); err != nil {
+	if files.Foreground, err = buildStageImage(draw.DrawOver, "foreground.png"); err != nil {
 		return files, err
 	}
 

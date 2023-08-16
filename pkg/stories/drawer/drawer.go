@@ -1,15 +1,13 @@
-package stages
+//nolint:varnamelen,gomnd,exhaustruct,nakedret,nonamedreturns
+package drawer
 
 import (
+	"context"
 	"fmt"
 	"image"
 	"image/color"
-	_ "image/jpeg"
-	_ "image/png"
 	"io"
 	"os"
-
-	_ "golang.org/x/image/webp"
 
 	"github.com/cenkalti/dominantcolor"
 	"github.com/disintegration/imaging"
@@ -51,7 +49,7 @@ type Draw struct {
 	height int
 }
 
-type drawPipe func(source fetcher.Result) error
+type DrawPipe func(ctx context.Context, source fetcher.Result) error
 
 func NewCoverColors(im image.Image) CoverColors {
 	main := dominantcolor.Find(im)
@@ -103,25 +101,21 @@ func NewDraw(width, height int) (*Draw, error) {
 	}, nil
 }
 
-func (d *Draw) Draw(source fetcher.Result) error {
-	if err := d.DrawBase(source); err != nil {
+func (d *Draw) Draw(ctx context.Context, source fetcher.Result) error {
+	if err := d.DrawBase(ctx, source); err != nil {
 		return err
 	}
 
-	if err := d.DrawOver(source); err != nil {
-		return err
-	}
-
-	return nil
+	return d.DrawOver(ctx, source)
 }
 
-func (d *Draw) DrawBase(source fetcher.Result) error {
-	pipes := []drawPipe{
+func (d *Draw) DrawBase(ctx context.Context, source fetcher.Result) error {
+	pipes := []DrawPipe{
 		d.SetImage,
 	}
 
 	for _, pipe := range pipes {
-		if err := pipe(source); err != nil {
+		if err := pipe(ctx, source); err != nil {
 			return err
 		}
 	}
@@ -129,14 +123,14 @@ func (d *Draw) DrawBase(source fetcher.Result) error {
 	return nil
 }
 
-func (d *Draw) DrawOver(source fetcher.Result) error {
-	pipes := []drawPipe{
+func (d *Draw) DrawOver(ctx context.Context, source fetcher.Result) error {
+	pipes := []DrawPipe{
 		d.SetBackground,
 		d.SetText,
 	}
 
 	for _, pipe := range pipes {
-		if err := pipe(source); err != nil {
+		if err := pipe(ctx, source); err != nil {
 			return err
 		}
 	}
@@ -144,13 +138,12 @@ func (d *Draw) DrawOver(source fetcher.Result) error {
 	return nil
 }
 
-func (d *Draw) SetBackground(_ fetcher.Result) error {
+func (d *Draw) SetBackground(_ context.Context, _ fetcher.Result) error {
 	x := boxMargin
 	y := boxMargin
 
-	//nolint:gomnd
 	w := d.dc.Width() - (innerBoxMargin)
-	//nolint:gomnd
+
 	h := d.dc.Height() - (innerBoxMargin)
 
 	box := gg.NewContext(w, h)
@@ -163,7 +156,7 @@ func (d *Draw) SetBackground(_ fetcher.Result) error {
 	return nil
 }
 
-func (d *Draw) SetImage(source fetcher.Result) error {
+func (d *Draw) SetImage(ctx context.Context, source fetcher.Result) error {
 	tmpFile, err := os.CreateTemp(os.TempDir(), "fetch-*--"+source.ImageName())
 	if err != nil {
 		return err
@@ -172,7 +165,7 @@ func (d *Draw) SetImage(source fetcher.Result) error {
 	defer tmpFile.Close()
 	defer os.Remove(tmpFile.Name())
 
-	err = source.FetchImage(tmpFile)
+	err = source.FetchImage(ctx, tmpFile)
 
 	if err != nil {
 		return err
@@ -196,21 +189,14 @@ func (d *Draw) SetImage(source fetcher.Result) error {
 	return nil
 }
 
-func (d *Draw) SetText(source fetcher.Result) error {
-	_, titleHeight, err := d.addTitleText(source.Title)
-	if err != nil {
+func (d *Draw) SetText(_ context.Context, source fetcher.Result) error {
+	_, titleHeight := d.addTitleText(source.Title)
+
+	if err := d.addFooter(source); err != nil {
 		return err
 	}
 
-	if err = d.addFooter(source); err != nil {
-		return err
-	}
-
-	if err = d.addDescription(titleHeight, source.Text); err != nil {
-		return err
-	}
-
-	return nil
+	return d.addDescription(titleHeight, source.Text)
 }
 
 func (d *Draw) Write(target io.Writer) error {
@@ -226,7 +212,7 @@ func (d *Draw) detectColor() {
 	d.Colors = NewCoverColors(d.dc.Image())
 }
 
-func (d *Draw) addTitleText(text string) (textWidth, textHeight float64, err error) {
+func (d *Draw) addTitleText(text string) (textWidth, textHeight float64) {
 	dc := d.dc
 
 	W := dc.Width()
@@ -279,7 +265,7 @@ func (d *Draw) addTitleText(text string) (textWidth, textHeight float64, err err
 	}
 
 	dc.SetColor(d.Colors.Shadow)
-	//nolint:gomnd
+
 	dc.DrawStringWrapped(text, P+1, yPad+1, 0, 0, maxWidth, fontLineSpacing, gg.AlignLeft)
 	dc.SetColor(d.Colors.Text)
 	dc.DrawStringWrapped(text, P, yPad, 0, 0, maxWidth, fontLineSpacing, gg.AlignLeft)
@@ -311,7 +297,7 @@ func (d *Draw) addFooter(source fetcher.Result) error {
 	}))
 
 	dc.SetColor(d.Colors.Text)
-	//nolint:gomnd
+
 	dc.DrawStringWrapped(text, P, yPad, 0, 0, maxWidth, fontLineSpacing, gg.AlignLeft)
 
 	return nil

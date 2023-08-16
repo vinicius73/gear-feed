@@ -11,18 +11,20 @@ import (
 var ttfFS embed.FS
 
 var (
-	ubuntuMonoBold    = new("UbuntuMono-Bold.ttf")
-	ubuntuMonoRegular = new("UbuntuMono-Regular.ttf")
-	firaMonoBold      = new("FiraMono-Bold.ttf")
-	firaMonoRegular   = new("FiraMono-Regular.ttf")
+	ubuntuMonoBold    = newFont("UbuntuMono-Bold.ttf")
+	ubuntuMonoRegular = newFont("UbuntuMono-Regular.ttf")
+	firaMonoBold      = newFont("FiraMono-Bold.ttf")
+	firaMonoRegular   = newFont("FiraMono-Regular.ttf")
 )
 
 type font struct {
 	file string
 }
 
-func new(file string) font {
-	return font{file}
+func newFont(file string) font {
+	return font{
+		file: file,
+	}
 }
 
 func readFont(name string) (*truetype.Font, error) {

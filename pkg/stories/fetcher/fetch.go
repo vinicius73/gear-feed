@@ -35,10 +35,12 @@ type Result struct {
 }
 
 func Fetch(ctx context.Context, opt Options) (Result, error) {
+	//nolint:exhaustruct
 	httpClient := &http.Client{
 		Timeout: requestTimeout,
 	}
 
+	//nolint:exhaustruct
 	intent := opengraph.Intent{
 		Context:    ctx,
 		HTTPClient: httpClient,
@@ -78,16 +80,17 @@ func Fetch(ctx context.Context, opt Options) (Result, error) {
 	}, nil
 }
 
-func (f Result) FetchImage(target io.Writer) error {
+func (f Result) FetchImage(ctx context.Context, target io.Writer) error {
 	if f.ImageURL == "" {
 		return ErrMissingImageURL
 	}
 
+	//nolint:exhaustruct
 	httpClient := &http.Client{
 		Timeout: requestTimeout,
 	}
 
-	req, err := http.NewRequest("GET", f.ImageURL, nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, f.ImageURL, nil)
 	if err != nil {
 		return err
 	}
@@ -109,6 +112,7 @@ func (f Result) ImageName() string {
 
 func findBestImage(opt Options, images []opengraph.Image) opengraph.Image {
 	if len(images) == 0 {
+		//nolint:exhaustruct
 		return opengraph.Image{}
 	}
 
