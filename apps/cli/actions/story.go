@@ -3,33 +3,42 @@ package actions
 import (
 	"context"
 	"fmt"
+	"os"
 	"path/filepath"
 
 	"github.com/vinicius73/gamer-feed/pkg/stories"
 )
 
 type BuildStoryOptions struct {
-	URL      string
-	Output   string
-	Template string
+	URL    string
+	Output string
 }
 
-func Story(ctx context.Context, opt BuildStoryOptions) error {
+func VideoStory(ctx context.Context, opt BuildStoryOptions) error {
 	out, err := filepath.Abs(opt.Output)
 	if err != nil {
 		return err
 	}
 
-	stage, err := stories.BuildStory(ctx, stories.BuildStorieOptions{
+	tmp, err := os.MkdirTemp(os.TempDir(), "gamer-feed")
+	if err != nil {
+		return err
+	}
+
+	story, err := stories.BuildStory(ctx, stories.BuildStorieOptions{
 		SourceURL:        opt.URL,
-		TargetDir:        out,
-		TemplateFilename: opt.Template,
+		TargetDir:        tmp,
+		TemplateFilename: "{{.date}}-{{.site}}--{{.filename}}",
 	})
 	if err != nil {
 		return err
 	}
 
-	fmt.Println(stage)
+	if err = story.MoveVideo(out); err != nil {
+		return err
+	}
 
-	return nil
+	fmt.Println(story.Video)
+
+	return story.RemoveStage()
 }

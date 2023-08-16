@@ -1,13 +1,16 @@
 package main
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/urfave/cli/v2"
 	"github.com/vinicius73/gamer-feed/apps/cli/actions"
 )
 
 func storiesCMD() *cli.Command {
 	cover := &cli.Command{
-		Name:        "cover",
+		Name:        "video",
 		Description: `Build cover from URL`,
 		Flags: []cli.Flag{
 			&cli.StringFlag{
@@ -16,23 +19,17 @@ func storiesCMD() *cli.Command {
 				Required: true,
 			},
 			&cli.StringFlag{
-				Name:    "output",
-				Usage:   "Output dir",
-				Aliases: []string{"o"},
-				Value:   "outputs",
-			},
-			&cli.StringFlag{
-				Name:    "template-filename",
-				Usage:   "Template filename",
-				Aliases: []string{"t"},
-				Value:   "{{.date}}-{{.site}}-{{.title}}--{{.filename}}",
+				Name:        "output",
+				Usage:       "Output dir",
+				Aliases:     []string{"o"},
+				Value:       fmt.Sprintf("outputs/%v-story.mp4", time.Now().Unix()),
+				DefaultText: "outputs/{DATE}-story.mp4",
 			},
 		},
 		Action: func(cmd *cli.Context) error {
-			return actions.Story(cmd.Context, actions.BuildStoryOptions{
-				URL:      cmd.String("url"),
-				Output:   cmd.String("output"),
-				Template: cmd.String("template-filename"),
+			return actions.VideoStory(cmd.Context, actions.BuildStoryOptions{
+				URL:    cmd.String("url"),
+				Output: cmd.String("output"),
 			})
 		},
 	}

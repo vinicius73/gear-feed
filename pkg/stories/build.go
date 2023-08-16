@@ -3,15 +3,11 @@ package stories
 import (
 	"context"
 
+	"github.com/rs/zerolog"
 	"github.com/vinicius73/gamer-feed/pkg/stories/fetcher"
 	"github.com/vinicius73/gamer-feed/pkg/stories/filetemplate"
 	"github.com/vinicius73/gamer-feed/pkg/stories/stages"
 )
-
-type Storie struct {
-	Stage stages.Stage
-	Video string
-}
 
 type BuildStorieOptions struct {
 	TemplateFilename string
@@ -33,6 +29,9 @@ func (bo BuildStorieOptions) Template(source fetcher.Result) (filetemplate.Templ
 }
 
 func BuildStory(ctx context.Context, opt BuildStorieOptions) (Storie, error) {
+	logger := zerolog.Ctx(ctx).With().Str("component", "stories").Logger()
+	ctx = logger.WithContext(ctx)
+
 	entry, err := fetcher.Fetch(ctx, fetcher.Options{
 		SourceURL:     opt.SourceURL,
 		DefaultWidth:  stages.DefaultWidth,
@@ -41,6 +40,8 @@ func BuildStory(ctx context.Context, opt BuildStorieOptions) (Storie, error) {
 	if err != nil {
 		return Storie{}, err
 	}
+
+	logger.Info().Str("title", entry.Title).Msg("entry data loades")
 
 	tpl, err := opt.Template(entry)
 	if err != nil {
@@ -55,6 +56,8 @@ func BuildStory(ctx context.Context, opt BuildStorieOptions) (Storie, error) {
 		return Storie{}, err
 	}
 
+	logger.Info().Str("title", entry.Title).Msg("stage builded")
+
 	videoFile, err := tpl.Render("video.mp4")
 	if err != nil {
 		return Storie{}, err
@@ -64,10 +67,11 @@ func BuildStory(ctx context.Context, opt BuildStorieOptions) (Storie, error) {
 		Stage:  stage,
 		Target: videoFile,
 	})
-
 	if err != nil {
 		return Storie{}, err
 	}
+
+	logger.Info().Str("title", entry.Title).Msg("video builded")
 
 	return Storie{
 		Stage: stage,
