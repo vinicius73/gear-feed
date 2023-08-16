@@ -3,21 +3,28 @@ module github.com/vinicius73/gamer-feed
 go 1.20
 
 require (
+	github.com/cenkalti/dominantcolor v1.0.1
 	github.com/charmbracelet/bubbles v0.16.1
 	github.com/charmbracelet/bubbletea v0.24.2
 	github.com/charmbracelet/lipgloss v0.7.1
 	github.com/creasty/defaults v1.7.0
+	github.com/disintegration/imaging v1.6.2
 	github.com/dustin/go-humanize v1.0.1
+	github.com/fogleman/gg v1.3.0
 	github.com/go-co-op/gocron v1.31.1
 	github.com/go-gorp/gorp/v3 v3.1.0
 	github.com/gocolly/colly v1.2.0
+	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
 	github.com/gosimple/slug v1.13.1
 	github.com/kkyr/fig v0.3.2
 	github.com/mitchellh/go-homedir v1.1.0
+	github.com/muesli/gamut v0.3.1
+	github.com/otiai10/opengraph/v2 v2.1.0
 	github.com/rs/zerolog v1.30.0
 	github.com/rubenv/sql-migrate v1.5.2
 	github.com/stretchr/testify v1.8.2
 	github.com/urfave/cli/v2 v2.25.7
+	golang.org/x/image v0.0.0-20200927104501-e162460cd6b5
 	gopkg.in/telebot.v3 v3.1.3
 	gopkg.in/yaml.v3 v3.0.1
 	modernc.org/sqlite v1.25.0
@@ -49,6 +56,8 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/muesli/ansi v0.0.0-20230316100256-276c6243b2f6 // indirect
 	github.com/muesli/cancelreader v0.2.2 // indirect
+	github.com/muesli/clusters v0.0.0-20200529215643-2700303c1762 // indirect
+	github.com/muesli/kmeans v0.3.1 // indirect
 	github.com/muesli/reflow v0.3.0 // indirect
 	github.com/muesli/termenv v0.15.2 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
