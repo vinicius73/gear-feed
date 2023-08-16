@@ -82,10 +82,10 @@ func Fetch(ctx context.Context, opt Options) (Result, error) {
 	}
 
 	return Result{
-		Title:      title,
-		Hash:       hash,
-		Text:       ogp.Description,
+		Title:      strings.TrimSpace(title),
+		Text:       strings.TrimSpace(ogp.Description),
 		ImageURL:   image.URL,
+		Hash:       hash,
 		SiteName:   siteName,
 		URL:        siteURL,
 		DomainName: parsed.Hostname(),

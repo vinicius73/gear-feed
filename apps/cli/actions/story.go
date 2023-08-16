@@ -2,10 +2,10 @@ package actions
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"path/filepath"
 
+	"github.com/rs/zerolog"
 	"github.com/vinicius73/gamer-feed/pkg/stories"
 )
 
@@ -34,11 +34,17 @@ func VideoStory(ctx context.Context, opt BuildStoryOptions) error {
 		return err
 	}
 
+	defer story.RemoveStage()
+
 	if err = story.MoveVideo(out); err != nil {
 		return err
 	}
 
-	fmt.Println(story.Video)
+	logger := zerolog.Ctx(ctx)
 
-	return story.RemoveStage()
+	logger.Info().
+		Str("hash", story.Hash).
+		Str("output", out).Msg("video story was created")
+
+	return nil
 }
