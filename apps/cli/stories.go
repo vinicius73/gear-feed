@@ -16,14 +16,16 @@ func storiesCMD() *cli.Command {
 				Required: true,
 			},
 			&cli.StringFlag{
-				Name:  "output",
-				Usage: "Output dir",
-				Value: "outputs",
+				Name:    "output",
+				Usage:   "Output dir",
+				Aliases: []string{"o"},
+				Value:   "outputs",
 			},
 			&cli.StringFlag{
-				Name:  "template-filename",
-				Usage: "Template filename",
-				Value: "{{.date}}-{{.site}}-{{.title}}--{{.filename}}",
+				Name:    "template-filename",
+				Usage:   "Template filename",
+				Aliases: []string{"t"},
+				Value:   "{{.date}}-{{.site}}-{{.title}}--{{.filename}}",
 			},
 		},
 		Action: func(cmd *cli.Context) error {

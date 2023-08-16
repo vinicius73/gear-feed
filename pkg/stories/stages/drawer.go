@@ -1,4 +1,4 @@
-package covers
+package stages
 
 import (
 	"fmt"
