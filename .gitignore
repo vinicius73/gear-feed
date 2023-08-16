@@ -4,6 +4,9 @@ bin/*
 data/*
 !data/.gitkeep
 
+outputs/*
+!outputs/.gitkeep
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
