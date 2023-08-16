@@ -24,7 +24,7 @@ require (
 	github.com/rubenv/sql-migrate v1.5.2
 	github.com/stretchr/testify v1.8.2
 	github.com/urfave/cli/v2 v2.25.7
-	golang.org/x/image v0.0.0-20200927104501-e162460cd6b5
+	golang.org/x/image v0.11.0
 	gopkg.in/telebot.v3 v3.1.3
 	gopkg.in/yaml.v3 v3.0.1
 	modernc.org/sqlite v1.25.0
@@ -83,7 +83,7 @@ require (
 	google.golang.org/protobuf v1.31.0 // indirect
 	lukechampine.com/uint128 v1.3.0 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
-	modernc.org/ccgo/v3 v3.16.14 // indirect
+	modernc.org/ccgo/v3 v3.16.15 // indirect
 	modernc.org/libc v1.24.1 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.0 // indirect

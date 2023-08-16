@@ -210,7 +210,7 @@ github.com/xrash/smetrics
 # go.uber.org/atomic v1.11.0
 ## explicit; go 1.18
 go.uber.org/atomic
-# golang.org/x/image v0.0.0-20200927104501-e162460cd6b5
+# golang.org/x/image v0.11.0
 ## explicit; go 1.12
 golang.org/x/image/bmp
 golang.org/x/image/ccitt
@@ -334,7 +334,7 @@ lukechampine.com/uint128
 # modernc.org/cc/v3 v3.41.0
 ## explicit; go 1.17
 modernc.org/cc/v3
-# modernc.org/ccgo/v3 v3.16.14
+# modernc.org/ccgo/v3 v3.16.15
 ## explicit; go 1.18
 modernc.org/ccgo/v3/lib
 # modernc.org/libc v1.24.1
