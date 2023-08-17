@@ -2,6 +2,7 @@ name: JOGO_VEIO
 base_url: https://jogoveio.com.br
 path: ?s=anime
 limit: 5
+support_stories: true
 enabled: true
 parser: HTML
 attributes:

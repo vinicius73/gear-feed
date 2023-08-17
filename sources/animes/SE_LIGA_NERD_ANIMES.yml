@@ -2,6 +2,7 @@ name: SE_LIGA_NERD
 base_url: https://seliganerd.com
 path: /noticias/animes/
 limit: 5
+support_stories: true
 enabled: true
 parser: HTML
 attributes:

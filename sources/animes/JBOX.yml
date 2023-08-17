@@ -3,6 +3,7 @@ base_url: https://www.jbox.com.br
 path: /categoria/anime/
 limit: 5
 enabled: true
+support_stories: true
 parser: HTML
 attributes:
   entry_selector: ".container .row .col-lg-9 > a"

@@ -3,6 +3,7 @@ base_url: https://www.animeunited.com.br/
 path: noticias/ultimas/
 limit: 5
 enabled: true
+support_stories: true
 parser: HTML
 attributes:
   entry_selector: "#main article.post-single"
