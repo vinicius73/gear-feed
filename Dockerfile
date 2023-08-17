@@ -21,7 +21,7 @@ RUN go build \
 
 FROM alpine:3
 
-RUN apk add --update --no-cache ca-certificates tzdata sqlite
+RUN apk add --update --no-cache ca-certificates tzdata ffmpeg
 
 # args
 ARG APP_REVISION=unknown
