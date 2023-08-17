@@ -61,8 +61,15 @@ func (t SendLastStories[T]) loadEntries(ctx context.Context, opts TaskRunOptions
 		return entries, err
 	}
 
+	names := definitions.OnlyStorieSuported().Names()
+
+	if len(names) == 0 {
+		zerolog.Ctx(ctx).Warn().Msg("no sources to load")
+		return entries, nil
+	}
+
 	return opts.Storage.FindByHasStory(storage.FindByHasStoryOptions{
-		SourceNames: definitions.OnlyStorieSuported().Names(),
+		SourceNames: names,
 		Interval:    t.Interval,
 		Limit:       t.Limit,
 		Has:         false,
