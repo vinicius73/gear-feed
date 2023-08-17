@@ -7,6 +7,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/vinicius73/gamer-feed/pkg/model"
 	"github.com/vinicius73/gamer-feed/pkg/scraper"
+	"github.com/vinicius73/gamer-feed/pkg/support"
 )
 
 type LoadOptions struct {
@@ -39,7 +40,7 @@ func FromSources[T model.IEntry](ctx context.Context, options LoadOptions) (Coll
 	go func() {
 		defer wg.Done()
 
-		for collection := range mergeChanners(chCollections...) {
+		for collection := range support.MergeChanners(chCollections...) {
 			collections = append(collections, collection)
 		}
 	}()
@@ -49,7 +50,7 @@ func FromSources[T model.IEntry](ctx context.Context, options LoadOptions) (Coll
 	go func() {
 		defer wg.Done()
 
-		for err := range mergeChanners(chErrors...) {
+		for err := range support.MergeChanners(chErrors...) {
 			logger.Error().Err(err).Msg("Error on load worker")
 		}
 	}()
@@ -104,32 +105,4 @@ func loadWorker[T model.IEntry](wg *sync.WaitGroup, ctx context.Context, input <
 	}()
 
 	return out, errc
-}
-
-func mergeChanners[T any](list ...<-chan T) <-chan T {
-	var wg sync.WaitGroup
-
-	out := make(chan T)
-
-	output := func(c <-chan T) {
-		defer wg.Done()
-
-		for n := range c {
-			out <- n
-		}
-	}
-
-	wg.Add(len(list))
-
-	for _, c := range list {
-		go output(c)
-	}
-
-	go func() {
-		wg.Wait()
-
-		close(out)
-	}()
-
-	return out
 }
