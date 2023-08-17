@@ -1,7 +1,8 @@
 name: SE_LIGA_NERD
 base_url: https://seliganerd.com
 path: /noticias/games/
-limit: 3
+limit: 5
+support_stories: true
 enabled: true
 parser: HTML
 attributes:

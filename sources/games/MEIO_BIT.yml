@@ -1,7 +1,8 @@
 name: MEIO_BIT
 base_url: https://meiobit.com
 path: /tema/games/
-limit: 2
+limit: 4
+support_stories: true
 enabled: true
 parser: HTML
 attributes:
