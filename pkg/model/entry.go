@@ -14,6 +14,7 @@ type IEntry interface {
 	ImageURL() string
 	Hash() (string, error)
 	HasStory() bool
+	SetHasStory(bool) IEntry
 
 	FillFrom(IEntry) IEntry
 }
@@ -56,16 +57,25 @@ func (e Entry) HasStory() bool {
 	return e.HaveStory
 }
 
+func (e Entry) SetHasStory(hasStory bool) IEntry {
+	e.HaveStory = hasStory
+
+	return e
+}
+
 func (e Entry) FillFrom(input IEntry) IEntry {
 	if actual, ok := input.(Entry); ok {
 		return actual
 	}
 
-	e.Title = input.Text()
-	e.URL = input.Link()
-	e.Image = input.ImageURL()
-	e.Categories = input.Tags()
-	e.SourceName = input.Source()
+	e = Entry{
+		Title:      input.Text(),
+		URL:        input.Link(),
+		Image:      input.ImageURL(),
+		Categories: input.Tags(),
+		SourceName: input.Source(),
+		HaveStory:  input.HasStory(),
+	}
 
 	return e
 }

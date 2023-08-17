@@ -7,12 +7,26 @@ import (
 	"github.com/vinicius73/gamer-feed/pkg/stories/fetcher"
 	"github.com/vinicius73/gamer-feed/pkg/stories/filetemplate"
 	"github.com/vinicius73/gamer-feed/pkg/stories/stages"
+	"github.com/vinicius73/gamer-feed/pkg/support"
 )
+
+const workerSize = 2
 
 type BuildStorieOptions struct {
 	TemplateFilename string
 	SourceURL        string
 	TargetDir        string
+}
+
+type BuildCollectionOptions struct {
+	Sources          []string
+	TemplateFilename string
+	TargetDir        string
+}
+
+type workerResult struct {
+	Story Story
+	Error error
 }
 
 func (bo BuildStorieOptions) Template(source fetcher.Result) (filetemplate.Template, error) {
@@ -81,4 +95,66 @@ func BuildStory(ctx context.Context, opt BuildStorieOptions) (Story, error) {
 		Video: videoFile,
 		Hash:  entry.Hash,
 	}, nil
+}
+
+func BuildCollection(ctx context.Context, opt BuildCollectionOptions) (Collection, error) {
+	logger := zerolog.Ctx(ctx).With().Str("component", "stories").Logger()
+	ctx = logger.WithContext(ctx)
+
+	var collection Collection
+
+	//nolint:gomnd
+	input := make(chan BuildStorieOptions, 2)
+	outs := make([]<-chan workerResult, workerSize)
+
+	for i := 0; i < workerSize; i++ {
+		outs[i] = buildWorker(ctx, input)
+	}
+
+	for _, source := range opt.Sources {
+		input <- BuildStorieOptions{
+			SourceURL:        source,
+			TargetDir:        opt.TargetDir,
+			TemplateFilename: opt.TemplateFilename,
+		}
+	}
+
+	close(input)
+
+	for res := range support.MergeChanners(outs...) {
+		if res.Error != nil {
+			logger.Error().Err(res.Error).Msg("Error on build worker")
+
+			continue
+		}
+
+		collection = append(collection, res.Story)
+	}
+
+	return collection, nil
+}
+
+func buildWorker(ctx context.Context, input <-chan BuildStorieOptions) <-chan workerResult {
+	//nolint:gomnd
+	out := make(chan workerResult, 2)
+
+	go func() {
+		defer close(out)
+
+		for {
+			select {
+			case opt, ok := <-input:
+				if !ok {
+					return
+				}
+
+				story, err := BuildStory(ctx, opt)
+				out <- workerResult{Story: story, Error: err}
+			case <-ctx.Done():
+				return
+			}
+		}
+	}()
+
+	return out
 }

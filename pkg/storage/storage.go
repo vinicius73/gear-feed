@@ -18,6 +18,13 @@ type Options struct {
 	TTL time.Duration `fig:"ttl" yaml:"ttl"`
 }
 
+type FindByHasStoryOptions struct {
+	SourceNames []string
+	Interval    time.Duration
+	Limit       int
+	Has         bool
+}
+
 type Entry[T model.IEntry] struct {
 	Data   T
 	Status Status
@@ -26,6 +33,8 @@ type Entry[T model.IEntry] struct {
 type Storage[T model.IEntry] interface {
 	Has(hash string) (bool, error)
 	Store(entry Entry[T]) error
+	FindByHasStory(opt FindByHasStoryOptions) ([]T, error)
+	Update(entry Entry[T]) error
 	Cleanup() (int64, error)
 	Where(opts WhereOptions, list []T) ([]T, error)
 }

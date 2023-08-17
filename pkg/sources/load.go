@@ -22,7 +22,7 @@ type LoadOptions struct {
 	Only  []string `fig:"only"  yaml:"only"`
 }
 
-func Load(ctx context.Context, opt LoadOptions) ([]scraper.SourceDefinition, error) {
+func Load(ctx context.Context, opt LoadOptions) (Collection, error) {
 	definitions := []scraper.SourceDefinition{}
 
 	for _, path := range opt.Paths {
@@ -37,7 +37,7 @@ func Load(ctx context.Context, opt LoadOptions) ([]scraper.SourceDefinition, err
 	return definitions, nil
 }
 
-func loadPath(ctx context.Context, path string, only []string) ([]scraper.SourceDefinition, error) {
+func loadPath(ctx context.Context, path string, only []string) (Collection, error) {
 	definitions := []scraper.SourceDefinition{}
 
 	if !filepath.IsAbs(path) {

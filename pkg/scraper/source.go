@@ -24,13 +24,14 @@ const (
 )
 
 type SourceDefinition struct {
-	Name       string           `yaml:"name"`
-	Enabled    bool             `yaml:"enabled"`
-	BaseURL    string           `yaml:"base_url"`
-	Path       string           `yaml:"path"`
-	Limit      int              `yaml:"limit"`
-	Parser     string           `yaml:"parser"`
-	Attributes AttributesFinder `yaml:"attributes"`
+	Name           string           `yaml:"name"`
+	Enabled        bool             `yaml:"enabled"`
+	SupportStories bool             `yaml:"support_stories"`
+	BaseURL        string           `yaml:"base_url"`
+	Path           string           `yaml:"path"`
+	Limit          int              `yaml:"limit"`
+	Parser         string           `yaml:"parser"`
+	Attributes     AttributesFinder `yaml:"attributes"`
 }
 
 type PathFinder struct {
@@ -80,6 +81,7 @@ func (d SourceDefinition) buildEntry(title, link, image string, categories []str
 		SourceName: d.Name,
 		Title:      title,
 		Categories: categories,
+		HaveStory:  false,
 		URL:        d.absouteURL(link),
 		Image:      d.absouteURL(image),
 	}

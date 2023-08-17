@@ -21,6 +21,12 @@ type DBEntry[T model.IEntry] struct {
 	TTL        time.Time      `db:"ttl"`
 }
 
+type DBEntryToUpdate[T model.IEntry] struct {
+	Hash     string         `db:"hash,primarykey"`
+	Status   storage.Status `db:"status"`
+	HasStory bool           `db:"has_story"`
+}
+
 func (e DBEntry[T]) ToEntry(target T) T {
 	//nolint:forcetypeassert
 	return target.FillFrom(model.Entry{
@@ -57,5 +63,20 @@ func NewEntry[T model.IEntry](ttl time.Duration, entry storage.Entry[T]) (DBEntr
 		Categories: categories,
 		CreatedAt:  time.Now(),
 		TTL:        time.Now().Add(ttl),
+	}, nil
+}
+
+func EntryToUpdate[T model.IEntry](entry storage.Entry[T]) (DBEntryToUpdate[T], error) {
+	source := entry.Data
+
+	hash, err := source.Hash()
+	if err != nil {
+		return DBEntryToUpdate[T]{}, err
+	}
+
+	return DBEntryToUpdate[T]{
+		Hash:     hash,
+		HasStory: source.HasStory(),
+		Status:   entry.Status,
 	}, nil
 }

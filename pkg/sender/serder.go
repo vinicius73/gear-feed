@@ -39,6 +39,7 @@ type Serder[T model.IEntry] interface {
 	SendResume(ctx context.Context, opt SendResumeOptions) error
 	SendCleanupNotify(ctx context.Context, opt SendCleanupNotifyOptions) error
 	SendFile(ctx context.Context, opt SendFileOptions) error
+	SendStory(ctx context.Context, story Story[T]) error
 	WithChats(ids []int64) Serder[T]
 }
 
@@ -120,6 +121,41 @@ func (s TelegramSerder[T]) Send(ctx context.Context, entry T) error {
 	}
 
 	return nil
+}
+
+func (s TelegramSerder[T]) SendStory(ctx context.Context, story Story[T]) error {
+	logger := zerolog.Ctx(ctx)
+
+	if len(s.chats) == 0 {
+		return ErrNoChats
+	}
+
+	msg := BuildMessage(story.Entry)
+	video := &telebot.Video{
+		File:    telebot.FromDisk(story.Story.Video),
+		Caption: msg,
+		Thumbnail: &telebot.Photo{
+			File: telebot.FromDisk(story.Story.Stage.Full),
+		},
+	}
+
+	for _, chat := range s.chats {
+		if _, err := s.bot.Send(chat, video); err != nil {
+			return ErrFailToSend.Wrap(err)
+		}
+
+		logger.Info().
+			Str("recipient", chat.Recipient()).
+			Strs("tags", story.Entry.Tags()).
+			Msgf("Story sent %s", story.Entry.Link())
+	}
+
+	entry := story.Entry.SetHasStory(true).(T)
+
+	return s.storage.Update(storage.Entry[T]{
+		Data:   entry,
+		Status: storage.StatusSent,
+	})
 }
 
 func (s TelegramSerder[T]) SendCollection(ctx context.Context, entries []T) error {

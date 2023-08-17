@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"log"
 	"time"
 
 	"github.com/go-gorp/gorp/v3"
@@ -24,7 +25,10 @@ func NewStorage[T model.IEntry](db *sql.DB, opt Options) (storage.Storage[T], er
 		TypeConverter:   nil,
 	}
 
+	dbmap.TraceOn("[gorp]", log.Default())
+
 	dbmap.AddTableWithName(DBEntry[T]{}, "entries")
+	dbmap.AddTableWithName(DBEntryToUpdate[T]{}, "entries")
 
 	return Storage[T]{
 		ttl: opt.TTL,
@@ -51,6 +55,60 @@ func (s Storage[T]) Store(entry storage.Entry[T]) error {
 	}
 
 	return nil
+}
+
+func (s Storage[T]) Update(entry storage.Entry[T]) error {
+	record, err := EntryToUpdate[T](entry)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.db.Update(&record)
+
+	if err != nil {
+		return ErrFailedToCreateEntry.Wrap(err)
+	}
+
+	return nil
+}
+
+func (s Storage[T]) FindByHash(hash string) (T, error) {
+	var found DBEntry[T]
+	var entry T
+
+	err := s.db.SelectOne(&found, "SELECT * FROM entries WHERE hash = ?", hash)
+	if err != nil {
+		return found.ToEntry(entry), err
+	}
+
+	return found.ToEntry(entry), nil
+}
+
+func (s Storage[T]) FindByHasStory(opt storage.FindByHasStoryOptions) ([]T, error) {
+	var found []DBEntry[T]
+
+	//nolint:lll
+	sql := "SELECT * FROM entries WHERE source_name IN (:sources) AND created_at >= :created_at AND has_story = :has_story ORDER BY RANDOM() LIMIT :limit"
+
+	_, err := s.db.Select(&found, sql, map[string]interface{}{
+		"sources":    opt.SourceNames,
+		"created_at": time.Now().Add(-opt.Interval),
+		"has_story":  opt.Has,
+		"limit":      opt.Limit,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	result := []T{}
+
+	for _, entry := range found {
+		var e T
+
+		result = append(result, entry.ToEntry(e))
+	}
+
+	return result, nil
 }
 
 func (s Storage[T]) Where(where storage.WhereOptions, list []T) ([]T, error) {
