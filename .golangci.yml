@@ -45,6 +45,7 @@ linters-settings:
       - 'github.com/urfave/cli/v2\.BoolFlag$'
       - 'github.com/urfave/cli/v2\.Int64Flag$'
       - 'github.com/urfave/cli/v2\.Int64SliceFlag$'
+      - 'github.com/urfave/cli/v2\.DurationFlag$'
       - gopkg.in/telebot.v3\.Document
       - gopkg.in/telebot.v3\.Photo
       - gopkg.in/telebot.v3\.Video

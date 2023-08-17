@@ -17,6 +17,7 @@ import (
 type TasksConfig[T model.IEntry] struct {
 	Timezone        *time.Location                    `fig:"-"                 yaml:"-"`
 	SendLastEntries Task[T, tasks.SendLastEntries[T]] `fig:"send_last_entries" yaml:"send_last_entries"`
+	SendLastStories Task[T, tasks.SendLastStories[T]] `fig:"send_last_stories" yaml:"send_last_stories"`
 	Backup          Task[T, tasks.Backup[T]]          `fig:"backup"            yaml:"backup"`
 	Cleanup         Task[T, tasks.Cleanup[T]]         `fig:"cleanup"           yaml:"cleanup"`
 }
@@ -56,6 +57,7 @@ func (r Runner[T]) Start(ctx context.Context) error {
 
 	tasks := []ScheduleTask[T]{
 		r.config.SendLastEntries,
+		r.config.SendLastStories,
 		r.config.Backup,
 		r.config.Cleanup,
 	}
