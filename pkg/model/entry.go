@@ -13,6 +13,7 @@ type IEntry interface {
 	Source() string
 	ImageURL() string
 	Hash() (string, error)
+	HasStory() bool
 
 	FillFrom(IEntry) IEntry
 }
@@ -23,6 +24,7 @@ type Entry struct {
 	Image      string   `json:"image_url"`
 	Categories []string `json:"categories"`
 	SourceName string   `json:"source"`
+	HaveStory  bool     `json:"has_story"`
 }
 
 // Hash of entry.
@@ -48,6 +50,10 @@ func (e Entry) Tags() []string {
 
 func (e Entry) Source() string {
 	return e.SourceName
+}
+
+func (e Entry) HasStory() bool {
+	return e.HaveStory
 }
 
 func (e Entry) FillFrom(input IEntry) IEntry {

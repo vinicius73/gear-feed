@@ -17,6 +17,7 @@ type DBEntry[T model.IEntry] struct {
 	URL        string         `db:"url"`
 	Status     storage.Status `db:"status"`
 	CreatedAt  time.Time      `db:"created_at"`
+	HasStory   bool           `db:"has_story"`
 	TTL        time.Time      `db:"ttl"`
 }
 
@@ -26,8 +27,9 @@ func (e DBEntry[T]) ToEntry(target T) T {
 		Title:      e.Text,
 		URL:        e.URL,
 		Image:      e.ImageURL,
-		Categories: []string{},
+		HaveStory:  e.HasStory,
 		SourceName: e.SourceName,
+		Categories: []string{},
 	}).(T)
 }
 
@@ -50,6 +52,7 @@ func NewEntry[T model.IEntry](ttl time.Duration, entry storage.Entry[T]) (DBEntr
 		ImageURL:   source.ImageURL(),
 		Text:       source.Text(),
 		URL:        source.Link(),
+		HasStory:   source.HasStory(),
 		Status:     entry.Status,
 		Categories: categories,
 		CreatedAt:  time.Now(),
