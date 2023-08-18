@@ -1,0 +1,26 @@
+name: GAME_DEVELOPER
+base_url: https://www.gamedeveloper.com
+path: /latest/news
+limit: 4
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: "#container-main main .content-wrap .edge-top-wrap .topic-content-article"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: a.article-edge-wrap--link
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: .article-title
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: ""
+    attribute: ""
+    parse_strategy: ""
