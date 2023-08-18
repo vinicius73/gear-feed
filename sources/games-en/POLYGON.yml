@@ -3,6 +3,7 @@ base_url: https://www.polygon.com
 path: /gaming
 limit: 4
 enabled: true
+support_stories: true
 parser: HTML
 attributes:
   entry_selector: "#content .l-hub-wrapper .c-compact-river .c-compact-river__entry"

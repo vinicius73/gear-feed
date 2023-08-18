@@ -3,6 +3,7 @@ base_url: https://www.gamesradar.com
 path: /news/games/
 limit: 4
 enabled: true
+support_stories: true
 parser: HTML
 attributes:
   entry_selector: "#content .listingResults.news .listingResult[data-page]"

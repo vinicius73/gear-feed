@@ -3,6 +3,7 @@ base_url: https://www.gamedeveloper.com
 path: /latest/news
 limit: 4
 enabled: true
+support_stories: true
 parser: HTML
 attributes:
   entry_selector: "#container-main main .content-wrap .edge-top-wrap .topic-content-article"

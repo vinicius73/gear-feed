@@ -3,6 +3,7 @@ base_url: https://www.videogameschronicle.com
 path: /category/news/
 limit: 4
 enabled: true
+support_stories: true
 parser: HTML
 attributes:
   entry_selector: "#page-wrapper .vgc-listing--index article.vgc-post"

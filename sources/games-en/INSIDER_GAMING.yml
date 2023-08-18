@@ -3,6 +3,7 @@ base_url: https://insider-gaming.com
 path: /category/news/
 limit: 4
 enabled: true
+support_stories: true
 parser: HTML
 attributes:
   entry_selector: "#contents-wrap main article.post"
