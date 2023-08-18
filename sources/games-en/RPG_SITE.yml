@@ -1,0 +1,26 @@
+name: RPG_SITE
+base_url: https://www.rpgsite.net/
+path: /
+limit: 2
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: "#left section[role=article-list] > article"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: h3 a
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: h3 a
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .image img
+    attribute: data-src
+    parse_strategy: ""

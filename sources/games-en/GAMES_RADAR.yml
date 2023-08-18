@@ -1,0 +1,26 @@
+name: GAMES_RADAR
+base_url: https://www.gamesradar.com
+path: /news/games/
+limit: 4
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: "#content .listingResults.news .listingResult[data-page]"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: a.article-link
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: h3.article-name
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .image picture img
+    attribute: src
+    parse_strategy: ""

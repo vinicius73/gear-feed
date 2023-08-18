@@ -1,0 +1,41 @@
+name: SILICONERA
+base_url: https://www.siliconera.com
+path: /feed/
+limit: 4
+enabled: true
+parser: XML
+attributes:
+  entry_selector: //channel[1]/item
+  category:
+    path_finder:
+      path: /category
+      attribute: ""
+      parse_strategy: ""
+    allows:
+      - games
+      - android
+      - ios
+      - pc
+      - playstation
+      - playstation 4
+      - playstation 5
+      - nintendo
+      - nintendo switch
+      - xbox 360
+      - xbox one
+      - xbox series x
+      - xbox series s
+      - xbox
+      - microsoft
+  link:
+    path: /link
+    attribute: ""
+    parse_strategy: ""
+  title:
+    path: /title
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: img
+    attribute: src
+    parse_strategy: ""

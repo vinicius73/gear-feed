@@ -1,0 +1,26 @@
+name: VGC
+base_url: https://www.videogameschronicle.com
+path: /category/news/
+limit: 4
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: "#page-wrapper .vgc-listing--index article.vgc-post"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: .vgc-post__info h2 a
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: .vgc-post__info h2 a
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .vgc-post__media figure img
+    attribute: src
+    parse_strategy: ""

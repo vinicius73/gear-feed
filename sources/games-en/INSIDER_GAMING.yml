@@ -1,0 +1,26 @@
+name: INSIDER_GAMING
+base_url: https://insider-gaming.com
+path: /category/news/
+limit: 4
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: "#contents-wrap main article.post"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: h3 a
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: h3 a
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .mask-img img
+    attribute: data-lazy-src
+    parse_strategy: ""

@@ -1,0 +1,26 @@
+name: EUROGAMER
+base_url: https://www.eurogamer.net
+path: /news
+limit: 4
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: "#content_above .page_content .spotlight .items > .summary"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: a.link_overlay
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: .details .title a
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .thumbnail img
+    attribute: src
+    parse_strategy: ""

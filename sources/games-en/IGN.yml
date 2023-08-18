@@ -1,0 +1,26 @@
+name: IGN
+base_url: https://www.ign.com
+path: /?filter=games
+limit: 4
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: "#main-content section.main-content .content-item:not(.promoted-item):not(.deals-item)"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: a.item-body
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: .item-title
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .item-thumbnail img
+    attribute: src
+    parse_strategy: ""

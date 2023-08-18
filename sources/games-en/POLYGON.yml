@@ -1,0 +1,26 @@
+name: POLYGON
+base_url: https://www.polygon.com
+path: /gaming
+limit: 4
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: "#content .l-hub-wrapper .c-compact-river .c-compact-river__entry"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: a.c-entry-box--compact__image-wrapper
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: h2 a
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .c-entry-box--compact__image noscript img
+    attribute: src
+    parse_strategy: ""

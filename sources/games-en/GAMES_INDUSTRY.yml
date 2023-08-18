@@ -1,0 +1,26 @@
+name: GAMES_INDUSTRY
+base_url: https://www.gamesindustry.biz
+path: /archive
+limit: 4
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: "#content_above .archive_list ul.summary_list li"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: a.link_overlay
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: a.title_link
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .thumbnail img[loading="lazy"]
+    attribute: src
+    parse_strategy: ""

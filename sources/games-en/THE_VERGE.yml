@@ -1,0 +1,36 @@
+name: THE_VERGE
+base_url: https://www.theverge.com
+path: /games/archives/1
+limit: 4
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: "#content .duet--layout--river .duet--content-cards--content-card.group:not(.hidden)"
+  category:
+    path_finder:
+      path: ".duet--content-cards--content-card-group a"
+      attribute: ""
+      parse_strategy: ""
+    allows:
+      - gaming
+      - microsoft
+      - nintendo
+      - pc gaming
+      - playstation
+      - xbox
+      - tech
+      - amd
+      - nvidia
+      - pokemon
+  link:
+    path: h2 > a
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: h2 > a
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: a.block img
+    attribute: src
+    parse_strategy: ""
