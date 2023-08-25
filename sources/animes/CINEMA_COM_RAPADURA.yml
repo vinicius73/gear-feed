@@ -1,8 +1,9 @@
 name: CINEMA_COM_RAPADURA
-base_url: https://cinemacomrapadura.com.br/
-path: search/anime
+base_url: https://cinemacomrapadura.com.br
+path: /search/anime
 limit: 5
 enabled: true
+support_stories: true
 parser: HTML
 attributes:
   entry_selector: ".wrapper .category-list section > a"
