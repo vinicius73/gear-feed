@@ -6,6 +6,7 @@ import (
 
 	"github.com/urfave/cli/v2"
 	"github.com/vinicius73/gamer-feed/apps/cli/actions"
+	"github.com/vinicius73/gamer-feed/pkg/stories"
 )
 
 func storiesCMD() *cli.Command {
@@ -25,11 +26,25 @@ func storiesCMD() *cli.Command {
 				Value:       fmt.Sprintf("outputs/%v-story.mp4", time.Now().Unix()),
 				DefaultText: "outputs/{DATE}-story.mp4",
 			},
+			&cli.StringFlag{
+				Name:    "footer-text",
+				Usage:   "Footer text",
+				Aliases: []string{"ft"},
+			},
+			&cli.StringFlag{
+				Name:    "footer-image",
+				Usage:   "Footer image",
+				Aliases: []string{"fi"},
+			},
 		},
 		Action: func(cmd *cli.Context) error {
 			return actions.VideoStory(cmd.Context, actions.BuildStoryOptions{
 				URL:    cmd.String("url"),
 				Output: cmd.String("output"),
+				Footer: stories.Footer{
+					Text:  cmd.String("footer-text"),
+					Image: cmd.String("footer-image"),
+				},
 			})
 		},
 	}

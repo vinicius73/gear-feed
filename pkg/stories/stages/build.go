@@ -28,7 +28,11 @@ func BuildStage(ctx context.Context, opt BuildStageOptions) (Stage, error) {
 		Foreground: "",
 	}
 
-	draw, err := drawer.NewDraw(files.Width, files.Height)
+	draw, err := drawer.NewDraw(drawer.DrawOptions{
+		Width:  files.Width,
+		Height: files.Height,
+		Footer: drawer.Footer(opt.Footer),
+	})
 	if err != nil {
 		return files, err
 	}

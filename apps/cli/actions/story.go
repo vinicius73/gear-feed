@@ -17,10 +17,12 @@ import (
 type BuildStoryOptions struct {
 	URL    string
 	Output string
+	Footer stories.Footer
 }
 
 type SendStoriesOptions struct {
 	Sources sources.LoadOptions
+	Footer  stories.Footer
 	Period  time.Duration
 	To      int64
 	Limit   int
@@ -32,7 +34,7 @@ func VideoStory(ctx context.Context, opt BuildStoryOptions) error {
 		return err
 	}
 
-	tmp, err := os.MkdirTemp(os.TempDir(), "gamer-feed-*")
+	tmp, err := os.MkdirTemp(os.TempDir(), "gfeed-*")
 	if err != nil {
 		return err
 	}
@@ -40,6 +42,7 @@ func VideoStory(ctx context.Context, opt BuildStoryOptions) error {
 	story, err := stories.BuildStory(ctx, stories.BuildStorieOptions{
 		SourceURL:        opt.URL,
 		TargetDir:        tmp,
+		Footer:           opt.Footer,
 		TemplateFilename: "{{.date}}-{{.site}}-{{.hash}}--{{.filename}}",
 	})
 	if err != nil {
@@ -84,6 +87,7 @@ func SendStories(ctx context.Context, opt SendStoriesOptions) error {
 		Limit:    opt.Limit,
 		Sources:  opt.Sources,
 		Interval: opt.Period,
+		Footer:   opt.Footer,
 	}.
 		Run(ctx, tasks.TaskRunOptions[model.Entry]{
 			Storage: store,

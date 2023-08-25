@@ -12,13 +12,17 @@ import (
 
 const workerSize = 2
 
+type Footer stages.Footer
+
 type BuildStorieOptions struct {
+	Footer           Footer
 	TemplateFilename string
 	SourceURL        string
 	TargetDir        string
 }
 
 type BuildCollectionOptions struct {
+	Footer           Footer
 	Sources          []string
 	TemplateFilename string
 	TargetDir        string
@@ -68,6 +72,7 @@ func BuildStory(ctx context.Context, opt BuildStorieOptions) (Story, error) {
 	stage, err := stages.BuildStage(ctx, stages.BuildStageOptions{
 		Source:   entry,
 		Template: tpl,
+		Footer:   stages.Footer(opt.Footer),
 	})
 	if err != nil {
 		return Story{}, err
@@ -116,6 +121,7 @@ func BuildCollection(ctx context.Context, opt BuildCollectionOptions) (Collectio
 			SourceURL:        source,
 			TargetDir:        opt.TargetDir,
 			TemplateFilename: opt.TemplateFilename,
+			Footer:           opt.Footer,
 		}
 	}
 

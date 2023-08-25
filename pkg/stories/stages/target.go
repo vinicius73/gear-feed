@@ -1,6 +1,7 @@
 package stages
 
 import (
+	"github.com/vinicius73/gamer-feed/pkg/stories/drawer"
 	"github.com/vinicius73/gamer-feed/pkg/stories/fetcher"
 	"github.com/vinicius73/gamer-feed/pkg/stories/filetemplate"
 	"github.com/vinicius73/gamer-feed/pkg/support/apperrors"
@@ -13,7 +14,10 @@ var (
 	ErrFailtoBuildFilename = apperrors.System(nil, "fail to build filename", "STAGES:FAIL_TO_BUILD_FILENAME")
 )
 
+type Footer drawer.Footer
+
 type BuildStageOptions struct {
+	Footer
 	Source   fetcher.Result
 	Template filetemplate.Template
 }

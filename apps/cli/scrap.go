@@ -6,6 +6,7 @@ import (
 	"github.com/urfave/cli/v2"
 	"github.com/vinicius73/gamer-feed/apps/cli/actions"
 	"github.com/vinicius73/gamer-feed/pkg/sources"
+	"github.com/vinicius73/gamer-feed/pkg/stories"
 )
 
 //nolint:funlen
@@ -102,13 +103,26 @@ func scrapCMD() *cli.Command {
 				Usage:    "Send the loaded data to the specified channel",
 				Required: true,
 			},
+			&cli.StringFlag{
+				Name:    "footer-text",
+				Usage:   "Footer text",
+				Aliases: []string{"ft"},
+			},
+			&cli.StringFlag{
+				Name:    "footer-image",
+				Usage:   "Footer image",
+				Aliases: []string{"fi"},
+			},
 		},
 		Action: func(cmd *cli.Context) error {
 			return actions.SendStories(cmd.Context, actions.SendStoriesOptions{
 				To:     cmd.Int64("to"),
 				Limit:  cmd.Int("limit"),
 				Period: cmd.Duration("period"),
-				// SendResumeTo: cmd.Int64Slice("send-resume-to"),
+				Footer: stories.Footer{
+					Text:  cmd.String("footer-text"),
+					Image: cmd.String("footer-image"),
+				},
 				Sources: sources.LoadOptions{
 					Only:  cmd.StringSlice("only"),
 					Paths: cmd.StringSlice("sources"),

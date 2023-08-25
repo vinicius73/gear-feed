@@ -17,6 +17,7 @@ type SendLastStories[T model.IEntry] struct {
 	Limit    int                 `fig:"limit"    yaml:"limit"`
 	Sources  sources.LoadOptions `fig:"sources"  yaml:"sources"`
 	Interval time.Duration       `fig:"interval" yaml:"interval"`
+	Footer   stories.Footer      `fig:"footer"   yaml:"footer"`
 }
 
 func (t SendLastStories[T]) Name() string {
@@ -65,6 +66,7 @@ func (t SendLastStories[T]) loadEntries(ctx context.Context, opts TaskRunOptions
 
 	if len(names) == 0 {
 		zerolog.Ctx(ctx).Warn().Msg("no sources to load")
+
 		return entries, nil
 	}
 
@@ -93,6 +95,7 @@ func (t SendLastStories[T]) loadStories(ctx context.Context, opts TaskRunOptions
 	stories, err := stories.BuildCollection(ctx, stories.BuildCollectionOptions{
 		Sources:          urls,
 		TargetDir:        tmpDir,
+		Footer:           t.Footer,
 		TemplateFilename: "{{.date}}-{{.site}}-{{.hash}}--{{.filename}}",
 	})
 	if err != nil {
