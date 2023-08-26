@@ -74,6 +74,8 @@ func loadPath(ctx context.Context, path string, only []string) (Collection, erro
 
 		def, use, err := readFile(filepath.Join(path, name), only)
 		if err != nil {
+			logger.Error().Err(err).Msgf("Fail to read file %s", name)
+
 			return definitions, ErrFailToLoad.Wrap(err)
 		}
 
