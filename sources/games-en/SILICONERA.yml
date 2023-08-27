@@ -1,6 +1,7 @@
 name: SILICONERA
 base_url: https://www.siliconera.com
-path: /feed/
+paths:
+  - /feed/
 limit: 4
 enabled: true
 parser: XML

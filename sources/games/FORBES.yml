@@ -1,6 +1,7 @@
 name: FORBES
 base_url: https://forbes.com.br
-path: /forbes-games/
+paths:
+  - /forbes-games/
 limit: 4
 enabled: true
 support_stories: true

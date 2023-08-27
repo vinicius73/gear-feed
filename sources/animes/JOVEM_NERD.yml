@@ -1,6 +1,7 @@
 name: JOVEM_NERD
 base_url: https://jovemnerd.com.br
-path: /bunker/categoria/animes-e-mangas/
+paths:
+  - /bunker/categoria/animes-e-mangas/
 limit: 5
 enabled: true
 parser: HTML

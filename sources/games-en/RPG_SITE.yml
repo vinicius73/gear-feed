@@ -1,6 +1,7 @@
 name: RPG_SITE
 base_url: https://www.rpgsite.net/
-path: /
+paths:
+  - /
 limit: 2
 enabled: true
 parser: HTML

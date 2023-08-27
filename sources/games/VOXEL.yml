@@ -1,6 +1,7 @@
 name: VOXEL
 base_url: https://www.tecmundo.com.br
-path: /voxel
+paths:
+  - /voxel
 limit: 2
 enabled: true
 parser: HTML

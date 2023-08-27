@@ -1,6 +1,7 @@
 name: JOVEM_NERD
 base_url: https://jovemnerd.com.br
-path: /bunker/categoria/games/
+paths:
+  - /bunker/categoria/games/
 limit: 2
 enabled: true
 parser: HTML

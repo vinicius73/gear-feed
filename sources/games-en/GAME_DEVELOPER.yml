@@ -1,6 +1,7 @@
 name: GAME_DEVELOPER
 base_url: https://www.gamedeveloper.com
-path: /latest/news
+paths:
+  - /latest/news
 limit: 4
 enabled: true
 support_stories: true

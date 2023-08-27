@@ -1,6 +1,7 @@
 name: EUROGAMER
 base_url: https://www.eurogamer.net
-path: /news
+paths:
+  - /news
 limit: 4
 enabled: true
 parser: HTML

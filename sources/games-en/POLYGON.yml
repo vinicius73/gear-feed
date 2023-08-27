@@ -1,6 +1,7 @@
 name: POLYGON
 base_url: https://www.polygon.com
-path: /gaming
+paths:
+  - /gaming
 limit: 4
 enabled: true
 support_stories: true

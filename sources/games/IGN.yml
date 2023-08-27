@@ -1,6 +1,7 @@
 name: IGN
 base_url: https://br.ign.com
-path: /news.xml
+paths:
+  - /news.xml
 limit: 2
 enabled: true
 parser: XML

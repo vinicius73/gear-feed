@@ -1,6 +1,7 @@
 name: OMELETE
 base_url: https://www.omelete.com.br
-path: /busca?q=Anime
+paths:
+  - /busca?q=Anime
 limit: 5
 enabled: true
 parser: HTML

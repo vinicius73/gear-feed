@@ -1,6 +1,7 @@
 name: THE_ENEMY
 base_url: https://www.theenemy.com.br
-path: /news
+paths:
+  - /news
 limit: 3
 support_stories: true
 enabled: true

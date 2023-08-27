@@ -1,6 +1,7 @@
 name: TECNOBLOG
 base_url: https://tecnoblog.net
-path: /tema/games-jogos/
+paths:
+  - /tema/games-jogos/
 limit: 2
 enabled: true
 parser: HTML

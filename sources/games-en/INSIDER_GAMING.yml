@@ -1,6 +1,7 @@
 name: INSIDER_GAMING
 base_url: https://insider-gaming.com
-path: /category/news/
+paths:
+  - /category/news/
 limit: 4
 enabled: true
 support_stories: true

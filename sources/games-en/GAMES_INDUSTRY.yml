@@ -1,6 +1,7 @@
 name: GAMES_INDUSTRY
 base_url: https://www.gamesindustry.biz
-path: /archive
+paths:
+  - /archive
 limit: 4
 enabled: true
 parser: HTML

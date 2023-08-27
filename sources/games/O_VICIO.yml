@@ -1,6 +1,7 @@
 name: O_VICIO
 base_url: https://ovicio.com.br
-path: /category/games/
+paths:
+  - /category/games/
 limit: 3
 enabled: true
 parser: HTML

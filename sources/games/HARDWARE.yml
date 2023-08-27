@@ -1,6 +1,7 @@
 name: HARDWARE
 base_url: https://www.hardware.com.br
-path: /games/
+paths:
+  - /games/
 limit: 3
 enabled: true
 parser: HTML

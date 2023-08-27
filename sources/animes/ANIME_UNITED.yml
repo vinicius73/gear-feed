@@ -1,6 +1,7 @@
 name: ANIME_UNITED
-base_url: https://www.animeunited.com.br/
-path: noticias/ultimas/
+base_url: https://www.animeunited.com.br
+paths:
+  - /noticias/ultimas/
 limit: 5
 enabled: true
 support_stories: true

@@ -1,6 +1,7 @@
 name: IGN
 base_url: https://www.ign.com
-path: /?filter=games
+paths:
+  - /?filter=games
 limit: 4
 enabled: true
 parser: HTML

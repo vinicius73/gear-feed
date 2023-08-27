@@ -1,6 +1,7 @@
 name: ADRENALINE
 base_url: https://adrenaline.com.br
-path: /games
+paths:
+  - /games
 limit: 3
 enabled: true
 parser: HTML

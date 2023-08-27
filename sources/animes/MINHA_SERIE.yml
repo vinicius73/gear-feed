@@ -1,6 +1,7 @@
 name: MINHA_SERIE
 base_url: https://www.tecmundo.com.br
-path: /minha-serie/tag/anime
+paths:
+  - /minha-serie/tag/anime
 limit: 5
 enabled: true
 parser: HTML

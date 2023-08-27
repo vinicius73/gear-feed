@@ -1,6 +1,7 @@
 name: VOCE_SABIA_ANIME
 base_url: https://vocesabianime.com
-path: /mundo-anime-categoria/
+paths:
+  - /mundo-anime-categoria/
 limit: 5
 support_stories: true
 enabled: true

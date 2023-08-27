@@ -1,6 +1,7 @@
 name: JOGO_VEIO
 base_url: https://jogoveio.com.br
-path: /noticias/
+paths:
+  - /noticias/
 limit: 2
 enabled: true
 parser: HTML

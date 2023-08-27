@@ -1,6 +1,7 @@
 name: VGC
 base_url: https://www.videogameschronicle.com
-path: /category/news/
+paths:
+  - /category/news/
 limit: 4
 enabled: true
 support_stories: true

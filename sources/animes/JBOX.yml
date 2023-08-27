@@ -1,6 +1,7 @@
 name: JBOX
 base_url: https://www.jbox.com.br
-path: /categoria/anime/
+paths:
+  - /categoria/anime/
 limit: 5
 enabled: true
 support_stories: true

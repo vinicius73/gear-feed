@@ -1,6 +1,7 @@
 name: GAMES_RADAR
 base_url: https://www.gamesradar.com
-path: /news/games/
+paths:
+  - /news/games/
 limit: 4
 enabled: true
 support_stories: true

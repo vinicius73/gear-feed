@@ -1,6 +1,7 @@
 name: INTOXIANIME
 base_url: https://www.intoxianime.com
-path: /category/noticias-2/
+paths:
+  - /category/noticias-2/
 limit: 5
 enabled: true
 support_stories: true

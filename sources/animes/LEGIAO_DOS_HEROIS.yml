@@ -1,6 +1,7 @@
 name: LEGIAO_DOS_HEROIS
 base_url: https://www.legiaodosherois.com.br
-path: /c/animes
+paths:
+  - /c/animes
 limit: 5
 enabled: true
 parser: HTML

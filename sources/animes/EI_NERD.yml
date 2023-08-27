@@ -1,6 +1,7 @@
 name: EI_NERD
 base_url: https://www.einerd.com.br
-path: /secao/otaku/
+paths:
+  - /secao/otaku/
 limit: 5
 support_stories: true
 enabled: true
