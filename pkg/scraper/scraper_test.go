@@ -38,7 +38,8 @@ func (s *FindEntriesTestSuite) TestExample01Simple() {
 	source := s.parseSource(`
 name: test
 enabled: true
-path: /example_01.html
+paths:
+ - /example_01.html
 attributes:
 	entry_selector: "#news > article"
 	link:
@@ -68,7 +69,8 @@ func (s *FindEntriesTestSuite) TestExample02BaseURL() {
 	source := s.parseSource(`
 name: test_01
 enabled: true
-path: /example_02.html
+paths:
+  - /example_02.html
 attributes:
 	entry_selector: "#posts > article"
 	link:
@@ -100,7 +102,8 @@ attributes:
 func (s *FindEntriesTestSuite) TestExample03XML() {
 	source := s.parseSource(`
 name: test_xml
-path: /example_03.xml
+paths:
+  - /example_03.xml
 limit: 0
 parser: XML
 attributes:
@@ -133,7 +136,8 @@ func (s *FindEntriesTestSuite) TestExample04CategoriesFilter() {
 	source := s.parseSource(`
 name: test_04
 enabled: true
-path: /example_04.html
+paths:
+  - /example_04.html
 attributes:
 	entry_selector: "#last-news-games > article"
 	link:
@@ -169,7 +173,8 @@ attributes:
 func (s *FindEntriesTestSuite) TestExample05XMLCategories() {
 	source := s.parseSource(`
 name: test_xml_categories
-path: /example_05.xml
+paths:
+  - /example_05.xml
 limit: 2
 parser: XML
 attributes:
@@ -208,7 +213,8 @@ func (s *FindEntriesTestSuite) TestExample06CategoriesFromAttributesFilter() {
 	source := s.parseSource(`
 name: test_06_categories_from_attributes
 enabled: true
-path: /example_06.html
+paths:
+  - /example_06.html
 attributes:
 	entry_selector: "#last-news-games > article"
 	link:
@@ -247,7 +253,8 @@ func (s *FindEntriesTestSuite) TestExample07CustomAttributeParser() {
 	source := s.parseSource(`
 name: test
 enabled: true
-path: /example_07.html
+paths:
+  - /example_07.html
 attributes:
 	entry_selector: "#news > article"
 	link:

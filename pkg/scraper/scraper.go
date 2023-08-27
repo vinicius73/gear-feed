@@ -114,17 +114,20 @@ func visit(ctx context.Context, source SourceDefinition, callback func(e Element
 		logger.Debug().Msgf("Response: %v / %v", r.StatusCode, len(r.Body))
 	})
 
-	err := collector.Visit(source.visitURL())
-	if err != nil {
-		logger.
-			Error().
-			Err(err).
-			Msgf("Fail to visit %s", source.visitURL())
+	urls := source.urls()
 
-		return fmt.Errorf("error on visit: %w", err)
+	for _, url := range urls {
+		logger.Info().Msgf("Visiting %s", url)
+
+		if err := collector.Visit(url); err != nil {
+			logger.
+				Error().
+				Err(err).
+				Msgf("Fail to visit %s", url)
+
+			return fmt.Errorf("error on visit: %w", err)
+		}
 	}
-
-	logger.Info().Msg("Fetching source")
 
 	collector.Wait()
 

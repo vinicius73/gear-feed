@@ -15,7 +15,8 @@ import (
 const sourceDemo01 = `
 name: Demo 01
 enabled: true
-path: /demo_01.html
+paths:
+  - /demo_01.html
 attributes:
 	entry_selector: "body ul li"
 	link:
@@ -31,7 +32,10 @@ attributes:
 const sourceDemo02 = `
 name: Demo 02
 enabled: true
-path: /demo_02.html
+limit: 4
+paths:
+  - /demo_01.html
+  - /demo_02.html
 attributes:
 	entry_selector: "body ul li"
 	link:
@@ -69,5 +73,32 @@ func TestFromSources(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, 2, len(entries))
-	assert.Equal(t, 6, len(entries.Entries()))
+	assert.Equal(t, 7, len(entries.Entries()))
+}
+
+func TestLoadEntries(t *testing.T) {
+	t.Parallel()
+
+	server := httptest.NewServer(testdata.FileHandler())
+
+	defer server.Close()
+
+	demo01, err := testdata.ParseSource(server.URL, sourceDemo01)
+
+	assert.NoError(t, err)
+
+	demo02, err := testdata.ParseSource(server.URL, sourceDemo02)
+
+	assert.NoError(t, err)
+
+	sources := []scraper.SourceDefinition{demo01, demo02}
+
+	entries, err := linkloader.LoadEntries[model.Entry](context.TODO(), linkloader.LoadOptions{
+		Workers: 0,
+		Sources: sources,
+	})
+
+	assert.NoError(t, err)
+
+	assert.Equal(t, 7, len(entries))
 }

@@ -28,7 +28,7 @@ type SourceDefinition struct {
 	Enabled        bool             `yaml:"enabled"`
 	SupportStories bool             `yaml:"support_stories"`
 	BaseURL        string           `yaml:"base_url"`
-	Path           string           `yaml:"path"`
+	Paths          []string         `yaml:"paths"`
 	Limit          int              `yaml:"limit"`
 	Parser         string           `yaml:"parser"`
 	Attributes     AttributesFinder `yaml:"attributes"`
@@ -72,8 +72,14 @@ type Element interface {
 	ChildText(selector string) string
 }
 
-func (d SourceDefinition) visitURL() string {
-	return d.BaseURL + d.Path
+func (d SourceDefinition) urls() []string {
+	urls := make([]string, len(d.Paths))
+
+	for i, path := range d.Paths {
+		urls[i] = d.absouteURL(path)
+	}
+
+	return urls
 }
 
 func (d SourceDefinition) buildEntry(title, link, image string, categories []string) model.IEntry {
