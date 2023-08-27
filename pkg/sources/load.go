@@ -63,9 +63,15 @@ func loadPath(ctx context.Context, path string, only []string) (Collection, erro
 
 		name := entry.Name()
 
-		base := filepath.Ext(name)
+		// check if is a hidden file
+		if strings.HasPrefix(name, ".") {
+			logger.Debug().
+				Msgf("Ignoring %s", name)
+			continue
+		}
 
-		if !support.Contains(ymlExtensions, strings.ToLower(base)) {
+		// check if is a yaml file
+		if base := filepath.Ext(name); !support.Contains(ymlExtensions, strings.ToLower(base)) {
 			logger.Warn().
 				Msgf("File %s is not a yaml file", name)
 
