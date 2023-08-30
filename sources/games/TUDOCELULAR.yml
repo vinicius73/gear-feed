@@ -1,0 +1,27 @@
+name: TUDOCELULAR
+base_url: https://www.tudocelular.com
+paths:
+  - /jogos/
+limit: 4
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: "#main_container section.big_notices .newlist_normal"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: .title_newlist_normal a.title_new
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: .title_newlist_normal a.title_new
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .thumb_new_image img
+    attribute: data-src
+    parse_strategy: ""
