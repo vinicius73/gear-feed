@@ -2,8 +2,9 @@ name: HARDWARE
 base_url: https://www.hardware.com.br
 paths:
   - /games/
-limit: 3
+limit: 4
 enabled: true
+support_stories: true
 parser: HTML
 attributes:
   entry_selector: ".archive-posts.row .new"

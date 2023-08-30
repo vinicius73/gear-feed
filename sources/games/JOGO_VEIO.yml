@@ -4,6 +4,7 @@ paths:
   - /noticias/
 limit: 2
 enabled: true
+support_stories: true
 parser: HTML
 attributes:
   entry_selector: ".elementor-container .ecs-posts article.elementor-post"
