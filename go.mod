@@ -11,7 +11,7 @@ require (
 	github.com/disintegration/imaging v1.6.2
 	github.com/dustin/go-humanize v1.0.1
 	github.com/fogleman/gg v1.3.0
-	github.com/go-co-op/gocron v1.33.0
+	github.com/go-co-op/gocron v1.33.1
 	github.com/go-gorp/gorp/v3 v3.1.0
 	github.com/gocolly/colly v1.2.0
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
