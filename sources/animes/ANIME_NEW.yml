@@ -1,0 +1,28 @@
+name: ANIME_NEW
+base_url: https://animenew.com.br
+paths:
+  - /noticias/
+limit: 5
+enabled: true
+support_stories: true
+parser: HTML
+attributes:
+  entry_selector: 'div[data-element_type="container"] .elementor-posts-container.elementor-posts.elementor-grid article.elementor-post.elementor-grid-item'
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: h3.elementor-post__title a
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: h3.elementor-post__title a
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .elementor-post__thumbnail img
+    attribute: data-lazy-src
+    parse_strategy: ""
