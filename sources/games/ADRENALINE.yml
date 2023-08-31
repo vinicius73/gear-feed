@@ -3,6 +3,7 @@ base_url: https://adrenaline.com.br
 paths:
   - /games
 limit: 3
+support_stories: true
 enabled: true
 parser: HTML
 attributes:

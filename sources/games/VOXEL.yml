@@ -4,6 +4,7 @@ paths:
   - /voxel
 limit: 2
 enabled: true
+support_stories: true
 parser: HTML
 attributes:
   entry_selector: article.tec--voxel-main__item
