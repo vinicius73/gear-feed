@@ -1,0 +1,28 @@
+name: GAME_VICIO
+base_url: https://www.gamevicio.com
+paths:
+  - /games/
+limit: 3
+support_stories: true
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: "#news-list .item-list"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: h3 a
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: h3 a
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .item-list-image img
+    attribute: src
+    parse_strategy: ""
