@@ -1,0 +1,28 @@
+name: OLHAR_DIGITAL
+base_url: https://olhardigital.com.br
+paths:
+  - /editorias/games-e-consoles/
+limit: 4
+enabled: true
+support_stories: true
+parser: HTML
+attributes:
+  entry_selector: .container .sidebar-left .post-list a.card-post
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path:
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: .post-title h2
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .post-image img
+    attribute: src
+    parse_strategy: ""
