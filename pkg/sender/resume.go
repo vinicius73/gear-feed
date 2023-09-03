@@ -20,7 +20,7 @@ type ResumeSource struct {
 func (r Resume) HTML() string {
 	var builder strings.Builder
 
-	builder.WriteString(buildMsgHeader())
+	builder.WriteString(BuildMsgHeader())
 
 	builder.WriteRune('\n')
 	builder.WriteString("🗞 <b>Resume: </b>")
@@ -36,7 +36,7 @@ func (r Resume) HTML() string {
 		builder.WriteString(source.HTML())
 	}
 
-	builder.WriteString(buildMsgFooter())
+	builder.WriteString(BuildMsgFooter())
 
 	return builder.String()
 }

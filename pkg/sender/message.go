@@ -30,7 +30,7 @@ func BuildMessage(entry model.IEntry) string {
 func BuildCleanupMessage(count int64) string {
 	var builder strings.Builder
 
-	builder.WriteString(buildMsgHeader())
+	builder.WriteString(BuildMsgHeader())
 
 	builder.WriteRune('\n')
 
@@ -38,12 +38,12 @@ func BuildCleanupMessage(count int64) string {
 	builder.WriteString(strconv.FormatInt(count, 10))
 	builder.WriteString(" records</code>")
 
-	builder.WriteString(buildMsgFooter())
+	builder.WriteString(BuildMsgFooter())
 
 	return builder.String()
 }
 
-func buildMsgHeader() string {
+func BuildMsgHeader() string {
 	var builder strings.Builder
 
 	builder.WriteString("ℹ️ <b>")
@@ -59,7 +59,7 @@ func buildMsgHeader() string {
 	return builder.String()
 }
 
-func buildMsgFooter() string {
+func BuildMsgFooter() string {
 	var builder strings.Builder
 
 	builder.WriteString("\n\n 🕔 <i>")
