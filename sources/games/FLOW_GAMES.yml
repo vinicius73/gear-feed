@@ -1,0 +1,28 @@
+name: FLOW_GAMES
+base_url: https://flowgames.gg
+paths:
+  - /categorias/games/
+limit: 3
+enabled: true
+support_stories: true
+parser: HTML
+attributes:
+  entry_selector: "main .list-post-home ul li"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: .thumb > a
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: .content h3
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .thumb > a img:not(.frame-post)
+    attribute: src
+    parse_strategy: ""
