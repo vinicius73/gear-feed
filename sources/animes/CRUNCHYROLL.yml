@@ -1,0 +1,16 @@
+name: CRUNCHYROLL
+base_url: https://www.crunchyroll.com/pt-br/news/
+paths:
+  - https://cr-news-api-service.prd.crunchyrollsvc.com/v1/pt-BR/stories/search?category=Not%C3%ADcias&page_size=16&page=1
+
+limit: 5
+enabled: false
+parser: JSON
+attributes:
+  entry_selector: "stories"
+  link:
+    path: slug
+  title:
+    path: content.lead
+  image:
+    path: content.thumbnail.filename
