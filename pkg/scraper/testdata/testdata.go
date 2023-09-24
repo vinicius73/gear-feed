@@ -11,6 +11,7 @@ import (
 
 //go:embed *.html
 //go:embed *.xml
+//go:embed *.json
 var files embed.FS
 
 func ParseSource(baseURL, input string) (scraper.SourceDefinition, error) {

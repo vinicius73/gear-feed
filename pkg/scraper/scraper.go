@@ -4,17 +4,21 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"math"
+	"net/http"
 	"strings"
 	"time"
 
 	"github.com/gocolly/colly"
 	"github.com/rs/zerolog"
+	"github.com/tidwall/gjson"
 	"github.com/vinicius73/gamer-feed/pkg/model"
 	"github.com/vinicius73/gamer-feed/pkg/support"
 )
 
 var ErrCategoryNotAllowed = errors.New("category not allowed")
+var ErrFailToCrateRequest = errors.New("fail to create request")
 
 const (
 	requestTimeout = time.Second * 15
@@ -32,6 +36,91 @@ func newCollector() *colly.Collector {
 }
 
 func FindEntries[T model.IEntry](ctx context.Context, source SourceDefinition) ([]T, error) {
+	switch strings.ToUpper(source.Parser) {
+	case "JSON":
+		return FindEntriesJSON[T](ctx, source)
+	default:
+		return FindEntriesXHTML[T](ctx, source)
+	}
+}
+
+func FindEntriesJSON[T model.IEntry](ctx context.Context, source SourceDefinition) ([]T, error) {
+	logger := zerolog.Ctx(ctx).With().Str("source", source.Name).Logger()
+
+	//nolint:exhaustivestruct
+	httpClient := http.Client{Timeout: requestTimeout}
+
+	urls := source.urls()
+	limit := source.Limit
+
+	entries := []T{}
+
+	doRequest := func(url string) error {
+		req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+		if err != nil {
+
+			return ErrFailToCrateRequest
+		}
+
+		req.Header.Set("User-Agent", userAgent)
+
+		resp, err := httpClient.Do(req)
+
+		if err != nil {
+			return fmt.Errorf("error on request: %w", err)
+		}
+
+		defer resp.Body.Close()
+
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return fmt.Errorf("error on read body: %w", err)
+		}
+
+		resultEntries := gjson.GetBytes(body, source.Attributes.EntrySelector).Array()
+
+		for _, row := range resultEntries {
+			if limit == 0 {
+				break
+			}
+
+			limit--
+
+			title := row.Get(source.Attributes.Title.Path).String()
+			link := row.Get(source.Attributes.Link.Path).String()
+			image := row.Get(source.Attributes.Image.Path).String()
+
+			// TODO: support categories
+
+			entry := source.buildEntry(title, link, image, []string{}).(T)
+
+			entries = append(entries, entry)
+
+			if limit == 0 {
+				logger.Warn().Msgf("Limit reached (%v)", source.Limit)
+			}
+		}
+
+		return nil
+	}
+
+	for _, url := range urls {
+		logger.Info().Msgf("Visiting %s", url)
+
+		if err := doRequest(url); err != nil {
+			logger.
+				Error().
+				Err(err).
+				Msgf("Fail to visit %s", url)
+
+			return nil, err
+		}
+	}
+
+	return entries, nil
+}
+
+func FindEntriesXHTML[T model.IEntry](ctx context.Context, source SourceDefinition) ([]T, error) {
 	logger := zerolog.Ctx(ctx).With().Str("source", source.Name).Logger()
 
 	ctx = logger.WithContext(ctx)

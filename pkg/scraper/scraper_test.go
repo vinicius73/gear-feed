@@ -2,6 +2,7 @@ package scraper_test
 
 import (
 	"context"
+	"fmt"
 	"net/http/httptest"
 	"strconv"
 	"testing"
@@ -69,6 +70,7 @@ func (s *FindEntriesTestSuite) TestExample02BaseURL() {
 	source := s.parseSource(`
 name: test_01
 enabled: true
+base_url: "http://json.com"
 paths:
   - /example_02.html
 attributes:
@@ -281,6 +283,40 @@ attributes:
 		assert.Equal(s.T(), title, entry.Title)
 		assert.Equal(s.T(), "http://foo.com/news/good-"+num, entry.URL)
 		assert.Equal(s.T(), "https://cdn.net/images/news-"+num+".png", entry.Image)
+	}
+}
+
+func (s *FindEntriesTestSuite) TestExampleJSON() {
+	source := s.parseSource(`
+  name: JSONSOURCE
+paths:
+  - /example.json
+
+limit: 3
+enabled: true
+parser: JSON
+attributes:
+  entry_selector: "stories"
+  link:
+    path: slug
+  title:
+    path: content.lead
+  image:
+    path: content.thumbnail.filename
+`)
+
+	entries, err := scraper.FindEntries[model.Entry](context.TODO(), source)
+	assert.NoError(s.T(), err)
+	assert.Equal(s.T(), 3, len(entries))
+
+	baseURL := source.BaseURL
+
+	for index, entry := range entries {
+		num := strconv.Itoa(index + 1)
+
+		assert.Equal(s.T(), "A new Entry 00"+num, entry.Title)
+		assert.Equal(s.T(), fmt.Sprintf("%s/latest/2023/9/24/new-entries-00%v", baseURL, num), entry.URL)
+		assert.Equal(s.T(), "https://foo.json/image-00"+num+".jpg", entry.Image)
 	}
 }
 

@@ -1,0 +1,40 @@
+{
+  "stories": [
+    {
+      "slug": "/latest/2023/9/24/new-entries-001",
+      "content": {
+        "lead": "A new Entry 001",
+        "thumbnail": {
+          "filename": "https://foo.json/image-001.jpg"
+        }
+      }
+    },
+    {
+      "slug": "/latest/2023/9/24/new-entries-002",
+      "content": {
+        "lead": "A new Entry 002",
+        "thumbnail": {
+          "filename": "https://foo.json/image-002.jpg"
+        }
+      }
+    },
+    {
+      "slug": "/latest/2023/9/24/new-entries-003",
+      "content": {
+        "lead": "A new Entry 003",
+        "thumbnail": {
+          "filename": "https://foo.json/image-003.jpg"
+        }
+      }
+    },
+    {
+      "slug": "/latest/2023/9/24/new-entries-003",
+      "content": {
+        "lead": "A new Entry 004",
+        "thumbnail": {
+          "filename": "https://foo.json/image-004.jpg"
+        }
+      }
+    }
+  ]
+}
