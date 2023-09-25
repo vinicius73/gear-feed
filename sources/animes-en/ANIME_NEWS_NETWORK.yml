@@ -1,0 +1,29 @@
+name: ANIME_NEWS_NETWORK
+base_url: https://www.animenewsnetwork.com
+paths:
+  - /news/?topic=anime
+  - /news/?topic=manga
+limit: 4
+support_stories: true
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: "#mainfeed .mainfeed-section .box.news:not([data-topics*=local])" # not local news
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: h3 > a
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: h3 > a
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .thumbnail.lazyload
+    attribute: data-src
+    parse_strategy: ""

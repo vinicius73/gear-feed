@@ -1,0 +1,28 @@
+name: CBR
+base_url: https://www.cbr.com
+paths:
+  - /category/anime-news/
+limit: 4
+support_stories: true
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: ".listing .listing-content .sentinel-listing-page-list .article"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: a.dc-img-link
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: h5 > a
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: .dc-img-link figure picture source
+    attribute: srcset
+    parse_strategy: ""

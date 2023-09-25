@@ -1,0 +1,28 @@
+name: SCREEN_RANT
+base_url: https://screenrant.com
+paths:
+  - /anime/
+limit: 4
+support_stories: true
+enabled: true
+parser: HTML
+attributes:
+  entry_selector: "main .wrapper-latest .listing-content .article"
+  category:
+    path_finder:
+      path: ""
+      attribute: ""
+      parse_strategy: ""
+    allows: []
+  link:
+    path: a.dc-img-link
+    attribute: href
+    parse_strategy: ""
+  title:
+    path: h5 > a
+    attribute: ""
+    parse_strategy: ""
+  image:
+    path: a.dc-img-link figure picture source
+    attribute: srcset
+    parse_strategy: ""
