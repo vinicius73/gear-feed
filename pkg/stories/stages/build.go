@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 
+	"github.com/rs/zerolog"
 	"github.com/vinicius73/gamer-feed/pkg/stories/drawer"
 	"github.com/vinicius73/gamer-feed/pkg/support/apperrors"
 )
@@ -38,12 +39,16 @@ func BuildStage(ctx context.Context, opt BuildStageOptions) (Stage, error) {
 	}
 
 	buildStageImage := func(build drawer.DrawPipe, name string) (string, error) {
+		logger := zerolog.Ctx(ctx).With().Str("stage", name).Logger()
+
+		logger.Debug().Msg("building stage")
+
 		target, err := opt.Template.Render(name)
 		if err != nil {
 			return "", err
 		}
 
-		if err := build(ctx, opt.Source); err != nil {
+		if err := build(logger.WithContext(ctx), opt.Source); err != nil {
 			return "", ErrFailToBuildStage.Wrap(err)
 		}
 
