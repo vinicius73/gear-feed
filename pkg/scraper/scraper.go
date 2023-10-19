@@ -17,8 +17,10 @@ import (
 	"github.com/vinicius73/gamer-feed/pkg/support"
 )
 
-var ErrCategoryNotAllowed = errors.New("category not allowed")
-var ErrFailToCrateRequest = errors.New("fail to create request")
+var (
+	ErrCategoryNotAllowed = errors.New("category not allowed")
+	ErrFailToCrateRequest = errors.New("fail to create request")
+)
 
 const (
 	requestTimeout = time.Second * 15
@@ -58,14 +60,12 @@ func FindEntriesJSON[T model.IEntry](ctx context.Context, source SourceDefinitio
 	doRequest := func(url string) error {
 		req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 		if err != nil {
-
 			return ErrFailToCrateRequest
 		}
 
 		req.Header.Set("User-Agent", userAgent)
 
 		resp, err := httpClient.Do(req)
-
 		if err != nil {
 			return fmt.Errorf("error on request: %w", err)
 		}
