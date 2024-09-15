@@ -34,16 +34,7 @@ func Load(file string) (AppConfig, error) {
 	var cfg AppConfig
 
 	if file != "" {
-		err = fig.Load(&cfg,
-			fig.File(filepath.Base(file)),
-			fig.Dirs(filepath.Dir(file)),
-		)
-
-		if err != nil {
-			return cfg, ErrFailToLoadConfig.Wrap(err)
-		}
-
-		return applyDefaults(cfg)
+		return fromFile(file)
 	}
 
 	home, err := homedir.Dir()
@@ -190,4 +181,32 @@ func checkDatabaseFile(filename string) (string, error) {
 	}
 
 	return filename, nil
+}
+
+func fromFile(file string) (AppConfig, error) {
+	var cfg AppConfig
+
+	content, err := loadFileContentAndApplyEnv(file)
+
+	if err != nil {
+		return cfg, err
+	}
+
+	err = yaml.Unmarshal(content, &cfg)
+
+	if err != nil {
+		return cfg, err
+	}
+
+	return applyDefaults(cfg)
+}
+
+func loadFileContentAndApplyEnv(file string) ([]byte, error) {
+	content, err := os.ReadFile(file)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return []byte(os.ExpandEnv(string(content))), nil
 }
