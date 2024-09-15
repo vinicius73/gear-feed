@@ -446,6 +446,16 @@ func (j *Job) ScheduledTime() time.Time {
 	return j.nextRun
 }
 
+// ScheduledUnit returns the scheduled unit of the Job.
+func (j *Job) ScheduledUnit() string {
+	return j.unit.String()
+}
+
+// Interval returns the scheduled interval of the Job.
+func (j *Job) ScheduledInterval() int {
+	return j.interval
+}
+
 // ScheduledAtTime returns the specific time of day the Job will run at.
 // If multiple times are set, the earliest time will be returned.
 func (j *Job) ScheduledAtTime() string {
@@ -482,6 +492,9 @@ func (j *Job) Weekdays() []time.Weekday {
 	if len(j.scheduledWeekdays) == 0 {
 		return []time.Weekday{time.Sunday}
 	}
+	sort.Slice(j.scheduledWeekdays, func(i, k int) bool {
+		return j.scheduledWeekdays[i] < j.scheduledWeekdays[k]
+	})
 
 	return j.scheduledWeekdays
 }

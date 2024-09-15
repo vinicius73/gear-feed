@@ -393,8 +393,8 @@ func (s *Scheduler) calculateWeeks(job *Job, lastRun time.Time) nextRun {
 
 func (s *Scheduler) calculateTotalDaysDifference(lastRun time.Time, daysToWeekday int, job *Job) int {
 	if job.getInterval() > 1 {
-		// just count weeks after the first jobs were done
-		if job.RunCount() < len(job.Weekdays()) {
+		weekDays := job.Weekdays()
+		if job.lastRun.Weekday() != weekDays[len(weekDays)-1] {
 			return daysToWeekday
 		}
 		if daysToWeekday > 0 {
@@ -537,6 +537,7 @@ func (s *Scheduler) EveryRandom(lower, upper int) *Scheduler {
 // Every schedules a new periodic Job with an interval.
 // Interval can be an int, time.Duration or a string that
 // parses with time.ParseDuration().
+// Negative intervals will return an error.
 // Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h".
 //
 // The job is run immediately, unless:
@@ -553,6 +554,9 @@ func (s *Scheduler) Every(interval interface{}) *Scheduler {
 			job.error = wrapOrError(job.error, ErrInvalidInterval)
 		}
 	case time.Duration:
+		if interval <= 0 {
+			job.error = wrapOrError(job.error, ErrInvalidInterval)
+		}
 		job.setInterval(0)
 		job.setDuration(interval)
 		job.setUnit(duration)
@@ -560,6 +564,9 @@ func (s *Scheduler) Every(interval interface{}) *Scheduler {
 		d, err := time.ParseDuration(interval)
 		if err != nil {
 			job.error = wrapOrError(job.error, err)
+		}
+		if d <= 0 {
+			job.error = wrapOrError(job.error, ErrInvalidInterval)
 		}
 		job.setDuration(d)
 		job.setUnit(duration)
@@ -821,7 +828,7 @@ func (s *Scheduler) MonthFirstWeekday(weekday time.Weekday) *Scheduler {
 		return s.Cron(fmt.Sprintf("0 0 %d %d %d", day, month, weekday))
 	}
 
-	return s.Cron(fmt.Sprintf("0 0 %d %d %d", day, month+1, weekday))
+	return s.Cron(fmt.Sprintf("0 0 %d %d %d", day, (month+1)%12, weekday))
 }
 
 // LimitRunsTo limits the number of executions of this job to n.
@@ -1518,6 +1525,46 @@ func (s *Scheduler) RegisterEventListeners(eventListeners ...EventListener) {
 	for _, job := range s.jobs {
 		job.RegisterEventListeners(eventListeners...)
 	}
+}
+
+// BeforeJobRuns registers an event listener that is called before a job runs.
+func (s *Scheduler) BeforeJobRuns(eventListenerFunc func(jobName string)) *Scheduler {
+	job := s.getCurrentJob()
+	job.mu.Lock()
+	defer job.mu.Unlock()
+	job.eventListeners.beforeJobRuns = eventListenerFunc
+
+	return s
+}
+
+// AfterJobRuns registers an event listener that is called after a job runs.
+func (s *Scheduler) AfterJobRuns(eventListenerFunc func(jobName string)) *Scheduler {
+	job := s.getCurrentJob()
+	job.mu.Lock()
+	defer job.mu.Unlock()
+	job.eventListeners.afterJobRuns = eventListenerFunc
+
+	return s
+}
+
+// WhenJobStarts registers an event listener that is called when a job starts.
+func (s *Scheduler) WhenJobReturnsError(eventListenerFunc func(jobName string, err error)) *Scheduler {
+	job := s.getCurrentJob()
+	job.mu.Lock()
+	defer job.mu.Unlock()
+	job.eventListeners.onError = eventListenerFunc
+
+	return s
+}
+
+// WhenJobStarts registers an event listener that is called when a job starts.
+func (s *Scheduler) WhenJobReturnsNoError(eventListenerFunc func(jobName string)) *Scheduler {
+	job := s.getCurrentJob()
+	job.mu.Lock()
+	defer job.mu.Unlock()
+	job.eventListeners.noError = eventListenerFunc
+
+	return s
 }
 
 func (s *Scheduler) PauseJobExecution(shouldPause bool) {

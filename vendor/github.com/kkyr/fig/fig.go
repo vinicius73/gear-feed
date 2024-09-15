@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/mitchellh/mapstructure"
-	"github.com/pelletier/go-toml"
+	"github.com/pelletier/go-toml/v2"
 	"gopkg.in/yaml.v3"
 )
 
@@ -27,6 +27,47 @@ const (
 	// DefaultTimeLayout is the default time layout that fig uses to parse times.
 	DefaultTimeLayout = time.RFC3339
 )
+
+// StringUnmarshaler is an interface designed for custom string unmarshaling.
+//
+// This interface is used when a field of a custom type needs to define its own
+// method for unmarshaling from a string. This is particularly useful for handling
+// different string representations that need to be converted into a specific type.
+//
+// To use this, the custom type must implement this interface and a corresponding
+// string value should be provided in the configuration. Fig automatically detects
+// this and handles the rest.
+//
+// Example usage:
+//
+//	type ListenerType uint
+//
+//	const (
+//		ListenerUnix ListenerType = iota
+//		ListenerTCP
+//		ListenerTLS
+//	)
+//
+//	func (l *ListenerType) UnmarshalType(v string) error {
+//		switch strings.ToLower(v) {
+//		case "unix":
+//			*l = ListenerUnix
+//		case "tcp":
+//			*l = ListenerTCP
+//		case "tls":
+//			*l = ListenerTLS
+//		default:
+//			return fmt.Errorf("unknown listener type: %s", v)
+//		}
+//		return nil
+//	}
+//
+//	type Config struct {
+//		Listener ListenerType `fig:"listener_type" default:"tcp"`
+//	}
+type StringUnmarshaler interface {
+	UnmarshalString(s string) error
+}
 
 // Load reads a configuration file and loads it into the given struct. The
 // parameter `cfg` must be a pointer to a struct.
@@ -137,12 +178,8 @@ func (f *fig) decodeFile(file string) (map[string]interface{}, error) {
 			return nil, err
 		}
 	case ".toml":
-		tree, err := toml.LoadReader(fd)
-		if err != nil {
+		if err := toml.NewDecoder(fd).Decode(&vals); err != nil {
 			return nil, err
-		}
-		for field, val := range tree.ToMap() {
-			vals[field] = val
 		}
 	default:
 		return nil, fmt.Errorf("unsupported file extension %s", filepath.Ext(f.filename))
@@ -162,6 +199,7 @@ func (f *fig) decodeMap(m map[string]interface{}, result interface{}) error {
 			mapstructure.StringToTimeDurationHookFunc(),
 			mapstructure.StringToTimeHookFunc(f.timeLayout),
 			stringToRegexpHookFunc(),
+			stringToStringUnmarshalerHook(),
 		),
 	})
 	if err != nil {
@@ -184,6 +222,36 @@ func stringToRegexpHookFunc() mapstructure.DecodeHookFunc {
 		}
 		//nolint:forcetypeassert
 		return regexp.Compile(data.(string))
+	}
+}
+
+// stringToStringUnmarshalerHook returns a DecodeHookFunc that executes a custom method which
+// satisfies the StringUnmarshaler interface on custom types.
+func stringToStringUnmarshalerHook() mapstructure.DecodeHookFunc {
+	return func(f reflect.Type, t reflect.Type, data interface{}) (interface{}, error) {
+		if f.Kind() != reflect.String {
+			return data, nil
+		}
+
+		ds, ok := data.(string)
+		if !ok {
+			return data, nil
+		}
+
+		if reflect.PointerTo(t).Implements(reflect.TypeOf((*StringUnmarshaler)(nil)).Elem()) {
+			val := reflect.New(t).Interface()
+
+			if unmarshaler, ok := val.(StringUnmarshaler); ok {
+				err := unmarshaler.UnmarshalString(ds)
+				if err != nil {
+					return nil, err
+				}
+
+				return reflect.ValueOf(val).Elem().Interface(), nil
+			}
+		}
+
+		return data, nil
 	}
 }
 
@@ -261,9 +329,17 @@ func (f *fig) setDefaultValue(fv reflect.Value, val string) error {
 
 // setValue sets fv to val. it attempts to convert val to the correct
 // type based on the field's kind. if conversion fails an error is
-// returned.
+// returned. If fv satisfies the StringUnmarshaler interface it will
+// execute the corresponding StringUnmarshaler.UnmarshalString method
+// on the value.
 // fv must be settable else this panics.
 func (f *fig) setValue(fv reflect.Value, val string) error {
+	if ok, err := trySetFromStringUnmarshaler(fv, val); err != nil {
+		return err
+	} else if ok {
+		return nil
+	}
+
 	switch fv.Kind() {
 	case reflect.Ptr:
 		if fv.IsNil() {
@@ -344,4 +420,28 @@ func (f *fig) setSlice(sv reflect.Value, val string) error {
 	}
 	sv.Set(slice)
 	return nil
+}
+
+// trySetFromStringUnmarshaler takes a value fv which is expected to implement the
+// StringUnmarshaler interface and attempts to unmarshal the string val into the field.
+// If the value does not implement the interface, or an error occurs during the unmarshal,
+// then false and an error (if applicable) is returned. Otherwise, true and a nil error
+// is returned.
+func trySetFromStringUnmarshaler(fv reflect.Value, val string) (bool, error) {
+	if fv.IsValid() && reflect.PointerTo(fv.Type()).Implements(reflect.TypeOf((*StringUnmarshaler)(nil)).Elem()) {
+		vi := reflect.New(fv.Type()).Interface()
+		if unmarshaler, ok := vi.(StringUnmarshaler); ok {
+			err := unmarshaler.UnmarshalString(val)
+			if err != nil {
+				return false, fmt.Errorf("could not unmarshal string %q: %w", val, err)
+			}
+
+			fv.Set(reflect.ValueOf(vi).Elem())
+			return true, nil
+		}
+
+		return false, fmt.Errorf("unable to type assert StringUnmarshaler from type %s", fv.Type().Name())
+	}
+
+	return false, nil
 }

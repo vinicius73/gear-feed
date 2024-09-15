@@ -52,7 +52,7 @@ import (
 	"math/rand"
 	"sort"
 
-	"github.com/disintegration/imaging"
+	"golang.org/x/image/draw"
 )
 
 const (
@@ -72,7 +72,7 @@ type Color struct {
 
 func findClusters(img image.Image, nCluster int) (kMeanClusterGroup, float64) {
 	// Shrink image for faster processing.
-	img = imaging.Fit(img, resizeTo, resizeTo, imaging.NearestNeighbor)
+	img = resizeIfLarge(img)
 
 	bounds := img.Bounds()
 	width, height := bounds.Dx(), bounds.Dy()
@@ -138,10 +138,34 @@ func findClusters(img image.Image, nCluster int) (kMeanClusterGroup, float64) {
 	return clusters, float64(width) * float64(height)
 }
 
+func resizeIfLarge(img image.Image) image.Image {
+	srcBounds := img.Bounds()
+	if srcBounds.Dx() <= resizeTo && srcBounds.Dy() <= resizeTo {
+		return img // already small enough
+	}
+
+	aspect := float64(srcBounds.Dx()) / float64(srcBounds.Dy())
+	var newW, newH int
+	if aspect > 1 /* aspect ratio of resizeTo:resizeTo */ {
+		newW = resizeTo
+		newH = int(float64(newW) / aspect)
+	} else {
+		newH = resizeTo
+		newW = int(float64(newH) * aspect)
+	}
+
+	dstBounds := image.Rect(0, 0, newW, newH)
+	dst := image.NewNRGBA(dstBounds)
+	draw.NearestNeighbor.Scale(dst, dstBounds, img, srcBounds, draw.Src, nil)
+	return dst
+}
+
 // Find returns the dominant color in img.
 func Find(img image.Image) color.RGBA {
 	colors := FindN(img, nClustersDefault)
-
+	if len(colors) == 0 {
+		return color.RGBA{0, 0, 0, 0}
+	}
 	// Loop through the clusters to figure out which cluster has an appropriate
 	// color. Skip any that are too bright/dark and go in order of weight.
 	for _, c := range colors {

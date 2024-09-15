@@ -113,7 +113,7 @@ func asNumber(t iterator, o interface{}) float64 {
 	case query:
 		node := typ.Select(t)
 		if node == nil {
-			return float64(0)
+			return math.NaN()
 		}
 		if v, err := strconv.ParseFloat(node.Value(), 64); err == nil {
 			return v
@@ -613,4 +613,41 @@ func reverseFunc(q query, t iterator) func() NodeNavigator {
 		node := list[i]
 		return node
 	}
+}
+
+// string-join is a XPath Node Set functions string-join(node-set, separator).
+func stringJoinFunc(arg1 query) func(query, iterator) interface{} {
+	return func(q query, t iterator) interface{} {
+		var separator string
+		switch v := functionArgs(arg1).Evaluate(t).(type) {
+		case string:
+			separator = v
+		case query:
+			node := v.Select(t)
+			if node != nil {
+				separator = node.Value()
+			}
+		}
+
+		q = functionArgs(q)
+		test := predicate(q)
+		var parts []string
+		switch v := q.Evaluate(t).(type) {
+		case string:
+			return v
+		case query:
+			for node := v.Select(t); node != nil; node = v.Select(t) {
+				if test(node) {
+					parts = append(parts, node.Value())
+				}
+			}
+		}
+		return strings.Join(parts, separator)
+	}
+}
+
+// lower-case is XPATH function that converts a string to lower case.
+func lowerCaseFunc(q query, t iterator) interface{} {
+	v := functionArgs(q).Evaluate(t)
+	return strings.ToLower(asString(t, v))
 }

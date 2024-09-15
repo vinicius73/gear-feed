@@ -10,13 +10,16 @@ import (
 type User struct {
 	ID int64 `json:"id"`
 
-	FirstName    string `json:"first_name"`
-	LastName     string `json:"last_name"`
-	Username     string `json:"username"`
-	LanguageCode string `json:"language_code"`
-	IsBot        bool   `json:"is_bot"`
-	IsPremium    bool   `json:"is_premium"`
-	AddedToMenu  bool   `json:"added_to_attachment_menu"`
+	FirstName         string   `json:"first_name"`
+	LastName          string   `json:"last_name"`
+	IsForum           bool     `json:"is_forum"`
+	Username          string   `json:"username"`
+	LanguageCode      string   `json:"language_code"`
+	IsBot             bool     `json:"is_bot"`
+	IsPremium         bool     `json:"is_premium"`
+	AddedToMenu       bool     `json:"added_to_attachment_menu"`
+	Usernames         []string `json:"active_usernames"`
+	CustomEmojiStatus string   `json:"emoji_status_custom_emoji_id"`
 
 	// Returns only in getMe
 	CanJoinGroups   bool `json:"can_join_groups"`
@@ -44,20 +47,32 @@ type Chat struct {
 	Username  string `json:"username"`
 
 	// Returns only in getChat
-	Bio              string        `json:"bio,omitempty"`
-	Photo            *ChatPhoto    `json:"photo,omitempty"`
-	Description      string        `json:"description,omitempty"`
-	InviteLink       string        `json:"invite_link,omitempty"`
-	PinnedMessage    *Message      `json:"pinned_message,omitempty"`
-	Permissions      *Rights       `json:"permissions,omitempty"`
-	SlowMode         int           `json:"slow_mode_delay,omitempty"`
-	StickerSet       string        `json:"sticker_set_name,omitempty"`
-	CanSetStickerSet bool          `json:"can_set_sticker_set,omitempty"`
-	LinkedChatID     int64         `json:"linked_chat_id,omitempty"`
-	ChatLocation     *ChatLocation `json:"location,omitempty"`
-	Private          bool          `json:"has_private_forwards,omitempty"`
-	Protected        bool          `json:"has_protected_content,omitempty"`
-	NoVoiceAndVideo  bool          `json:"has_restricted_voice_and_video_messages"`
+	Bio                      string        `json:"bio,omitempty"`
+	Photo                    *ChatPhoto    `json:"photo,omitempty"`
+	Description              string        `json:"description,omitempty"`
+	InviteLink               string        `json:"invite_link,omitempty"`
+	PinnedMessage            *Message      `json:"pinned_message,omitempty"`
+	Permissions              *Rights       `json:"permissions,omitempty"`
+	Reactions                []Reaction    `json:"available_reactions"`
+	SlowMode                 int           `json:"slow_mode_delay,omitempty"`
+	StickerSet               string        `json:"sticker_set_name,omitempty"`
+	CanSetStickerSet         bool          `json:"can_set_sticker_set,omitempty"`
+	CustomEmojiSetName       string        `json:"custom_emoji_sticker_set_name"`
+	LinkedChatID             int64         `json:"linked_chat_id,omitempty"`
+	ChatLocation             *ChatLocation `json:"location,omitempty"`
+	Private                  bool          `json:"has_private_forwards,omitempty"`
+	Protected                bool          `json:"has_protected_content,omitempty"`
+	NoVoiceAndVideo          bool          `json:"has_restricted_voice_and_video_messages"`
+	HasHiddenMembers         bool          `json:"has_hidden_members,omitempty"`
+	AggressiveAntiSpam       bool          `json:"has_aggressive_anti_spam_enabled,omitempty"`
+	CustomEmojiID            string        `json:"emoji_status_custom_emoji_id"`
+	EmojiExpirationUnixtime  int64         `json:"emoji_status_expiration_date"`
+	BackgroundEmojiID        string        `json:"background_custom_emoji_id"`
+	AccentColorID            int           `json:"accent_color_id"`
+	ProfileAccentColorID     int           `json:"profile_accent_color_id"`
+	ProfileBackgroundEmojiID string        `json:"profile_background_custom_emoji_id"`
+	HasVisibleHistory        bool          `json:"has_visible_history"`
+	UnrestrictBoosts         int           `json:"unrestrict_boost_count"`
 }
 
 // Recipient returns chat ID (see Recipient interface).
@@ -101,6 +116,7 @@ type ChatMember struct {
 	Role      MemberStatus `json:"status"`
 	Title     string       `json:"custom_title"`
 	Anonymous bool         `json:"is_anonymous"`
+	Member    bool         `json:"is_member,omitempty"`
 
 	// Date when restrictions will be lifted for the user, unix time.
 	//
@@ -148,6 +164,9 @@ type ChatMemberUpdate struct {
 	// (Optional) InviteLink which was used by the user to
 	// join the chat; for joining by invite link events only.
 	InviteLink *ChatInviteLink `json:"invite_link"`
+
+	// (Optional) True, if the user joined the chat via a chat folder invite link.
+	ViaFolderLink bool `json:"via_chat_folder_invite_link"`
 }
 
 // Time returns the moment of the change in local time.
@@ -162,14 +181,13 @@ func (c *ChatMemberUpdate) Time() time.Time {
 //
 // Example:
 //
-//		group := tele.ChatID(-100756389456)
-//		b.Send(group, "Hello!")
+//	group := tele.ChatID(-100756389456)
+//	b.Send(group, "Hello!")
 //
-//		type Config struct {
-//			AdminGroup tele.ChatID `json:"admin_group"`
-//		}
-//		b.Send(conf.AdminGroup, "Hello!")
-//
+//	type Config struct {
+//		AdminGroup tele.ChatID `json:"admin_group"`
+//	}
+//	b.Send(conf.AdminGroup, "Hello!")
 type ChatID int64
 
 // Recipient returns chat ID (see Recipient interface).
@@ -184,6 +202,12 @@ type ChatJoinRequest struct {
 
 	// Sender is the user that sent the join request.
 	Sender *User `json:"from"`
+
+	// UserChatID is an ID of a private chat with the user
+	// who sent the join request. The bot can use this ID
+	// for 5 minutes to send messages until the join request
+	// is processed, assuming no other administrator contacted the user.
+	UserChatID int64 `json:"user_chat_id"`
 
 	// Unixtime, use ChatJoinRequest.Time() to get time.Time.
 	Unixtime int64 `json:"date"`
@@ -229,6 +253,14 @@ type ChatInviteLink struct {
 	PendingCount int `json:"pending_join_request_count"`
 }
 
+type Story struct {
+	// Unique identifier for the story in the chat
+	ID int `json:"id"`
+
+	// Chat that posted the story
+	Poster *Chat `json:"chat"`
+}
+
 // ExpireDate returns the moment of the link expiration in local time.
 func (c *ChatInviteLink) ExpireDate() time.Time {
 	return time.Unix(c.ExpireUnixtime, 0)
@@ -237,6 +269,11 @@ func (c *ChatInviteLink) ExpireDate() time.Time {
 // Time returns the moment of chat join request sending in local time.
 func (r ChatJoinRequest) Time() time.Time {
 	return time.Unix(r.Unixtime, 0)
+}
+
+// Time returns the moment of the emoji status expiration.
+func (c *Chat) Time() time.Time {
+	return time.Unix(c.EmojiExpirationUnixtime, 0)
 }
 
 // InviteLink should be used to export chat's invite link.
@@ -426,6 +463,9 @@ func (b *Bot) SetGroupPermissions(chat *Chat, perms Rights) error {
 	params := map[string]interface{}{
 		"chat_id":     chat.Recipient(),
 		"permissions": perms,
+	}
+	if perms.Independent {
+		params["use_independent_chat_permissions"] = true
 	}
 
 	_, err := b.Raw("setChatPermissions", params)
