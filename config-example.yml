@@ -1,0 +1,60 @@
+timezone: Local
+logger:
+  level: debug
+  format: text
+telegram:
+  token: "${TELEGRAM_TOKEN}"
+  broadcast: []
+storage:
+  ttl: 720h0m0s
+  path: ${GFEED_DATABASE_FILE}
+  must_exist: false
+cron:
+  send_last_entries:
+    config:
+      limit: 4
+      send_resume_to:
+        - ${TELEGRAM_USER_ID}
+      sources:
+        paths:
+          - "${GFEED_SOURCE_PATH}"
+        only: []
+    schedules:
+      - "0 8-23 * * 1-4" # 8am to 11pm, Monday to Thursday
+      - "0 8-15 * * 5" # 8am to 3pm, Friday
+      - "0 9-19 * * 6" # 9am to 7pm, Saturday
+    chats:
+      - ${TELEGRAM_CHANNEL_ID}
+  send_last_stories:
+    config:
+      limit: 2
+      sources:
+        paths:
+          - "${GFEED_SOURCE_PATH}"
+        only: []
+      interval: 24h
+      footer:
+        image: "${GFEED_SOURCE_PATH}/avatar.jpg"
+        text: "${GFFED_STORY_FOOTER_TEXT}"
+    schedules:
+      - "0/45 8-23 * * 1-4" # At every 45 minutes, from 8am to 11pm, Monday to Thursday
+      - "45 8-15 * * 5" # 45 minutes past the hour, from 8am to 3pm, Friday
+      - "45 9-19 * * 6" # 45 minutes past the hour, from 9am to 7pm, Saturday
+    chats:
+      - ${TELEGRAM_CHANNEL_ID}
+  backup:
+    config:
+      base: "data"
+      glob: "*.sqlite"
+      name: ${GFEED_BACKUP_NAME}
+    schedules:
+      - "0 2 * * *" # Every day at 2am
+    chats:
+      - ${TELEGRAM_USER_ID}
+  cleanup:
+    config:
+      notify: true
+    schedules:
+      - "0 3 * * 1" # Every Monday at 3am
+    chats:
+      - ${TELEGRAM_USER_ID}
