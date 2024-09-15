@@ -14,6 +14,7 @@ import (
 	"github.com/fogleman/gg"
 	"github.com/golang/freetype/truetype"
 	"github.com/muesli/gamut"
+	"github.com/rs/zerolog"
 	"github.com/vinicius73/gamer-feed/assets/fonts"
 	"github.com/vinicius73/gamer-feed/pkg/stories/fetcher"
 )
@@ -199,14 +200,14 @@ func (d *Draw) SetImage(ctx context.Context, source fetcher.Result) error {
 	return nil
 }
 
-func (d *Draw) SetText(_ context.Context, source fetcher.Result) error {
+func (d *Draw) SetText(ctx context.Context, source fetcher.Result) error {
 	if err := d.addHead(source); err != nil {
 		return err
 	}
 
 	_, titleHeight := d.addTitleText(source)
 
-	if err := d.addFooter(source); err != nil {
+	if err := d.addFooter(ctx, source); err != nil {
 		return err
 	}
 
@@ -323,7 +324,9 @@ func (d *Draw) addHead(source fetcher.Result) error {
 	return nil
 }
 
-func (d *Draw) addFooter(_ fetcher.Result) error {
+func (d *Draw) addFooter(ctx context.Context, _ fetcher.Result) error {
+	logger := zerolog.Ctx(ctx)
+
 	text := d.Footer.Text
 
 	dc := d.dc
@@ -349,6 +352,7 @@ func (d *Draw) addFooter(_ fetcher.Result) error {
 	dc.DrawStringWrapped(text, xPad, yPad-(footerImageSize/2)+P, 0, 0, maxWidth, fontLineSpacing, gg.AlignLeft)
 
 	if !d.Footer.hasImage() {
+		logger.Debug().Any("footer", d.Footer).Msg("no image in footer")
 		return nil
 	}
 
