@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-co-op/gocron"
 	"github.com/gosimple/slug"
+	"github.com/jsuar/go-cron-descriptor/pkg/crondescriptor"
 	"github.com/rs/zerolog"
 	"github.com/vinicius73/gamer-feed/pkg/model"
 	"github.com/vinicius73/gamer-feed/pkg/sender"
@@ -110,9 +111,13 @@ func (r Runner[T]) register(ctx context.Context, task ScheduleTask[T]) error {
 		job.Name(name)
 		job.Tag(task.Name())
 
+		cd, _ := crondescriptor.NewCronDescriptor(schedule)
+		description, _ := cd.GetDescription(crondescriptor.Full)
+
 		logger.Info().
 			Str("task", task.Name()).
 			Str("schedule", schedule).
+			Str("desc", *description).
 			Msg("Task registered")
 	}
 
