@@ -7,6 +7,7 @@ import (
 	"io"
 	"math"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -25,13 +26,20 @@ var (
 const (
 	requestTimeout = time.Second * 15
 	titleLimit     = 150
-	userAgent      = "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/116.0"
+	userAgent      = "Mozilla/5.0 (X11; Linux x86_64; rv:135.0) Gecko/20100101 Firefox/135.0"
 )
 
 func newCollector() *colly.Collector {
+	tmpDir := os.TempDir()
+
 	c := colly.NewCollector(
 		colly.UserAgent(userAgent),
+		colly.MaxDepth(1),
+		colly.Async(true),
+		colly.IgnoreRobotsTxt(),
+		colly.CacheDir(tmpDir),
 	)
+
 	c.SetRequestTimeout(requestTimeout)
 
 	return c
@@ -208,13 +216,16 @@ func visit(ctx context.Context, source SourceDefinition, callback func(e Element
 	for _, url := range urls {
 		logger.Info().Msgf("Visiting %s", url)
 
-		if err := collector.Visit(url); err != nil {
+		if err := collector.Request("GET", url, nil, nil, http.Header{
+			"User-Agent": {userAgent},
+		}); err != nil {
 			logger.
 				Error().
 				Err(err).
+				Str("url", url).
 				Msgf("Fail to visit %s", url)
 
-			return fmt.Errorf("error on visit: %w", err)
+			return fmt.Errorf("error on visit (%s): %w", url, err)
 		}
 	}
 
