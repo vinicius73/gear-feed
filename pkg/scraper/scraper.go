@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"math"
+	"math/rand"
 	"net/http"
 	"os"
 	"strings"
@@ -26,14 +27,27 @@ var (
 const (
 	requestTimeout = time.Second * 15
 	titleLimit     = 150
-	userAgent      = "Mozilla/5.0 (X11; Linux x86_64; rv:135.0) Gecko/20100101 Firefox/135.0"
 )
+
+var randGen = rand.New(rand.NewSource(time.Now().UnixNano()))
+
+var userAgents = []string{
+	"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
+	"Mozilla/5.0 (X11; Linux x86_64; rv:135.0) Gecko/20100101 Firefox/135.0",
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.1 Safari/605.1.15",
+	// Add more user agents as needed
+}
+
+func getRandomUserAgent() string {
+	return userAgents[randGen.Intn(len(userAgents))]
+}
 
 func newCollector() *colly.Collector {
 	tmpDir := os.TempDir()
 
 	c := colly.NewCollector(
-		colly.UserAgent(userAgent),
+		colly.UserAgent(getRandomUserAgent()),
 		colly.MaxDepth(1),
 		colly.Async(true),
 		colly.IgnoreRobotsTxt(),
@@ -71,7 +85,7 @@ func FindEntriesJSON[T model.IEntry](ctx context.Context, source SourceDefinitio
 			return ErrFailToCrateRequest
 		}
 
-		req.Header.Set("User-Agent", userAgent)
+		req.Header.Set("User-Agent", getRandomUserAgent())
 
 		resp, err := httpClient.Do(req)
 		if err != nil {
@@ -217,7 +231,7 @@ func visit(ctx context.Context, source SourceDefinition, callback func(e Element
 		logger.Info().Msgf("Visiting %s", url)
 
 		if err := collector.Request("GET", url, nil, nil, http.Header{
-			"User-Agent": {userAgent},
+			"User-Agent": {getRandomUserAgent()},
 		}); err != nil {
 			logger.
 				Error().
