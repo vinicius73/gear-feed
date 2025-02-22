@@ -9,6 +9,7 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -39,22 +40,51 @@ var userAgents = []string{
 	// Add more user agents as needed
 }
 
+var _tmpDir string
+
+func init() {
+
+	tmpDir, err := os.UserCacheDir()
+
+	if err != nil {
+		tmpDir = os.TempDir()
+	}
+
+	_tmpDir = filepath.Join(tmpDir, "gamer-feed/colly")
+
+}
+
 func getRandomUserAgent() string {
 	return userAgents[randGen.Intn(len(userAgents))]
 }
 
-func newCollector() *colly.Collector {
-	tmpDir := os.TempDir()
+// getBrowserHeaders returns a set of headers that mimic a typical browser request.
+func getBrowserHeaders() http.Header {
+	return http.Header{
+		"User-Agent":                {getRandomUserAgent()},
+		"Accept":                    {"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"},
+		"Accept-Language":           {"en-US,en;q=0.5"},
+		"Accept-Encoding":           {"gzip, deflate, br"},
+		"Connection":                {"keep-alive"},
+		"Upgrade-Insecure-Requests": {"1"},
+	}
+}
 
+func newCollector(ctx context.Context) *colly.Collector {
 	c := colly.NewCollector(
 		colly.UserAgent(getRandomUserAgent()),
 		colly.MaxDepth(1),
 		colly.Async(true),
 		colly.IgnoreRobotsTxt(),
-		colly.CacheDir(tmpDir),
+		colly.CacheDir(_tmpDir),
+		colly.AllowURLRevisit(),
 	)
 
 	c.SetRequestTimeout(requestTimeout)
+
+	logger := zerolog.Ctx(ctx)
+
+	logger.Debug().Str("tmpDir", _tmpDir).Msg("colly.NewCollector: Using temporary directory")
 
 	return c
 }
@@ -71,7 +101,6 @@ func FindEntries[T model.IEntry](ctx context.Context, source SourceDefinition) (
 func FindEntriesJSON[T model.IEntry](ctx context.Context, source SourceDefinition) ([]T, error) {
 	logger := zerolog.Ctx(ctx).With().Str("source", source.Name).Logger()
 
-	//nolint:exhaustivestruct
 	httpClient := http.Client{Timeout: requestTimeout}
 
 	urls := source.urls()
@@ -79,13 +108,22 @@ func FindEntriesJSON[T model.IEntry](ctx context.Context, source SourceDefinitio
 
 	entries := []T{}
 
+	// Shuffle URLs to avoid scraping in a predictable order
+	randGen.Shuffle(len(urls), func(i, j int) { urls[i], urls[j] = urls[j], urls[i] })
+
 	doRequest := func(url string) error {
 		req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 		if err != nil {
 			return ErrFailToCrateRequest
 		}
 
-		req.Header.Set("User-Agent", getRandomUserAgent())
+		// Set browser-like headers
+		headers := getBrowserHeaders()
+		for key, values := range headers {
+			for _, value := range values {
+				req.Header.Add(key, value)
+			}
+		}
 
 		resp, err := httpClient.Do(req)
 		if err != nil {
@@ -130,13 +168,13 @@ func FindEntriesJSON[T model.IEntry](ctx context.Context, source SourceDefinitio
 		logger.Info().Msgf("Visiting %s", url)
 
 		if err := doRequest(url); err != nil {
-			logger.
-				Error().
-				Err(err).
-				Msgf("Fail to visit %s", url)
+			logger.Error().Err(err).Msgf("Fail to visit %s", url)
 
 			return nil, err
 		}
+
+		// Add a random delay after each request (0-5 seconds)
+		time.Sleep(time.Duration(randGen.Intn(5)) * time.Second)
 	}
 
 	return entries, nil
@@ -169,10 +207,7 @@ func FindEntriesXHTML[T model.IEntry](ctx context.Context, source SourceDefiniti
 			return
 		}
 
-		logger.
-			Debug().
-			Msgf("New entry: %s", entry.Link())
-
+		logger.Debug().Msgf("New entry: %s", entry.Link())
 		entries = append(entries, entry)
 
 		limit--
@@ -191,10 +226,7 @@ func FindEntriesXHTML[T model.IEntry](ctx context.Context, source SourceDefiniti
 
 	duration := time.Since(startTime)
 
-	logger.
-		Info().
-		Dur("duration", duration).
-		Msgf("Done with %v entries (%s).", len(entries), duration.String())
+	logger.Info().Dur("duration", duration).Msgf("Done with %v entries (%s).", len(entries), duration.String())
 
 	return entries, nil
 }
@@ -202,7 +234,7 @@ func FindEntriesXHTML[T model.IEntry](ctx context.Context, source SourceDefiniti
 func visit(ctx context.Context, source SourceDefinition, callback func(e Element)) error {
 	logger := zerolog.Ctx(ctx)
 
-	collector := newCollector()
+	collector := newCollector(ctx)
 	entrySelector := source.Attributes.EntrySelector
 
 	parser := strings.ToUpper(source.Parser)
@@ -227,17 +259,17 @@ func visit(ctx context.Context, source SourceDefinition, callback func(e Element
 
 	urls := source.urls()
 
+	// Shuffle URLs to avoid predictable scraping patterns
+	randGen.Shuffle(len(urls), func(i, j int) { urls[i], urls[j] = urls[j], urls[i] })
+
 	for _, url := range urls {
 		logger.Info().Msgf("Visiting %s", url)
 
-		if err := collector.Request("GET", url, nil, nil, http.Header{
-			"User-Agent": {getRandomUserAgent()},
-		}); err != nil {
-			logger.
-				Error().
-				Err(err).
-				Str("url", url).
-				Msgf("Fail to visit %s", url)
+		// Use browser-like headers for each request
+		headers := getBrowserHeaders()
+
+		if err := collector.Request("GET", url, nil, nil, headers); err != nil {
+			logger.Error().Err(err).Str("url", url).Msgf("Fail to visit %s", url)
 
 			return fmt.Errorf("error on visit (%s): %w", url, err)
 		}
@@ -272,7 +304,6 @@ func onEntry[T model.IEntry](ctx context.Context, source SourceDefinition, el El
 		title = title[:titleLimit]
 	}
 
-	//nolint:forcetypeassert
 	result = source.buildEntry(title, link, image, categories).(T)
 
 	return result, nil
