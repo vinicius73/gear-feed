@@ -106,7 +106,6 @@ func applyDefaults(cfg AppConfig) (AppConfig, error) {
 	}
 
 	cfg.Storage.Path, err = checkDatabaseFile(cfg.Storage.Path)
-
 	if err != nil {
 		return cfg, err
 	}
@@ -143,7 +142,6 @@ func ensureConfig() (AppConfig, error) {
 	}
 
 	cfg, err = applyDefaults(cfg)
-
 	if err != nil {
 		return cfg, ErrFailEnsureConfig.Wrap(err)
 	}
@@ -158,7 +156,6 @@ func ensureConfig() (AppConfig, error) {
 	configFile := path.Join(pwd, configBaseName+".yml")
 
 	err = os.WriteFile(configFile, buf, os.ModePerm)
-
 	if err != nil {
 		return cfg, ErrFailEnsureConfig.Wrap(err)
 	}
@@ -187,13 +184,11 @@ func fromFile(file string) (AppConfig, error) {
 	var cfg AppConfig
 
 	content, err := loadFileContentAndApplyEnv(file)
-
 	if err != nil {
 		return cfg, err
 	}
 
 	err = yaml.Unmarshal(content, &cfg)
-
 	if err != nil {
 		return cfg, err
 	}
@@ -203,7 +198,6 @@ func fromFile(file string) (AppConfig, error) {
 
 func loadFileContentAndApplyEnv(file string) ([]byte, error) {
 	content, err := os.ReadFile(file)
-
 	if err != nil {
 		return nil, err
 	}

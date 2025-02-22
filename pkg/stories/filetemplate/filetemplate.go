@@ -40,7 +40,6 @@ type Options struct {
 	BaseDir  string
 }
 
-//nolint:exhaustruct
 func New(opt Options) (Template, error) {
 	if opt.BaseDir == "" {
 		return Template{}, ErrEmptyDir

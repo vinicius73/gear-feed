@@ -26,7 +26,7 @@ func FromSources[T model.IEntry](ctx context.Context, options LoadOptions) (Coll
 
 	var wg sync.WaitGroup
 
-	for i := 0; i < options.Workers; i++ {
+	for range options.Workers {
 		wg.Add(1)
 		out, errc := loadWorker[T](&wg, ctx, chSources)
 

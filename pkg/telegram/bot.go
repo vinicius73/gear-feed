@@ -2,7 +2,6 @@
 package telegram
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/rs/zerolog"
@@ -23,7 +22,7 @@ func NewBot(cfg Config) (*telebot.Bot, error) {
 		Token:  cfg.Token,
 		Poller: &telebot.LongPoller{Timeout: poolingTiming},
 		OnError: func(err error, tx telebot.Context) {
-			_ = tx.Reply(fmt.Sprintf("Error: %s", err.Error()))
+			_ = tx.Reply("Error: " + err.Error())
 			logger := tx.Get(LoggerKey).(zerolog.Logger) //nolint:forcetypeassert
 			logger.Error().Err(err).Msg("Bot error")
 		},

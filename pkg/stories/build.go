@@ -112,7 +112,7 @@ func BuildCollection(ctx context.Context, opt BuildCollectionOptions) (Collectio
 	input := make(chan BuildStorieOptions, 2)
 	outs := make([]<-chan workerResult, workerSize)
 
-	for i := 0; i < workerSize; i++ {
+	for i := range workerSize {
 		outs[i] = buildWorker(ctx, input)
 	}
 

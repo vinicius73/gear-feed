@@ -49,7 +49,6 @@ func (s Storage[T]) Store(entry storage.Entry[T]) error {
 	}
 
 	err = s.db.Insert(&record)
-
 	if err != nil {
 		return ErrFailedToCreateEntry.Wrap(err)
 	}
@@ -64,7 +63,6 @@ func (s Storage[T]) Update(entry storage.Entry[T]) error {
 	}
 
 	_, err = s.db.Update(&record)
-
 	if err != nil {
 		return ErrFailedToCreateEntry.Wrap(err)
 	}
@@ -123,7 +121,6 @@ func (s Storage[T]) Where(where storage.WhereOptions, list []T) ([]T, error) {
 	_, err = s.db.Select(&found, "SELECT hash, status FROM entries WHERE hash IN (:hashs)", map[string]interface{}{
 		"hashs": hashs,
 	})
-
 	if err != nil {
 		return nil, err
 	}

@@ -78,7 +78,6 @@ func Fetch(ctx context.Context, opt Options) (Result, error) {
 
 	hash, err := support.HashSHA256(opt.SourceURL)
 	if err != nil {
-		//nolint:exhaustruct
 		return Result{}, ErrFailToHash.Wrap(err)
 	}
 

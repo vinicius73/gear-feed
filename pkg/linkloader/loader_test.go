@@ -72,8 +72,8 @@ func TestFromSources(t *testing.T) {
 
 	assert.NoError(t, err)
 
-	assert.Equal(t, 2, len(entries))
-	assert.Equal(t, 6, len(entries.Entries()))
+	assert.Len(t, entries, 2)
+	assert.Len(t, entries.Entries(), 6)
 }
 
 func TestLoadEntries(t *testing.T) {
@@ -100,5 +100,5 @@ func TestLoadEntries(t *testing.T) {
 
 	assert.NoError(t, err)
 
-	assert.Equal(t, 7, len(entries))
+	assert.Len(t, entries, 7)
 }

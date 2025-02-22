@@ -64,7 +64,6 @@ func (t Backup[T]) Run(ctx context.Context, opts TaskRunOptions[T]) error {
 		FilePath: tmpFile.Name(),
 		Caption:  buildCaption(tmpFile.Name(), dataFiles),
 	})
-
 	if err != nil {
 		return err
 	}
@@ -90,7 +89,6 @@ func (t Backup[T]) buildBackup(ctx context.Context, tmpFile *os.File) ([]fileDat
 
 	for index, file := range files {
 		dataFiles[index], err = addFileToTar(tarWriter, t.Base, file)
-
 		if err != nil {
 			return dataFiles, err
 		}

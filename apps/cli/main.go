@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"sort"
 
@@ -120,7 +119,7 @@ func buildFlags() []cli.Flag {
 			Aliases:     []string{"c"},
 			Usage:       "Load configuration from",
 			Value:       support.GetEnvString("GFEED_CONFIG", ""),
-			DefaultText: fmt.Sprintf("%s/gfeed.yml", support.GetBinDirPath()),
+			DefaultText: support.GetBinDirPath() + "/gfeed.yml",
 		},
 		&cli.StringFlag{
 			Name:        "level",

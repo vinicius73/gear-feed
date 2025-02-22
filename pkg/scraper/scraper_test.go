@@ -7,7 +7,6 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"github.com/vinicius73/gamer-feed/pkg/model"
 	"github.com/vinicius73/gamer-feed/pkg/scraper"
@@ -55,14 +54,14 @@ attributes:
 
 	entries, err := scraper.FindEntries[model.Entry](context.TODO(), source)
 
-	assert.NoError(s.T(), err)
+	s.NoError(err)
 
-	assert.Equal(s.T(), 3, len(entries))
+	s.Len(entries, 3)
 
 	for index, entry := range entries {
-		assert.Equal(s.T(), "Good news "+strconv.Itoa(index+1), entry.Title)
-		assert.Equal(s.T(), "http://foo.com/news/good-"+strconv.Itoa(index+1), entry.URL)
-		assert.Equal(s.T(), "http://bar.bang/foo.jpg", entry.Image)
+		s.Equal("Good news "+strconv.Itoa(index+1), entry.Title)
+		s.Equal("http://foo.com/news/good-"+strconv.Itoa(index+1), entry.URL)
+		s.Equal("http://bar.bang/foo.jpg", entry.Image)
 	}
 }
 
@@ -87,17 +86,17 @@ attributes:
 
 	entries, err := scraper.FindEntries[model.Entry](context.TODO(), source)
 
-	assert.NoError(s.T(), err)
+	s.NoError(err)
 
-	assert.Equal(s.T(), 2, len(entries))
+	s.Len(entries, 2)
 
 	baseURL := source.BaseURL
 
 	for index, entry := range entries {
 		num := strconv.Itoa(index + 1)
-		assert.Equal(s.T(), "Hot News "+num, entry.Title)
-		assert.Equal(s.T(), baseURL+"/hot-"+num+".htm", entry.URL)
-		assert.Equal(s.T(), baseURL+"/bang-"+num+".png", entry.Image)
+		s.Equal("Hot News "+num, entry.Title)
+		s.Equal(baseURL+"/hot-"+num+".htm", entry.URL)
+		s.Equal(baseURL+"/bang-"+num+".png", entry.Image)
 	}
 }
 
@@ -122,15 +121,15 @@ attributes:
 
 	entries, err := scraper.FindEntries[model.Entry](context.TODO(), source)
 
-	assert.NoError(s.T(), err)
+	s.NoError(err)
 
-	assert.Equal(s.T(), 3, len(entries))
+	s.Len(entries, 3)
 
 	for index, entry := range entries {
 		num := strconv.Itoa(index + 1)
-		assert.Equal(s.T(), "XML in 200"+num, entry.Title)
-		assert.Equal(s.T(), "https://xmlsite.net/news-"+num+".html", entry.URL)
-		assert.Equal(s.T(), "https://xmlsite.net/news-"+num+".jpg", entry.Image)
+		s.Equal("XML in 200"+num, entry.Title)
+		s.Equal("https://xmlsite.net/news-"+num+".html", entry.URL)
+		s.Equal("https://xmlsite.net/news-"+num+".jpg", entry.Image)
 	}
 }
 
@@ -159,16 +158,16 @@ attributes:
 
 	entries, err := scraper.FindEntries[model.Entry](context.TODO(), source)
 
-	assert.NoError(s.T(), err)
+	s.NoError(err)
 
-	assert.Equal(s.T(), 2, len(entries))
+	s.Len(entries, 2)
 
 	for index, num := range []string{"2", "3"} {
 		entry := entries[index]
 
-		assert.Equal(s.T(), "Good news "+num, entry.Title)
-		assert.Equal(s.T(), "http://foo.com/games/good-"+num, entry.URL)
-		assert.Equal(s.T(), "https://super.site/foo.jpg", entry.Image)
+		s.Equal("Good news "+num, entry.Title)
+		s.Equal("http://foo.com/games/good-"+num, entry.URL)
+		s.Equal("https://super.site/foo.jpg", entry.Image)
 	}
 }
 
@@ -199,15 +198,15 @@ attributes:
 
 	entries, err := scraper.FindEntries[model.Entry](context.TODO(), source)
 
-	assert.NoError(s.T(), err)
+	s.NoError(err)
 
-	assert.Equal(s.T(), 2, len(entries))
+	s.Len(entries, 2)
 
 	for index, num := range []string{"1", "3"} {
 		entry := entries[index]
-		assert.Equal(s.T(), "XML Title in 200"+num, entry.Title)
-		assert.Equal(s.T(), "https://xmlsite.net/news-"+num+".html", entry.URL)
-		assert.Equal(s.T(), "https://xmlsite.net/news-"+num+".jpg", entry.Image)
+		s.Equal("XML Title in 200"+num, entry.Title)
+		s.Equal("https://xmlsite.net/news-"+num+".html", entry.URL)
+		s.Equal("https://xmlsite.net/news-"+num+".jpg", entry.Image)
 	}
 }
 
@@ -238,16 +237,16 @@ attributes:
 
 	entries, err := scraper.FindEntries[model.Entry](context.TODO(), source)
 
-	assert.NoError(s.T(), err)
+	s.NoError(err)
 
-	assert.Equal(s.T(), 2, len(entries))
+	s.Len(entries, 2)
 
 	for index, num := range []string{"1", "5"} {
 		entry := entries[index]
 
-		assert.Equal(s.T(), "Game news "+num, entry.Title)
-		assert.Equal(s.T(), "http://foo.com/games/good-"+num, entry.URL)
-		assert.Equal(s.T(), "https://super.site/baz.jpg", entry.Image)
+		s.Equal("Game news "+num, entry.Title)
+		s.Equal("http://foo.com/games/good-"+num, entry.URL)
+		s.Equal("https://super.site/baz.jpg", entry.Image)
 	}
 }
 
@@ -273,16 +272,16 @@ attributes:
 
 	entries, err := scraper.FindEntries[model.Entry](context.TODO(), source)
 
-	assert.NoError(s.T(), err)
+	s.NoError(err)
 
-	assert.Equal(s.T(), 3, len(entries))
+	s.Len(entries, 3)
 
 	for index, entry := range entries {
 		num := strconv.Itoa(index + 1)
 		title := "G@M3R news " + num + " Não há quem goste de dor, que a procure e a queira ter, simplesmente porque é dor..."
-		assert.Equal(s.T(), title, entry.Title)
-		assert.Equal(s.T(), "http://foo.com/news/good-"+num, entry.URL)
-		assert.Equal(s.T(), "https://cdn.net/images/news-"+num+".png", entry.Image)
+		s.Equal(title, entry.Title)
+		s.Equal("http://foo.com/news/good-"+num, entry.URL)
+		s.Equal("https://cdn.net/images/news-"+num+".png", entry.Image)
 	}
 }
 
@@ -306,17 +305,17 @@ attributes:
 `)
 
 	entries, err := scraper.FindEntries[model.Entry](context.TODO(), source)
-	assert.NoError(s.T(), err)
-	assert.Equal(s.T(), 3, len(entries))
+	s.NoError(err)
+	s.Len(entries, 3)
 
 	baseURL := source.BaseURL
 
 	for index, entry := range entries {
 		num := strconv.Itoa(index + 1)
 
-		assert.Equal(s.T(), "A new Entry 00"+num, entry.Title)
-		assert.Equal(s.T(), fmt.Sprintf("%s/latest/2023/9/24/new-entries-00%v", baseURL, num), entry.URL)
-		assert.Equal(s.T(), "https://foo.json/image-00"+num+".jpg", entry.Image)
+		s.Equal("A new Entry 00"+num, entry.Title)
+		s.Equal(fmt.Sprintf("%s/latest/2023/9/24/new-entries-00%v", baseURL, num), entry.URL)
+		s.Equal("https://foo.json/image-00"+num+".jpg", entry.Image)
 	}
 }
 

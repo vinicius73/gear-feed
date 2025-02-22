@@ -67,6 +67,7 @@ func loadPath(ctx context.Context, path string, only []string) (Collection, erro
 		if strings.HasPrefix(name, ".") {
 			logger.Debug().
 				Msgf("Ignoring %s", name)
+
 			continue
 		}
 
@@ -105,7 +106,6 @@ func readFile(fileName string, only []string) (scraper.SourceDefinition, bool, e
 	var def scraper.SourceDefinition
 
 	err = yaml.Unmarshal(file, &def)
-
 	if err != nil {
 		return scraper.SourceDefinition{}, false, err
 	}

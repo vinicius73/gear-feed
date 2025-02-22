@@ -177,7 +177,6 @@ func (d *Draw) SetImage(ctx context.Context, source fetcher.Result) error {
 	defer os.Remove(tmpFile.Name())
 
 	err = source.FetchImage(ctx, tmpFile)
-
 	if err != nil {
 		return err
 	}
@@ -292,7 +291,7 @@ func (d *Draw) addTitleText(source fetcher.Result) (textWidth, textHeight float6
 }
 
 func (d *Draw) addHead(source fetcher.Result) error {
-	text := fmt.Sprintf("by %s", source.SiteName)
+	text := "by " + source.SiteName
 
 	if len(source.SiteName) == 0 {
 		text = source.DomainName
@@ -353,6 +352,7 @@ func (d *Draw) addFooter(ctx context.Context, _ fetcher.Result) error {
 
 	if !d.Footer.hasImage() {
 		logger.Debug().Any("footer", d.Footer).Msg("no image in footer")
+
 		return nil
 	}
 

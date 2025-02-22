@@ -42,7 +42,7 @@ func TestEntry_Hash(t *testing.T) {
 		entry := test.input
 		got, err := entry.Hash()
 
-		assert.Nil(t, err)
+		assert.NoError(t, err)
 		assert.Equal(t, test.want, got)
 	}
 }
