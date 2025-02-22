@@ -45,8 +45,6 @@ func FromSources[T model.IEntry](ctx context.Context, options LoadOptions) (Coll
 		}
 	}()
 
-	var err error
-
 	go func() {
 		defer wg.Done()
 
@@ -63,10 +61,6 @@ func FromSources[T model.IEntry](ctx context.Context, options LoadOptions) (Coll
 
 	wg.Wait()
 
-	if err != nil {
-		logger.Warn().Msg("There are errors on load workers")
-	}
-
 	return collections, nil
 }
 
@@ -82,25 +76,30 @@ func FromSource[T model.IEntry](ctx context.Context, source scraper.SourceDefini
 	}, nil
 }
 
-//nolint:lll,revive
 func loadWorker[T model.IEntry](wg *sync.WaitGroup, ctx context.Context, input <-chan scraper.SourceDefinition) (<-chan Collection[T], <-chan error) {
-	//nolint:gomnd
 	out := make(chan Collection[T], 2)
 	errc := make(chan error, 1)
 
 	go func() {
 		defer close(out)
 		defer close(errc)
-
 		defer wg.Done()
 
-		for source := range input {
-			collection, err := FromSource[T](ctx, source)
-			if err != nil {
-				errc <- err
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case source, ok := <-input:
+				if !ok {
+					return
+				}
+				collection, err := FromSource[T](ctx, source)
+				if err != nil {
+					errc <- err
+				} else {
+					out <- collection
+				}
 			}
-
-			out <- collection
 		}
 	}()
 
