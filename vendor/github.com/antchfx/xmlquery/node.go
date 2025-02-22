@@ -1,9 +1,11 @@
 package xmlquery
 
 import (
+	"bufio"
 	"encoding/xml"
 	"fmt"
 	"html"
+	"io"
 	"strings"
 )
 
@@ -56,6 +58,7 @@ type outputConfiguration struct {
 	preserveSpaces         bool
 	emptyElementTagSupport bool
 	skipComments           bool
+	useIndentation         string
 }
 
 type OutputOption func(*outputConfiguration)
@@ -86,6 +89,20 @@ func WithoutComments() OutputOption {
 func WithPreserveSpace() OutputOption {
 	return func(oc *outputConfiguration) {
 		oc.preserveSpaces = true
+	}
+}
+
+// WithoutPreserveSpace will not preserve spaces in output
+func WithoutPreserveSpace() OutputOption {
+	return func(oc *outputConfiguration) {
+		oc.preserveSpaces = false
+	}
+}
+
+// WithIndentation sets the indentation string used for formatting the output.
+func WithIndentation(indentation string) OutputOption {
+	return func(oc *outputConfiguration) {
+		oc.useIndentation = indentation
 	}
 }
 
@@ -141,109 +158,207 @@ func calculatePreserveSpaces(n *Node, pastValue bool) bool {
 	return pastValue
 }
 
-func outputXML(b *strings.Builder, n *Node, preserveSpaces bool, config *outputConfiguration) {
+type indentation struct {
+	level    int
+	hasChild bool
+	indent   string
+	w        io.Writer
+}
+
+func newIndentation(indent string, w io.Writer) *indentation {
+	if indent == "" {
+		return nil
+	}
+	return &indentation{
+		indent: indent,
+		w:      w,
+	}
+}
+
+func (i *indentation) NewLine() (err error) {
+	if i == nil {
+		return
+	}
+	_, err = io.WriteString(i.w, "\n")
+	return
+}
+
+func (i *indentation) Open() (err error) {
+	if i == nil {
+		return
+	}
+
+	if err = i.writeIndent(); err != nil {
+		return
+	}
+
+	i.level++
+	i.hasChild = false
+	return
+}
+
+func (i *indentation) Close() (err error) {
+	if i == nil {
+		return
+	}
+	i.level--
+	if i.hasChild {
+		if err = i.writeIndent(); err != nil {
+			return
+		}
+	}
+	i.hasChild = true
+	return
+}
+
+func (i *indentation) writeIndent() (err error) {
+	_, err = io.WriteString(i.w, "\n")
+	if err != nil {
+		return
+	}
+	_, err = io.WriteString(i.w, strings.Repeat(i.indent, i.level))
+	return
+}
+
+func outputXML(w io.Writer, n *Node, preserveSpaces bool, config *outputConfiguration, indent *indentation) (err error) {
 	preserveSpaces = calculatePreserveSpaces(n, preserveSpaces)
 	switch n.Type {
 	case TextNode:
-		b.WriteString(html.EscapeString(n.sanitizedData(preserveSpaces)))
+		_, err = io.WriteString(w, html.EscapeString(n.sanitizedData(preserveSpaces)))
 		return
 	case CharDataNode:
-		b.WriteString("<![CDATA[")
-		b.WriteString(n.Data)
-		b.WriteString("]]>")
+		_, err = fmt.Fprintf(w, "<![CDATA[%v]]>", n.Data)
 		return
 	case CommentNode:
 		if !config.skipComments {
-			b.WriteString("<!--")
-			b.WriteString(n.Data)
-			b.WriteString("-->")
+			_, err = fmt.Fprintf(w, "<!--%v-->", n.Data)
 		}
 		return
 	case NotationNode:
-		fmt.Fprintf(b, "<!%s>", n.Data)
+		if err = indent.NewLine(); err != nil {
+			return
+		}
+		_, err = fmt.Fprintf(w, "<!%s>", n.Data)
 		return
 	case DeclarationNode:
-		b.WriteString("<?" + n.Data)
+		_, err = io.WriteString(w, "<?"+n.Data)
+		if err != nil {
+			return
+		}
 	default:
+		if err = indent.Open(); err != nil {
+			return
+		}
 		if n.Prefix == "" {
-			b.WriteString("<" + n.Data)
+			_, err = io.WriteString(w, "<"+n.Data)
 		} else {
-			fmt.Fprintf(b, "<%s:%s", n.Prefix, n.Data)
+			_, err = fmt.Fprintf(w, "<%s:%s", n.Prefix, n.Data)
+		}
+		if err != nil {
+			return
 		}
 	}
 
 	for _, attr := range n.Attr {
 		if attr.Name.Space != "" {
-			fmt.Fprintf(b, ` %s:%s=`, attr.Name.Space, attr.Name.Local)
+			_, err = fmt.Fprintf(w, ` %s:%s=`, attr.Name.Space, attr.Name.Local)
 		} else {
-			fmt.Fprintf(b, ` %s=`, attr.Name.Local)
+			_, err = fmt.Fprintf(w, ` %s=`, attr.Name.Local)
 		}
-		b.WriteByte('"')
-		b.WriteString(html.EscapeString(attr.Value))
-		b.WriteByte('"')
-	}
-	if n.Type == DeclarationNode {
-		b.WriteString("?>")
-	} else {
-		if n.FirstChild != nil || !config.emptyElementTagSupport {
-			b.WriteString(">")
-		} else {
-			b.WriteString("/>")
+		if err != nil {
+			return
+		}
+
+		_, err = fmt.Fprintf(w, `"%v"`, html.EscapeString(attr.Value))
+		if err != nil {
 			return
 		}
 	}
-	for child := n.FirstChild; child != nil; child = child.NextSibling {
-		outputXML(b, child, preserveSpaces, config)
-	}
-	if n.Type != DeclarationNode {
-		if n.Prefix == "" {
-			fmt.Fprintf(b, "</%s>", n.Data)
+	if n.Type == DeclarationNode {
+		_, err = io.WriteString(w, "?>")
+	} else {
+		if n.FirstChild != nil || !config.emptyElementTagSupport {
+			_, err = io.WriteString(w, ">")
 		} else {
-			fmt.Fprintf(b, "</%s:%s>", n.Prefix, n.Data)
+			_, err = io.WriteString(w, "/>")
+			if err != nil {
+				return
+			}
+			err = indent.Close()
+			return
 		}
 	}
+	if err != nil {
+		return
+	}
+	for child := n.FirstChild; child != nil; child = child.NextSibling {
+		err = outputXML(w, child, preserveSpaces, config, indent)
+		if err != nil {
+			return
+		}
+	}
+	if n.Type != DeclarationNode {
+		if err = indent.Close(); err != nil {
+			return
+		}
+		if n.Prefix == "" {
+			_, err = fmt.Fprintf(w, "</%s>", n.Data)
+		} else {
+			_, err = fmt.Fprintf(w, "</%s:%s>", n.Prefix, n.Data)
+		}
+	}
+	return
 }
 
 // OutputXML returns the text that including tags name.
 func (n *Node) OutputXML(self bool) string {
-
-	config := &outputConfiguration{
-		printSelf:              true,
-		emptyElementTagSupport: false,
+	if self {
+		return n.OutputXMLWithOptions(WithOutputSelf())
 	}
-	preserveSpaces := calculatePreserveSpaces(n, false)
-	var b strings.Builder
-	if self && n.Type != DocumentNode {
-		outputXML(&b, n, preserveSpaces, config)
-	} else {
-		for n := n.FirstChild; n != nil; n = n.NextSibling {
-			outputXML(&b, n, preserveSpaces, config)
-		}
-	}
-
-	return b.String()
+	return n.OutputXMLWithOptions()
 }
 
 // OutputXMLWithOptions returns the text that including tags name.
 func (n *Node) OutputXMLWithOptions(opts ...OutputOption) string {
+	var b strings.Builder
+	n.WriteWithOptions(&b, opts...)
+	return b.String()
+}
 
-	config := &outputConfiguration{}
+// Write writes xml to given writer.
+func (n *Node) Write(writer io.Writer, self bool) error {
+	if self {
+		return n.WriteWithOptions(writer, WithOutputSelf())
+	}
+	return n.WriteWithOptions(writer)
+}
+
+// WriteWithOptions writes xml with given options to given writer.
+func (n *Node) WriteWithOptions(writer io.Writer, opts ...OutputOption) (err error) {
+	config := &outputConfiguration{
+		preserveSpaces: true,
+	}
 	// Set the options
 	for _, opt := range opts {
 		opt(config)
 	}
 	pastPreserveSpaces := config.preserveSpaces
 	preserveSpaces := calculatePreserveSpaces(n, pastPreserveSpaces)
-	var b strings.Builder
+	b := bufio.NewWriter(writer)
+	defer b.Flush()
+
+	ident := newIndentation(config.useIndentation, b)
 	if config.printSelf && n.Type != DocumentNode {
-		outputXML(&b, n, preserveSpaces, config)
+		err = outputXML(b, n, preserveSpaces, config, ident)
 	} else {
 		for n := n.FirstChild; n != nil; n = n.NextSibling {
-			outputXML(&b, n, preserveSpaces, config)
+			err = outputXML(b, n, preserveSpaces, config, ident)
+			if err != nil {
+				break
+			}
 		}
 	}
-
-	return b.String()
+	return
 }
 
 // AddAttr adds a new attribute specified by 'key' and 'val' to a node 'n'.
@@ -294,11 +409,7 @@ func AddChild(parent, n *Node) {
 	parent.LastChild = n
 }
 
-// AddSibling adds a new node 'n' as a sibling of a given node 'sibling'.
-// Note it is not necessarily true that the new node 'n' would be added
-// immediately after 'sibling'. If 'sibling' isn't the last child of its
-// parent, then the new node 'n' will be added at the end of the sibling
-// chain of their parent.
+// AddSibling adds a new node 'n' as a last node of sibling chain for a given node 'sibling'.
 func AddSibling(sibling, n *Node) {
 	for t := sibling.NextSibling; t != nil; t = t.NextSibling {
 		sibling = t
@@ -308,6 +419,19 @@ func AddSibling(sibling, n *Node) {
 	n.PrevSibling = sibling
 	n.NextSibling = nil
 	if sibling.Parent != nil {
+		sibling.Parent.LastChild = n
+	}
+}
+
+// AddImmediateSibling adds a new node 'n' as immediate sibling a given node 'sibling'.
+func AddImmediateSibling(sibling, n *Node) {
+	n.Parent = sibling.Parent
+	n.NextSibling = sibling.NextSibling
+	sibling.NextSibling = n
+	n.PrevSibling = sibling
+	if n.NextSibling != nil {
+		n.NextSibling.PrevSibling = n
+	} else if n.Parent != nil {
 		sibling.Parent.LastChild = n
 	}
 }
@@ -338,4 +462,16 @@ func RemoveFromTree(n *Node) {
 	n.Parent = nil
 	n.PrevSibling = nil
 	n.NextSibling = nil
+}
+
+// GetRoot returns a root of the tree where 'n' is a node.
+func GetRoot(n *Node) *Node {
+	if n == nil {
+		return nil
+	}
+	root := n
+	for root.Parent != nil {
+		root = root.Parent
+	}
+	return root
 }
