@@ -3,7 +3,7 @@ base_url: https://ovicio.com.br
 paths:
   - /category/animes/
 limit: 5
-enabled: true
+enabled: false
 parser: HTML
 attributes:
   entry_selector: .wrapper > main article.featured__item
