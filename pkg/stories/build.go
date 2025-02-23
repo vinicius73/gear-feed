@@ -127,7 +127,7 @@ func BuildCollection(ctx context.Context, opt BuildCollectionOptions) (Collectio
 
 	close(input)
 
-	for res := range support.MergeChanners(outs...) {
+	for res := range support.MergeChannels(outs...) {
 		if res.Error != nil {
 			logger.Error().Err(res.Error).Msg("Error on build worker")
 

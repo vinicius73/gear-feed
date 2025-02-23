@@ -40,7 +40,7 @@ func FromSources[T model.IEntry](ctx context.Context, options LoadOptions) (Coll
 	go func() {
 		defer wg.Done()
 
-		for collection := range support.MergeChanners(chCollections...) {
+		for collection := range support.MergeChannels(chCollections...) {
 			collections = append(collections, collection)
 		}
 	}()
@@ -48,7 +48,7 @@ func FromSources[T model.IEntry](ctx context.Context, options LoadOptions) (Coll
 	go func() {
 		defer wg.Done()
 
-		for err := range support.MergeChanners(chErrors...) {
+		for err := range support.MergeChannels(chErrors...) {
 			logger.Error().Err(err).Msg("Error on load worker")
 		}
 	}()
@@ -91,10 +91,12 @@ func loadWorker[T model.IEntry](wg *sync.WaitGroup, ctx context.Context, input <
 			select {
 			case <-ctx.Done():
 				logger.Warn().Msg("Context done")
+
 				return
 			case source, ok := <-input:
 				if !ok {
 					logger.Debug().Msg("Input closed")
+
 					return
 				}
 				collection, err := FromSource[T](ctx, source)
