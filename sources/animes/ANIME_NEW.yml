@@ -3,11 +3,11 @@ base_url: https://animenew.com.br
 paths:
   - /noticias/
 limit: 5
-enabled: true
+enabled: false
 support_stories: true
 parser: HTML
 attributes:
-  entry_selector: 'div[data-element_type="container"] .elementor-posts-container.elementor-posts.elementor-grid article.elementor-post.elementor-grid-item'
+  entry_selector: ".elementor-widget-container .block-inner > .p-wrap.p-grid"
   category:
     path_finder:
       path: ""
@@ -15,14 +15,14 @@ attributes:
       parse_strategy: ""
     allows: []
   link:
-    path: h3.elementor-post__title a
+    path: h1.entry-title a
     attribute: href
     parse_strategy: ""
   title:
-    path: h3.elementor-post__title a
+    path: h1.entry-title a
     attribute: ""
     parse_strategy: ""
   image:
-    path: .elementor-post__thumbnail img
-    attribute: data-lazy-src
+    path: img.featured-img
+    attribute: src
     parse_strategy: ""
