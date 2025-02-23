@@ -9,9 +9,9 @@ import (
 
 	"github.com/rs/zerolog"
 	migrate "github.com/rubenv/sql-migrate"
-	"github.com/vinicius73/gamer-feed/pkg/storage"
-	"github.com/vinicius73/gamer-feed/pkg/support"
-	"github.com/vinicius73/gamer-feed/pkg/support/apperrors"
+	"github.com/vinicius73/gear-feed/pkg/storage"
+	"github.com/vinicius73/gear-feed/pkg/support"
+	"github.com/vinicius73/gear-feed/pkg/support/apperrors"
 	_ "modernc.org/sqlite" // Enable sqlite driver.
 )
 

@@ -11,8 +11,8 @@ import (
 	"github.com/creasty/defaults"
 	"github.com/kkyr/fig"
 	"github.com/mitchellh/go-homedir"
-	"github.com/vinicius73/gamer-feed/pkg/support"
-	"github.com/vinicius73/gamer-feed/pkg/support/apperrors"
+	"github.com/vinicius73/gear-feed/pkg/support"
+	"github.com/vinicius73/gear-feed/pkg/support/apperrors"
 	"gopkg.in/yaml.v3"
 )
 

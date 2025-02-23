@@ -4,8 +4,8 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/rs/zerolog"
 	"github.com/urfave/cli/v2"
-	"github.com/vinicius73/gamer-feed/pkg/sources"
-	layout "github.com/vinicius73/gamer-feed/pkg/tui/sources"
+	"github.com/vinicius73/gear-feed/pkg/sources"
+	layout "github.com/vinicius73/gear-feed/pkg/tui/sources"
 )
 
 func sourcesCMD() *cli.Command {

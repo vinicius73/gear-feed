@@ -6,11 +6,11 @@ import (
 	"time"
 
 	"github.com/rs/zerolog"
-	"github.com/vinicius73/gamer-feed/pkg/model"
-	"github.com/vinicius73/gamer-feed/pkg/sender"
-	"github.com/vinicius73/gamer-feed/pkg/sources"
-	"github.com/vinicius73/gamer-feed/pkg/storage"
-	"github.com/vinicius73/gamer-feed/pkg/stories"
+	"github.com/vinicius73/gear-feed/pkg/model"
+	"github.com/vinicius73/gear-feed/pkg/sender"
+	"github.com/vinicius73/gear-feed/pkg/sources"
+	"github.com/vinicius73/gear-feed/pkg/storage"
+	"github.com/vinicius73/gear-feed/pkg/stories"
 )
 
 type SendLastStories[T model.IEntry] struct {

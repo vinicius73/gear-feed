@@ -8,11 +8,11 @@ import (
 	"github.com/gosimple/slug"
 	"github.com/jsuar/go-cron-descriptor/pkg/crondescriptor"
 	"github.com/rs/zerolog"
-	"github.com/vinicius73/gamer-feed/pkg/model"
-	"github.com/vinicius73/gamer-feed/pkg/sender"
-	"github.com/vinicius73/gamer-feed/pkg/storage"
-	"github.com/vinicius73/gamer-feed/pkg/support"
-	"github.com/vinicius73/gamer-feed/pkg/tasks"
+	"github.com/vinicius73/gear-feed/pkg/model"
+	"github.com/vinicius73/gear-feed/pkg/sender"
+	"github.com/vinicius73/gear-feed/pkg/storage"
+	"github.com/vinicius73/gear-feed/pkg/support"
+	"github.com/vinicius73/gear-feed/pkg/tasks"
 )
 
 type TasksConfig[T model.IEntry] struct {

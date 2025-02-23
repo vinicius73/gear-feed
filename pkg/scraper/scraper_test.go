@@ -8,9 +8,9 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/suite"
-	"github.com/vinicius73/gamer-feed/pkg/model"
-	"github.com/vinicius73/gamer-feed/pkg/scraper"
-	"github.com/vinicius73/gamer-feed/pkg/scraper/testdata"
+	"github.com/vinicius73/gear-feed/pkg/model"
+	"github.com/vinicius73/gear-feed/pkg/scraper"
+	"github.com/vinicius73/gear-feed/pkg/scraper/testdata"
 )
 
 type FindEntriesTestSuite struct {

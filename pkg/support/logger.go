@@ -6,7 +6,7 @@ import (
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"github.com/vinicius73/gamer-feed/pkg"
+	"github.com/vinicius73/gear-feed/pkg"
 )
 
 //nolint:gochecknoinits

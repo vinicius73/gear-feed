@@ -13,8 +13,8 @@ import (
 	"github.com/codingsince1985/checksum"
 	"github.com/dustin/go-humanize"
 	"github.com/rs/zerolog"
-	"github.com/vinicius73/gamer-feed/pkg/model"
-	"github.com/vinicius73/gamer-feed/pkg/sender"
+	"github.com/vinicius73/gear-feed/pkg/model"
+	"github.com/vinicius73/gear-feed/pkg/sender"
 )
 
 var _ Task[model.IEntry] = (*Backup[model.IEntry])(nil)

@@ -3,7 +3,7 @@ package stories
 import (
 	"os"
 
-	"github.com/vinicius73/gamer-feed/pkg/stories/stages"
+	"github.com/vinicius73/gear-feed/pkg/stories/stages"
 )
 
 type Story struct {

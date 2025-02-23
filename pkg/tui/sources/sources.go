@@ -4,10 +4,10 @@ import (
 	"context"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/vinicius73/gamer-feed/pkg/scraper"
-	"github.com/vinicius73/gamer-feed/pkg/tui"
-	"github.com/vinicius73/gamer-feed/pkg/tui/loadlinks"
-	"github.com/vinicius73/gamer-feed/pkg/tui/sourcelist"
+	"github.com/vinicius73/gear-feed/pkg/scraper"
+	"github.com/vinicius73/gear-feed/pkg/tui"
+	"github.com/vinicius73/gear-feed/pkg/tui/loadlinks"
+	"github.com/vinicius73/gear-feed/pkg/tui/sourcelist"
 )
 
 type mode int

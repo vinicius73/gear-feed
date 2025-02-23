@@ -15,8 +15,8 @@ import (
 	"github.com/golang/freetype/truetype"
 	"github.com/muesli/gamut"
 	"github.com/rs/zerolog"
-	"github.com/vinicius73/gamer-feed/assets/fonts"
-	"github.com/vinicius73/gamer-feed/pkg/stories/fetcher"
+	"github.com/vinicius73/gear-feed/assets/fonts"
+	"github.com/vinicius73/gear-feed/pkg/stories/fetcher"
 )
 
 const (

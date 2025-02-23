@@ -3,10 +3,10 @@ package configurations
 import (
 	"context"
 
-	"github.com/vinicius73/gamer-feed/pkg/cron"
-	"github.com/vinicius73/gamer-feed/pkg/model"
-	"github.com/vinicius73/gamer-feed/pkg/storage/database"
-	"github.com/vinicius73/gamer-feed/pkg/telegram"
+	"github.com/vinicius73/gear-feed/pkg/cron"
+	"github.com/vinicius73/gear-feed/pkg/model"
+	"github.com/vinicius73/gear-feed/pkg/storage/database"
+	"github.com/vinicius73/gear-feed/pkg/telegram"
 )
 
 type ctxKey struct{}

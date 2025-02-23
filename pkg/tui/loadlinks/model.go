@@ -8,10 +8,10 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/vinicius73/gamer-feed/pkg/browser"
-	"github.com/vinicius73/gamer-feed/pkg/model"
-	"github.com/vinicius73/gamer-feed/pkg/scraper"
-	"github.com/vinicius73/gamer-feed/pkg/tui"
+	"github.com/vinicius73/gear-feed/pkg/browser"
+	"github.com/vinicius73/gear-feed/pkg/model"
+	"github.com/vinicius73/gear-feed/pkg/scraper"
+	"github.com/vinicius73/gear-feed/pkg/tui"
 )
 
 const loadTimeout = time.Second * 10

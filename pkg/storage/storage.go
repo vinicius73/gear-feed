@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/vinicius73/gamer-feed/pkg/model"
+	"github.com/vinicius73/gear-feed/pkg/model"
 )
 
 type Status byte

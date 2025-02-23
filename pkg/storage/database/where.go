@@ -1,8 +1,8 @@
 package database
 
 import (
-	"github.com/vinicius73/gamer-feed/pkg/model"
-	"github.com/vinicius73/gamer-feed/pkg/storage"
+	"github.com/vinicius73/gear-feed/pkg/model"
+	"github.com/vinicius73/gear-feed/pkg/storage"
 )
 
 func Where[T model.IEntry](where storage.WhereOptions, has bool, entry DBEntry[T]) bool {

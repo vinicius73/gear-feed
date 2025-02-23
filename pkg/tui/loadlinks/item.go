@@ -1,6 +1,6 @@
 package loadlinks
 
-import "github.com/vinicius73/gamer-feed/pkg/model"
+import "github.com/vinicius73/gear-feed/pkg/model"
 
 type Link struct {
 	model.Entry

@@ -4,7 +4,7 @@ import (
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/vinicius73/gamer-feed/pkg/scraper"
+	"github.com/vinicius73/gear-feed/pkg/scraper"
 )
 
 type delegateKeyMap struct {

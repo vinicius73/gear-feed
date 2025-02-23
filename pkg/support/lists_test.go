@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/vinicius73/gamer-feed/pkg/support"
+	"github.com/vinicius73/gear-feed/pkg/support"
 )
 
 func TestFindIndex(t *testing.T) {

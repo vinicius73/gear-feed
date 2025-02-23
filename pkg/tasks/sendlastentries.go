@@ -4,11 +4,11 @@ import (
 	"context"
 
 	"github.com/rs/zerolog"
-	"github.com/vinicius73/gamer-feed/pkg/linkloader"
-	"github.com/vinicius73/gamer-feed/pkg/linkloader/news"
-	"github.com/vinicius73/gamer-feed/pkg/model"
-	"github.com/vinicius73/gamer-feed/pkg/sender"
-	"github.com/vinicius73/gamer-feed/pkg/sources"
+	"github.com/vinicius73/gear-feed/pkg/linkloader"
+	"github.com/vinicius73/gear-feed/pkg/linkloader/news"
+	"github.com/vinicius73/gear-feed/pkg/model"
+	"github.com/vinicius73/gear-feed/pkg/sender"
+	"github.com/vinicius73/gear-feed/pkg/sources"
 )
 
 var _ Task[model.IEntry] = (*SendLastEntries[model.IEntry])(nil)

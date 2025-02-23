@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/rs/zerolog"
-	"github.com/vinicius73/gamer-feed/pkg/model"
-	"github.com/vinicius73/gamer-feed/pkg/storage"
-	"github.com/vinicius73/gamer-feed/pkg/support/apperrors"
+	"github.com/vinicius73/gear-feed/pkg/model"
+	"github.com/vinicius73/gear-feed/pkg/storage"
+	"github.com/vinicius73/gear-feed/pkg/support/apperrors"
 	"gopkg.in/telebot.v3"
 )
 

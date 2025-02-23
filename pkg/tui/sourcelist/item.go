@@ -2,7 +2,7 @@ package sourcelist
 
 import (
 	"github.com/charmbracelet/bubbles/list"
-	"github.com/vinicius73/gamer-feed/pkg/scraper"
+	"github.com/vinicius73/gear-feed/pkg/scraper"
 )
 
 var _ list.DefaultItem = (*SourceItem)(nil)

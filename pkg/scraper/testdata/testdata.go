@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/vinicius73/gamer-feed/pkg/scraper"
+	"github.com/vinicius73/gear-feed/pkg/scraper"
 	"gopkg.in/yaml.v3"
 )
 

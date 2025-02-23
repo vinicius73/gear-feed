@@ -1,6 +1,6 @@
 package sources
 
-import "github.com/vinicius73/gamer-feed/pkg/scraper"
+import "github.com/vinicius73/gear-feed/pkg/scraper"
 
 type Collection []scraper.SourceDefinition
 

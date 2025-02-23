@@ -7,11 +7,11 @@ import (
 	"time"
 
 	"github.com/rs/zerolog"
-	"github.com/vinicius73/gamer-feed/pkg/configurations"
-	"github.com/vinicius73/gamer-feed/pkg/model"
-	"github.com/vinicius73/gamer-feed/pkg/sources"
-	"github.com/vinicius73/gamer-feed/pkg/stories"
-	"github.com/vinicius73/gamer-feed/pkg/tasks"
+	"github.com/vinicius73/gear-feed/pkg/configurations"
+	"github.com/vinicius73/gear-feed/pkg/model"
+	"github.com/vinicius73/gear-feed/pkg/sources"
+	"github.com/vinicius73/gear-feed/pkg/stories"
+	"github.com/vinicius73/gear-feed/pkg/tasks"
 )
 
 type BuildStoryOptions struct {

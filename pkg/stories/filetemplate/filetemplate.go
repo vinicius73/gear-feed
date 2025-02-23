@@ -8,9 +8,9 @@ import (
 	"time"
 
 	"github.com/gosimple/slug"
-	"github.com/vinicius73/gamer-feed/pkg/stories/fetcher"
-	"github.com/vinicius73/gamer-feed/pkg/support"
-	"github.com/vinicius73/gamer-feed/pkg/support/apperrors"
+	"github.com/vinicius73/gear-feed/pkg/stories/fetcher"
+	"github.com/vinicius73/gear-feed/pkg/support"
+	"github.com/vinicius73/gear-feed/pkg/support/apperrors"
 )
 
 const (

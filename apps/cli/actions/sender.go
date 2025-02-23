@@ -1,10 +1,10 @@
 package actions
 
 import (
-	"github.com/vinicius73/gamer-feed/pkg/model"
-	"github.com/vinicius73/gamer-feed/pkg/sender"
-	"github.com/vinicius73/gamer-feed/pkg/storage"
-	"github.com/vinicius73/gamer-feed/pkg/telegram"
+	"github.com/vinicius73/gear-feed/pkg/model"
+	"github.com/vinicius73/gear-feed/pkg/sender"
+	"github.com/vinicius73/gear-feed/pkg/storage"
+	"github.com/vinicius73/gear-feed/pkg/telegram"
 )
 
 type SenderOptions struct {

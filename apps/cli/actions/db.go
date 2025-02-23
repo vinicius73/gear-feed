@@ -3,10 +3,10 @@ package actions
 import (
 	"context"
 
-	"github.com/vinicius73/gamer-feed/pkg/configurations"
-	"github.com/vinicius73/gamer-feed/pkg/model"
-	"github.com/vinicius73/gamer-feed/pkg/storage/database"
-	"github.com/vinicius73/gamer-feed/pkg/tasks"
+	"github.com/vinicius73/gear-feed/pkg/configurations"
+	"github.com/vinicius73/gear-feed/pkg/model"
+	"github.com/vinicius73/gear-feed/pkg/storage/database"
+	"github.com/vinicius73/gear-feed/pkg/tasks"
 )
 
 func Cleanup(ctx context.Context) error {

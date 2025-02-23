@@ -4,10 +4,10 @@ import (
 	"context"
 
 	"github.com/rs/zerolog"
-	"github.com/vinicius73/gamer-feed/pkg/stories/fetcher"
-	"github.com/vinicius73/gamer-feed/pkg/stories/filetemplate"
-	"github.com/vinicius73/gamer-feed/pkg/stories/stages"
-	"github.com/vinicius73/gamer-feed/pkg/support"
+	"github.com/vinicius73/gear-feed/pkg/stories/fetcher"
+	"github.com/vinicius73/gear-feed/pkg/stories/filetemplate"
+	"github.com/vinicius73/gear-feed/pkg/stories/stages"
+	"github.com/vinicius73/gear-feed/pkg/support"
 )
 
 const workerSize = 2

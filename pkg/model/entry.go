@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/vinicius73/gamer-feed/pkg/support"
+	"github.com/vinicius73/gear-feed/pkg/support"
 )
 
 var _ IEntry = (*Entry)(nil) // Ensure that Entry implements IEntry.

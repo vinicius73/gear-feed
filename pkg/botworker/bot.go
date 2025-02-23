@@ -4,10 +4,10 @@ import (
 	"context"
 	"time"
 
-	"github.com/vinicius73/gamer-feed/pkg/cron"
-	"github.com/vinicius73/gamer-feed/pkg/model"
-	"github.com/vinicius73/gamer-feed/pkg/sender"
-	"github.com/vinicius73/gamer-feed/pkg/storage"
+	"github.com/vinicius73/gear-feed/pkg/cron"
+	"github.com/vinicius73/gear-feed/pkg/model"
+	"github.com/vinicius73/gear-feed/pkg/sender"
+	"github.com/vinicius73/gear-feed/pkg/storage"
 )
 
 const stopTimeout = time.Second * 30

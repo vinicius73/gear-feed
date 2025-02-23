@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/urfave/cli/v2"
-	"github.com/vinicius73/gamer-feed/apps/cli/actions"
-	"github.com/vinicius73/gamer-feed/pkg/stories"
+	"github.com/vinicius73/gear-feed/apps/cli/actions"
+	"github.com/vinicius73/gear-feed/pkg/stories"
 )
 
 func storiesCMD() *cli.Command {

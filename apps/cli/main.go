@@ -7,10 +7,10 @@ import (
 
 	zero "github.com/rs/zerolog/log"
 	"github.com/urfave/cli/v2"
-	"github.com/vinicius73/gamer-feed/pkg"
-	"github.com/vinicius73/gamer-feed/pkg/configurations"
-	"github.com/vinicius73/gamer-feed/pkg/support"
-	"github.com/vinicius73/gamer-feed/pkg/support/apperrors"
+	"github.com/vinicius73/gear-feed/pkg"
+	"github.com/vinicius73/gear-feed/pkg/configurations"
+	"github.com/vinicius73/gear-feed/pkg/support"
+	"github.com/vinicius73/gear-feed/pkg/support/apperrors"
 )
 
 var fileLog *os.File

@@ -1,4 +1,4 @@
-module github.com/vinicius73/gamer-feed
+module github.com/vinicius73/gear-feed
 
 go 1.23.0
 

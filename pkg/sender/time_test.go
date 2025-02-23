@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/vinicius73/gamer-feed/pkg/sender"
+	"github.com/vinicius73/gear-feed/pkg/sender"
 )
 
 func TestCalculeSendInterval(t *testing.T) {

@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/gocolly/colly"
-	"github.com/vinicius73/gamer-feed/pkg/model"
-	"github.com/vinicius73/gamer-feed/pkg/support"
+	"github.com/vinicius73/gear-feed/pkg/model"
+	"github.com/vinicius73/gear-feed/pkg/support"
 )
 
 var reURL = regexp.MustCompile(`\((.*?)\)`)

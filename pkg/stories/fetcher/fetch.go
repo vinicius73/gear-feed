@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"github.com/otiai10/opengraph/v2"
-	"github.com/vinicius73/gamer-feed/pkg/support"
-	"github.com/vinicius73/gamer-feed/pkg/support/apperrors"
+	"github.com/vinicius73/gear-feed/pkg/support"
+	"github.com/vinicius73/gear-feed/pkg/support/apperrors"
 )
 
 var (

@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/rs/zerolog"
-	"github.com/vinicius73/gamer-feed/pkg/model"
-	"github.com/vinicius73/gamer-feed/pkg/sender"
+	"github.com/vinicius73/gear-feed/pkg/model"
+	"github.com/vinicius73/gear-feed/pkg/sender"
 )
 
 var _ Task[model.IEntry] = (*Cleanup[model.IEntry])(nil)

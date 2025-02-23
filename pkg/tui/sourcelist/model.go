@@ -3,8 +3,8 @@ package sourcelist
 import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/vinicius73/gamer-feed/pkg/scraper"
-	"github.com/vinicius73/gamer-feed/pkg/tui"
+	"github.com/vinicius73/gear-feed/pkg/scraper"
+	"github.com/vinicius73/gear-feed/pkg/tui"
 )
 
 type Model struct {

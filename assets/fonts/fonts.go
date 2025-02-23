@@ -4,7 +4,7 @@ import (
 	"embed"
 
 	"github.com/golang/freetype/truetype"
-	"github.com/vinicius73/gamer-feed/pkg/support"
+	"github.com/vinicius73/gear-feed/pkg/support"
 )
 
 //go:embed *.ttf

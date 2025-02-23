@@ -1,10 +1,10 @@
 package stages
 
 import (
-	"github.com/vinicius73/gamer-feed/pkg/stories/drawer"
-	"github.com/vinicius73/gamer-feed/pkg/stories/fetcher"
-	"github.com/vinicius73/gamer-feed/pkg/stories/filetemplate"
-	"github.com/vinicius73/gamer-feed/pkg/support/apperrors"
+	"github.com/vinicius73/gear-feed/pkg/stories/drawer"
+	"github.com/vinicius73/gear-feed/pkg/stories/fetcher"
+	"github.com/vinicius73/gear-feed/pkg/stories/filetemplate"
+	"github.com/vinicius73/gear-feed/pkg/support/apperrors"
 )
 
 var (

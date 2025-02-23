@@ -4,10 +4,10 @@ import (
 	"context"
 
 	"github.com/rs/zerolog"
-	"github.com/vinicius73/gamer-feed/pkg/botworker"
-	"github.com/vinicius73/gamer-feed/pkg/configurations"
-	"github.com/vinicius73/gamer-feed/pkg/model"
-	"github.com/vinicius73/gamer-feed/pkg/storage/database"
+	"github.com/vinicius73/gear-feed/pkg/botworker"
+	"github.com/vinicius73/gear-feed/pkg/configurations"
+	"github.com/vinicius73/gear-feed/pkg/model"
+	"github.com/vinicius73/gear-feed/pkg/storage/database"
 )
 
 func BotWorker(ctx context.Context) error {

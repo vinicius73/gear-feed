@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/vinicius73/gamer-feed/pkg"
-	"github.com/vinicius73/gamer-feed/pkg/model"
+	"github.com/vinicius73/gear-feed/pkg"
+	"github.com/vinicius73/gear-feed/pkg/model"
 )
 
 func BuildMessage(entry model.IEntry) string {

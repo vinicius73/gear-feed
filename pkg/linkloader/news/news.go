@@ -4,11 +4,11 @@ import (
 	"context"
 
 	"github.com/rs/zerolog"
-	"github.com/vinicius73/gamer-feed/pkg/linkloader"
-	"github.com/vinicius73/gamer-feed/pkg/model"
-	"github.com/vinicius73/gamer-feed/pkg/sender"
-	"github.com/vinicius73/gamer-feed/pkg/storage"
-	"github.com/vinicius73/gamer-feed/pkg/support"
+	"github.com/vinicius73/gear-feed/pkg/linkloader"
+	"github.com/vinicius73/gear-feed/pkg/model"
+	"github.com/vinicius73/gear-feed/pkg/sender"
+	"github.com/vinicius73/gear-feed/pkg/storage"
+	"github.com/vinicius73/gear-feed/pkg/support"
 )
 
 type LoadOptions[T model.IEntry] struct {

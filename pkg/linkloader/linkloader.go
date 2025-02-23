@@ -3,7 +3,7 @@ package linkloader
 import (
 	"context"
 
-	"github.com/vinicius73/gamer-feed/pkg/model"
+	"github.com/vinicius73/gear-feed/pkg/model"
 )
 
 func LoadEntries[T model.IEntry](ctx context.Context, opt LoadOptions) ([]T, error) {

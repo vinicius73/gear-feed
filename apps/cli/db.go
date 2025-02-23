@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/urfave/cli/v2"
-	"github.com/vinicius73/gamer-feed/apps/cli/actions"
+	"github.com/vinicius73/gear-feed/apps/cli/actions"
 )
 
 func dbCMD() *cli.Command {

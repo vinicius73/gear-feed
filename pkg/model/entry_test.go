@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/vinicius73/gamer-feed/pkg/model"
+	"github.com/vinicius73/gear-feed/pkg/model"
 )
 
 func TestEntry_Hash(t *testing.T) {

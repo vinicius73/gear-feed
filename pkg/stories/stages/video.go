@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/rs/zerolog"
-	"github.com/vinicius73/gamer-feed/pkg/support/apperrors"
+	"github.com/vinicius73/gear-feed/pkg/support/apperrors"
 )
 
 var (
