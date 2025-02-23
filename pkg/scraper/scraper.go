@@ -43,15 +43,12 @@ var userAgents = []string{
 var _tmpDir string
 
 func init() {
-
 	tmpDir, err := os.UserCacheDir()
-
 	if err != nil {
 		tmpDir = os.TempDir()
 	}
 
 	_tmpDir = filepath.Join(tmpDir, "gamer-feed/colly")
-
 }
 
 func getRandomUserAgent() string {

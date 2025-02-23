@@ -80,6 +80,8 @@ func loadWorker[T model.IEntry](wg *sync.WaitGroup, ctx context.Context, input <
 	out := make(chan Collection[T], 2)
 	errc := make(chan error, 1)
 
+	logger := zerolog.Ctx(ctx).With().Str("worker", "load").Logger()
+
 	go func() {
 		defer close(out)
 		defer close(errc)
@@ -88,13 +90,16 @@ func loadWorker[T model.IEntry](wg *sync.WaitGroup, ctx context.Context, input <
 		for {
 			select {
 			case <-ctx.Done():
+				logger.Warn().Msg("Context done")
 				return
 			case source, ok := <-input:
 				if !ok {
+					logger.Debug().Msg("Input closed")
 					return
 				}
 				collection, err := FromSource[T](ctx, source)
 				if err != nil {
+					logger.Error().Err(err).Str("source", source.Name).Msg("Error on load worker")
 					errc <- err
 				} else {
 					out <- collection
