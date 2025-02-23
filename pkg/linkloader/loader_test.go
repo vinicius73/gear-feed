@@ -48,6 +48,11 @@ attributes:
 		attribute: "src"
 `
 
+// TestFromSources tests the FromSources function of the linkloader package.
+// It sets up an HTTP test server to serve test data, parses two source definitions,
+// and verifies that the FromSources function correctly loads entries from these sources.
+// The test ensures that no errors occur during the loading process and that the expected
+// number of entries and entries' length are returned.
 func TestFromSources(t *testing.T) {
 	t.Parallel()
 
@@ -73,7 +78,9 @@ func TestFromSources(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Len(t, entries, 2)
-	assert.Len(t, entries.Entries(), 6)
+	// The first source has 3 entries
+	// The second source has 6 entries, but the limit is set to 4
+	assert.Len(t, entries.Entries(), 7)
 }
 
 func TestLoadEntries(t *testing.T) {
