@@ -34,7 +34,7 @@ cron:
         only: []
       interval: 24h
       footer:
-        image: "${GFEED_SOURCE_PATH}/avatar.jpg"
+        image: "${GFEED_SOURCE_PATH}/avatar.png"
         text: "${GFFED_STORY_FOOTER_TEXT}"
     schedules:
       - "0/45 8-23 * * 1-4" # At every 45 minutes, from 8am to 11pm, Monday to Thursday
